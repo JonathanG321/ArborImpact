@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import { Button, Input } from 'react-native-elements';
 
@@ -58,10 +58,22 @@ export default function Auth() {
         />
       </View>
       <View className="mt-5 py-1 self-stretch">
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Pressable
+          className="flex items-center rounded bg-blue-500 px-2 py-1"
+          onPress={() => signInWithEmail()}
+          disabled={loading}
+        >
+          <Text className="text-white text-lg">Sign in</Text>
+        </Pressable>
       </View>
       <View className="py-1 self-stretch">
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Pressable
+          className="flex items-center rounded bg-blue-500 px-2 py-1"
+          onPress={() => signUpWithEmail()}
+          disabled={loading}
+        >
+          <Text className="text-white text-lg">Sign up</Text>
+        </Pressable>
       </View>
     </View>
   );

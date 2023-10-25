@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { View, Alert } from 'react-native';
+import { Text, View, Alert, Pressable } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { Session } from '@supabase/supabase-js';
 
@@ -88,17 +88,19 @@ export default function Account({ session }: { session: Session }) {
       <View className="py-1 self-stretch">
         <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
       </View>
-
       <View className="mt-5 py-1 self-stretch">
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
+        <Pressable
+          className="flex items-center rounded bg-blue-500 px-2 py-1"
           onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
           disabled={loading}
-        />
+        >
+          <Text className="text-white text-lg">{loading ? 'Loading ...' : 'Update'}</Text>
+        </Pressable>
       </View>
-
       <View className="py-1 self-stretch">
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <Pressable className="flex items-center rounded bg-blue-500 px-2 py-1" onPress={() => supabase.auth.signOut()}>
+          <Text className="text-white text-lg">Sign Out</Text>
+        </Pressable>
       </View>
     </View>
   );
