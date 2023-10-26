@@ -8,35 +8,32 @@ import { RootStackParamList } from '../../lib/utils';
 type Props = NativeStackScreenProps<RootStackParamList, 'Home', 'Main'>;
 
 export default function HomeScreen({
+  navigation: { replace },
   route: {
     params: { session },
   },
 }: Props) {
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
+  const [first_name, setFirst_name] = useState('');
+  const [last_name, setLast_name] = useState('');
 
   useEffect(() => {
     if (session) getProfile();
+    console.log('test');
   }, [session]);
 
   async function getProfile() {
     try {
       setLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
-
-      const { data, error, status } = await supabase
-        .from('profiles')
-        .select(`username, avatar_url`)
-        .eq('id', session?.user.id)
-        .single();
+      const { data, error, status } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
+      console.log({ error, data, status });
       if (error && status !== 406) {
         throw error;
       }
 
-      if (data) {
-        setUsername(data.username);
-        setAvatarUrl(data.avatar_url);
+      if (error) {
+        replace('Profile Setup 1');
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -47,19 +44,17 @@ export default function HomeScreen({
     }
   }
 
-  async function updateProfile({ username, avatar_url }: { username: string; avatar_url: string }) {
+  async function updateProfile({ first_name, last_name }: { first_name: string; last_name: string }) {
     try {
       setLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
 
-      const updates = {
+      const { error } = await supabase.from('profiles').upsert({
         id: session?.user.id,
-        username,
-        avatar_url,
+        first_name,
+        last_name,
         updated_at: new Date(),
-      };
-
-      const { error } = await supabase.from('profiles').upsert(updates);
+      });
 
       if (error) {
         throw error;
@@ -79,12 +74,15 @@ export default function HomeScreen({
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
       <View className="py-1 self-stretch">
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
+        <Input label="First Name" value={first_name || ''} onChangeText={(text) => setFirst_name(text)} />
+      </View>
+      <View className="py-1 self-stretch">
+        <Input label="Last Name" value={last_name || ''} onChangeText={(text) => setLast_name(text)} />
       </View>
       <View className="mt-5 py-1 self-stretch">
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
+          onPress={() => updateProfile({ first_name, last_name })}
           disabled={loading}
         >
           <Text className="text-white text-lg">{loading ? 'Loading ...' : 'Update'}</Text>
