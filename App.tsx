@@ -1,12 +1,13 @@
 import 'react-native-url-polyfill/auto';
 import { useState, useEffect } from 'react';
-import { supabase } from './lib/supabase';
-import Auth from './src/components/Auth';
-import Account from './src/components/Account';
-import { View } from 'react-native';
+import { supabase } from './supabase/supabase';
 import { Session } from '@supabase/supabase-js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SignInScreen from './src/screens/SignInScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import { RootStackParamList } from './lib/utils';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -21,17 +22,24 @@ export default function App() {
     });
   }, []);
 
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<RootStackParamList>();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" children={() => Home({ session })} />
+      <Stack.Navigator id="Main">
+        {session ? (
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} initialParams={{ session }} />
+            {/* <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} /> */}
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
-
-function Home({ session }: { session: Session | null }) {
-  return <View>{session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />}</View>;
 }

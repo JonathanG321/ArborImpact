@@ -2,22 +2,15 @@ import React, { useState } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
 import { supabase } from '../../supabase/supabase';
 import { Input } from 'react-native-elements';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../lib/utils';
 
-export default function Auth() {
+type Props = NativeStackScreenProps<RootStackParamList, 'SignUp', 'Main'>;
+
+export default function SignUpScreen({}: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-
-  async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-  }
 
   async function signUpWithEmail() {
     setLoading(true);
@@ -69,15 +62,6 @@ export default function Auth() {
           placeholder="Password"
           autoCapitalize={'none'}
         />
-      </View>
-      <View className="mt-5 py-1 self-stretch">
-        <Pressable
-          className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={() => signInWithEmail()}
-          disabled={loading}
-        >
-          <Text className="text-white text-lg">Sign in</Text>
-        </Pressable>
       </View>
       <View className="py-1 self-stretch">
         <Pressable
