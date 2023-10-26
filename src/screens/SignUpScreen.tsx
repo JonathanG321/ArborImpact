@@ -5,9 +5,9 @@ import { Input } from 'react-native-elements';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/utils';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'SignUp', 'Main'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Sign Up', 'Main'>;
 
-export default function SignUpScreen({}: Props) {
+export default function SignUpScreen({ navigation: { replace } }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,22 +21,17 @@ export default function SignUpScreen({}: Props) {
     //   setLoading(false);
     //   return;
     // }
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: email,
       password: password,
     });
 
-    console.log(session);
-
     if (error) {
       Alert.alert(error.message);
+      console.error(error);
       setLoading(false);
       return;
     }
-    if (!session) Alert.alert('Please check your inbox for email verification!');
     setLoading(false);
   }
 
@@ -70,6 +65,15 @@ export default function SignUpScreen({}: Props) {
           disabled={loading}
         >
           <Text className="text-white text-lg">Sign up</Text>
+        </Pressable>
+      </View>
+      <View className="mt-5 py-1 self-stretch">
+        <Pressable
+          className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
+          onPress={() => replace('Sign In')}
+          disabled={loading}
+        >
+          <Text className="text-white text-lg">Sign In Instead</Text>
         </Pressable>
       </View>
     </View>

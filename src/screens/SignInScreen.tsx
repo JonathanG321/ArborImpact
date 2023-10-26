@@ -5,9 +5,9 @@ import { Input } from 'react-native-elements';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/utils';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'SignIn', 'Main'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Sign In', 'Main'>;
 
-export default function SignInScreen({ navigation: { navigate } }: Props) {
+export default function SignInScreen({ navigation: { navigate, replace } }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -58,7 +58,7 @@ export default function SignInScreen({ navigation: { navigate } }: Props) {
       <View className="mt-5 py-1 self-stretch">
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={() => navigate('SignUp')}
+          onPress={() => replace('Sign Up')}
           disabled={loading}
         >
           <Text className="text-white text-lg">Sign Up Instead</Text>
