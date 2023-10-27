@@ -14,13 +14,6 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
 
   async function signUpWithEmail() {
     setLoading(true);
-    // const { data: userExists } = await supabase.auth.getUser.from('users').select(`email`).eq('email', email).single();
-    // console.log({ userExists });
-    // if (!!userExists?.email) {
-    //   Alert.alert('A User Already Exists For That Email!');
-    //   setLoading(false);
-    //   return;
-    // }
     const { error } = await supabase.auth.signUp({
       email: email,
       password: password,

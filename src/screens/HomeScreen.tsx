@@ -27,18 +27,10 @@ export default function HomeScreen({
       setLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
       const { data, error, status } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
-      console.log({ error, data, status });
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (error) {
-        replace('Profile Setup 1');
-      }
+      if (error && status !== 406) throw error;
+      if (error) replace('Profile Setup 1');
     } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message);
-      }
+      if (error instanceof Error) Alert.alert(error.message);
     } finally {
       setLoading(false);
     }
