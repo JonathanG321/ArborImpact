@@ -26,14 +26,14 @@ export default function App() {
 
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const profileSetup2InitParams = {
-    birth_date: new Date(),
-    first_name: '',
-    last_name: '',
+    birthDate: new Date(),
+    firstName: '',
+    lastName: '',
     location: '',
-    want_difference_world: false,
-    want_diversify_portfolio: false,
-    want_specific_cause: false,
-    want_tax_incentives: false,
+    wantDifferenceWorld: false,
+    wantDiversifyPortfolio: false,
+    wantSpecificCause: false,
+    wantTaxIncentives: false,
   };
 
   return (

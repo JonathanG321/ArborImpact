@@ -14,8 +14,8 @@ export default function HomeScreen({
   },
 }: Props) {
   const [loading, setLoading] = useState(true);
-  const [first_name, setFirst_name] = useState('');
-  const [last_name, setLast_name] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   useEffect(() => {
     if (session) getProfile();
@@ -44,15 +44,15 @@ export default function HomeScreen({
     }
   }
 
-  async function updateProfile({ first_name, last_name }: { first_name: string; last_name: string }) {
+  async function updateProfile({ firstName, lastName }: { firstName: string; lastName: string }) {
     try {
       setLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
 
       const { error } = await supabase.from('profiles').upsert({
         id: session?.user.id,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         updated_at: new Date(),
       });
 
@@ -74,15 +74,15 @@ export default function HomeScreen({
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
       <View className="py-1 self-stretch">
-        <Input label="First Name" value={first_name || ''} onChangeText={(text) => setFirst_name(text)} />
+        <Input label="First Name" value={firstName || ''} onChangeText={(text) => setFirstName(text)} />
       </View>
       <View className="py-1 self-stretch">
-        <Input label="Last Name" value={last_name || ''} onChangeText={(text) => setLast_name(text)} />
+        <Input label="Last Name" value={lastName || ''} onChangeText={(text) => setLastName(text)} />
       </View>
       <View className="mt-5 py-1 self-stretch">
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={() => updateProfile({ first_name, last_name })}
+          onPress={() => updateProfile({ firstName, lastName })}
           disabled={loading}
         >
           <Text className="text-white text-lg">{loading ? 'Loading ...' : 'Update'}</Text>
