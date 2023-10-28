@@ -18,7 +18,7 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
   async function getProfile(session: Session | null) {
     try {
       setIsLoading(true);
-      if (!session?.user) throw new Error('No user on the session!');
+      if (session && !session?.user) throw new Error('No user on the session!');
       const { error, status, data } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
       if (error && status !== 406) throw error;
       if (error) return;

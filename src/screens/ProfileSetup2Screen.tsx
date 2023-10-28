@@ -4,9 +4,9 @@ import { Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/utils';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 2', 'Main'>;
+export type ProfileSetup2Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 2', 'Main'>;
 
-export default function ProfileSetup2Screen({ navigation: { navigate } }: Props) {
+export default function ProfileSetup2Screen({ navigation: { navigate } }: ProfileSetup2Props) {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

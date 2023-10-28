@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
 import { supabase } from '../../supabase/supabase';
 import { Input } from 'react-native-elements';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/utils';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign Up', 'Main'>;
 
 export default function SignUpScreen({ navigation: { replace } }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { setIsLoading } = useContext(LoadingContext);
 
   async function signUpWithEmail() {
-    setLoading(true);
+    setIsLoading(true);
     const { error } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -22,10 +23,10 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
     if (error) {
       Alert.alert(error.message);
       console.error(error);
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
-    setLoading(false);
+    setIsLoading(false);
   }
 
   return (
@@ -55,7 +56,6 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
           onPress={() => signUpWithEmail()}
-          disabled={loading}
         >
           <Text className="text-white text-lg">Sign up</Text>
         </Pressable>
@@ -64,7 +64,6 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
           onPress={() => replace('Sign In')}
-          disabled={loading}
         >
           <Text className="text-white text-lg">Sign In Instead</Text>
         </Pressable>
