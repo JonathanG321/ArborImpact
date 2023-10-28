@@ -5,6 +5,7 @@ import { Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/utils';
 import { LoadingContext } from '../contexts/LoadingContext';
+import { ProfileContext } from '../contexts/ProfileContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home', 'Main'>;
 
@@ -17,23 +18,28 @@ export default function HomeScreen({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const { setIsLoading } = useContext(LoadingContext);
+  const { setProfile } = useContext(ProfileContext);
 
   useEffect(() => {
-    if (session) getProfile();
-    console.log('test');
+    if (session) {
+      // setIsLoading(true);
+      getProfile();
+      // setTimeout(() => setIsLoading(false), 5000);
+    }
   }, [session]);
 
   async function getProfile() {
     try {
-      setIsLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
+
       const { data, error, status } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
+
       if (error && status !== 406) throw error;
       if (error) replace('Profile Setup 1');
+
+      setProfile(data);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
-    } finally {
-      setIsLoading(false);
     }
   }
 
