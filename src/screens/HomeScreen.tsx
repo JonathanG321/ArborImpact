@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { Text, View, Alert, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/utils';
-import LoadingScreen from './LoadingScreen';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home', 'Main'>;
 
@@ -14,9 +14,9 @@ export default function HomeScreen({
     params: { session },
   },
 }: Props) {
-  const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const { setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     if (session) getProfile();
@@ -25,7 +25,7 @@ export default function HomeScreen({
 
   async function getProfile() {
     try {
-      setLoading(true);
+      setIsLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
       const { data, error, status } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
       if (error && status !== 406) throw error;
@@ -33,13 +33,13 @@ export default function HomeScreen({
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   async function updateProfile({ firstName, lastName }: { firstName: string; lastName: string }) {
     try {
-      setLoading(true);
+      setIsLoading(true);
       if (!session?.user) throw new Error('No user on the session!');
 
       const { error } = await supabase.from('profiles').upsert({
@@ -57,11 +57,9 @@ export default function HomeScreen({
         Alert.alert(error.message);
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
-
-  if (loading) return <LoadingScreen />;
 
   return (
     <View className="p-3 mt-10">
@@ -78,9 +76,8 @@ export default function HomeScreen({
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
           onPress={() => updateProfile({ firstName, lastName })}
-          disabled={loading}
         >
-          <Text className="text-white text-lg">{loading ? 'Loading ...' : 'Update'}</Text>
+          <Text className="text-white text-lg">Update</Text>
         </Pressable>
       </View>
       <View className="py-1 self-stretch">
