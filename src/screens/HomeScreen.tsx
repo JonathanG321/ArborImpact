@@ -21,11 +21,7 @@ export default function HomeScreen({
   const { setProfile } = useContext(ProfileContext);
 
   useEffect(() => {
-    if (session) {
-      // setIsLoading(true);
-      getProfile();
-      // setTimeout(() => setIsLoading(false), 5000);
-    }
+    if (session) getProfile();
   }, [session]);
 
   async function getProfile() {
