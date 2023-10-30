@@ -1,13 +1,18 @@
 import { createContext, PropsWithChildren, useState } from 'react';
 import { emptyProfile, Profile } from '../../lib/utils';
 
-export const ProfileSetupContext = createContext<{ profile: Profile | null; setProfile: (profile: Profile) => void }>({
-  profile: null,
-  setProfile: () => undefined,
+export const ProfileSetupContext = createContext<{
+  profileSetup: Profile | null;
+  setProfileSetup: (profileSetup: Profile) => void;
+}>({
+  profileSetup: null,
+  setProfileSetup: () => undefined,
 });
 
 export function ProfileSetupContextProvider({ children }: PropsWithChildren) {
-  const [profile, setProfile] = useState<Profile>(emptyProfile);
+  const [profileSetup, setProfileSetup] = useState<Profile>(emptyProfile);
 
-  return <ProfileSetupContext.Provider value={{ profile, setProfile }}>{children}</ProfileSetupContext.Provider>;
+  return (
+    <ProfileSetupContext.Provider value={{ profileSetup, setProfileSetup }}>{children}</ProfileSetupContext.Provider>
+  );
 }

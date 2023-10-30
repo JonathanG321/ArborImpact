@@ -4,7 +4,7 @@ import { supabase } from '../../supabase/supabase';
 import { LoadingContext } from './LoadingContext';
 import { Alert } from 'react-native';
 import { SessionContext } from './SessionContext';
-import { emptyProfile, Profile } from '../../lib/utils';
+import { Profile } from '../../lib/utils';
 
 export const ProfileContext = createContext<{ profile: Profile | null; setProfile: (profile: Profile) => void }>({
   profile: null,
@@ -13,7 +13,7 @@ export const ProfileContext = createContext<{ profile: Profile | null; setProfil
 export function ProfileContextProvider({ children }: PropsWithChildren) {
   const { setIsLoading } = useContext(LoadingContext);
   const { session } = useContext(SessionContext);
-  const [profile, setProfile] = useState<Profile>(emptyProfile);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   async function getProfile(session: Session | null) {
     try {
