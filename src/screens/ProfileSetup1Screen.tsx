@@ -7,8 +7,11 @@ import { useTailwind } from 'nativewind';
 import { z } from 'zod';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import DatePicker from '../components/DatePicker';
-import { Profile, RootStackParamList } from '../../lib/utils';
+import { FormSwitchProps, Profile, RootStackParamList } from '../../lib/types';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
+import FormSwitch from '../components/FormSwitch';
+import FormInput from '../components/FormInput';
+import { emptyProfile } from '../../lib/templates';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 
@@ -36,14 +39,18 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
     formState: { errors },
   } = useForm<Exclude<Profile, 'svg'>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      birthDate: new Date(),
-    },
+    defaultValues: emptyProfile,
+    shouldUseNativeValidation: true,
   });
 
   const onSubmit: SubmitHandler<Profile> = (data) => {
     // console.log(data);
+    // if (errors) {
+    //   console.error(errors);
+    //   return;
+    // }
     setProfileSetup(data);
+    navigate('Profile Setup 2');
   };
 
   const handleDateText = (): string => {
@@ -53,44 +60,35 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       : 'No value Selected';
   };
 
+  const fundReasonProps: FormSwitchProps<Profile>[] = [
+    { field: 'wantDifferenceWorld', description: 'I WANT TO MAKE A DIFFERENCE IN THE WORLD', control },
+    { field: 'wantDiversifyPortfolio', description: 'I WANT TO DIVERSIFY MY PORTFOLIO', control },
+    { field: 'wantTaxIncentives', description: 'I AM INTERESTED IN TAX INCENTIVES', control },
+    { field: 'wantSpecificCause', description: 'I AM PASSIONATE ABOUT A SPECIFIC CAUSE', control },
+  ];
+
   return (
     <View className="p-3 mt-10">
       <View className="py-1 flex items-center">
         <Text className="font-bold text-xl mb-2">HI, MY NAME IS</Text>
       </View>
       <View className="flex flex-row">
-        <View className="w-1/2">
-          <Controller
-            control={control}
-            rules={{ required: true, minLength: 1 }}
-            render={({ field }) => (
-              <Input
-                {...field}
-                className="px-3 border-b-2 rounded-bl-lg"
-                inputContainerStyle={useTailwind({ className: 'border-0 pl-1' }) as ViewStyle}
-                placeholder="First Name"
-                autoCorrect={false}
-              />
-            )}
-            name="firstName"
-          />
-        </View>
-        <View className="w-1/2">
-          <Controller
-            control={control}
-            rules={{ required: true, minLength: 1 }}
-            render={({ field }) => (
-              <Input
-                {...field}
-                className="px-3 border-b-2 rounded-br-lg"
-                inputContainerStyle={useTailwind({ className: 'border-0 pr-1' }) as ViewStyle}
-                placeholder="Last Name"
-                autoCorrect={false}
-              />
-            )}
-            name="lastName"
-          />
-        </View>
+        <FormInput
+          control={control}
+          className="w-1/2"
+          field="firstName"
+          placeholder="First Name"
+          inputClassName="px-3 border-b-2 rounded-bl-lg"
+          inputContainerStyle={useTailwind({ className: 'border-0 pl-1' }) as ViewStyle}
+        />
+        <FormInput
+          control={control}
+          className="w-1/2"
+          field="lastName"
+          placeholder="Last Name"
+          inputClassName="px-3 border-b-2 rounded-br-lg"
+          inputContainerStyle={useTailwind({ className: 'border-0 pr-1' }) as ViewStyle}
+        />
       </View>
       <View className="py-1 flex items-center">
         <Text className="font-bold text-xl mb-2">AND I WAS BORN ON</Text>
@@ -119,90 +117,22 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       <View className="py-1 mt-6 flex items-center">
         <Text className="font-bold text-xl mb-2">CURRENTLY BASED OUT ON</Text>
       </View>
-      <View>
-        <Controller
-          control={control}
-          rules={{ required: true, minLength: 1 }}
-          render={({ field }) => (
-            <Input
-              {...field}
-              className="px-3 border-b-2 rounded-b-lg"
-              inputContainerStyle={useTailwind({ className: 'border-0 px-2.5' }) as ViewStyle}
-              placeholder="Location"
-              autoCorrect={false}
-            />
-          )}
-          name="location"
-        />
+      <FormInput
+        control={control}
+        field="location"
+        placeholder="Location"
+        inputClassName="px-3 border-b-2 rounded-b-lg"
+        inputContainerStyle={useTailwind({ className: 'border-0 px-2.5' }) as ViewStyle}
+      />
+      <View className="px-2 mb-2">
+        <View className="border-b-2 mx-2" />
       </View>
-      <View className="mx-6 mb-3">
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { value, onChange } }) => (
-            <Switch
-              trackColor={{ false: '#fff', true: '#0e52fc' }}
-              thumbColor={value ? '#fff' : '#b2b0b2'}
-              ios_backgroundColor="#fff"
-              onValueChange={onChange}
-              value={value}
-            />
-          )}
-          name="wantDifferenceWorld"
-        />
-      </View>
-      <View className="mx-6 mb-3">
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { value, onChange } }) => (
-            <Switch
-              trackColor={{ false: '#fff', true: '#0e52fc' }}
-              thumbColor={value ? '#fff' : '#b2b0b2'}
-              ios_backgroundColor="#fff"
-              onValueChange={onChange}
-              value={value}
-            />
-          )}
-          name="wantDiversifyPortfolio"
-        />
-      </View>
-      <View className="mx-6 mb-3 flex flex-row">
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { value, onChange } }) => (
-            <Switch
-              trackColor={{ false: '#fff', true: '#0e52fc' }}
-              thumbColor={value ? '#fff' : '#b2b0b2'}
-              ios_backgroundColor="#fff"
-              onValueChange={onChange}
-              value={value}
-              style={{ borderWidth: 2, borderColor: value ? '#0e52fc' : '#dfdddf' }}
-            />
-          )}
-          name="wantTaxIncentives"
-        />
-        <Text className="font-bold text-md mb-2 ml-3">I AM INTERESTED IN TAX INCENTIVES</Text>
-      </View>
-      <View className="mx-6 mb-3">
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { value, onChange } }) => (
-            <Switch
-              trackColor={{ false: '#fff', true: '#0e52fc' }}
-              thumbColor={value ? '#fff' : '#b2b0b2'}
-              ios_backgroundColor="#fff"
-              onValueChange={onChange}
-              value={value}
-            />
-          )}
-          name="wantSpecificCause"
-        />
-      </View>
+      <Text className="text-2xl mb-6 ml-6 text-[#5a5a5b]">I choose to fund projects because:</Text>
+      {fundReasonProps.map((props) => (
+        <FormSwitch {...props} />
+      ))}
       <View className="py-1 self-stretch">
-        <Pressable className="flex items-center px-3 py-1" onPress={() => navigate('Profile Setup 2')}>
+        <Pressable className="flex items-center px-3 py-1" onPress={(e) => onSubmit(getValues(), e)}>
           <Text className="text-lg">Next</Text>
         </Pressable>
       </View>
