@@ -3,7 +3,7 @@ import { supabase } from '../../supabase/supabase';
 import { Text, View, Alert, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../lib/utils';
+import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 

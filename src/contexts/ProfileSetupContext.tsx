@@ -1,5 +1,6 @@
 import { createContext, PropsWithChildren, useState } from 'react';
-import { emptyProfile, Profile } from '../../lib/utils';
+import { Profile } from '../../lib/types';
+import { emptyProfile } from '../../lib/templates';
 
 export const ProfileSetupContext = createContext<{
   profileSetup: Profile | null;

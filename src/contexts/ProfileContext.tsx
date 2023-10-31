@@ -4,7 +4,7 @@ import { supabase } from '../../supabase/supabase';
 import { LoadingContext } from './LoadingContext';
 import { Alert } from 'react-native';
 import { SessionContext } from './SessionContext';
-import { Profile } from '../../lib/utils';
+import { Profile } from '../../lib/types';
 
 export const ProfileContext = createContext<{ profile: Profile | null; setProfile: (profile: Profile) => void }>({
   profile: null,

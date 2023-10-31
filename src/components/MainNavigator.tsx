@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
-import { RootStackParamList } from '../../lib/utils';
+import { RootStackParamList } from '../../lib/types';
 import ProfileSetup1Screen from '../screens/ProfileSetup1Screen';
 import ProfileSetup2Screen from '../screens/ProfileSetup2Screen';
 import { useContext } from 'react';

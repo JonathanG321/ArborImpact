@@ -1,5 +1,11 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Session } from '@supabase/supabase-js';
+import { Control, FieldValues, Path } from 'react-hook-form';
+
+export type FormSwitchProps<T extends FieldValues> = {
+  control: Control<T> | undefined;
+  field: Path<T>;
+  description: string;
+};
 
 export type RootStackParamList = {
   Home: { session: Session };
@@ -19,16 +25,4 @@ export type Profile = {
   wantTaxIncentives: boolean;
   wantSpecificCause: boolean;
   svg: string[];
-};
-
-export const emptyProfile = {
-  birthDate: new Date(),
-  firstName: '',
-  lastName: '',
-  location: '',
-  wantDifferenceWorld: false,
-  wantDiversifyPortfolio: false,
-  wantSpecificCause: false,
-  wantTaxIncentives: false,
-  svg: [],
 };

@@ -3,7 +3,7 @@ import { Alert, Pressable, Text, View } from 'react-native';
 import { supabase } from '../../supabase/supabase';
 import { Input } from 'react-native-elements';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../lib/utils';
+import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign In', 'Main'>;
