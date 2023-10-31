@@ -5,6 +5,7 @@ import { Input } from 'react-native-elements';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
+import ScreenContainer from '../components/ScreenContainer';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign In', 'Main'>;
 
@@ -25,7 +26,7 @@ export default function SignInScreen({ navigation: { navigate, replace } }: Prop
   }
 
   return (
-    <View className="mt-10 p-3">
+    <ScreenContainer>
       <View className="mt-5 py-1 self-stretch">
         <Input
           label="Email"
@@ -63,6 +64,6 @@ export default function SignInScreen({ navigation: { navigate, replace } }: Prop
           <Text className="text-white text-lg">Sign Up Instead</Text>
         </Pressable>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }

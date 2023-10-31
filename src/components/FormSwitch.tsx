@@ -5,7 +5,7 @@ import { FormSwitchProps } from '../../lib/types';
 
 export default function FormSwitch<T extends FieldValues>({ control, field, description }: FormSwitchProps<T>) {
   return (
-    <View className="mx-6 mb-3 flex flex-row items-center">
+    <View className="mx-6 mb-3 flex flex-row items-center w-9/12">
       <Controller
         control={control}
         rules={{ required: true }}
@@ -21,7 +21,7 @@ export default function FormSwitch<T extends FieldValues>({ control, field, desc
         )}
         name={field}
       />
-      <Text className="font-bold font-bebas-neue text-md mb-2 ml-3 mt-2">{description}</Text>
+      <Text className="font-bold font-bebas-neue text-md mb-2 ml-3 mt-2 flex flex-wrap">{description}</Text>
     </View>
   );
 }

@@ -6,6 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
+import ScreenContainer from '../components/ScreenContainer';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home', 'Main'>;
 
@@ -64,7 +65,7 @@ export default function HomeScreen({
   }
 
   return (
-    <View className="p-3 mt-10">
+    <ScreenContainer>
       <View className="mt-5 py-1 self-stretch">
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
@@ -90,6 +91,6 @@ export default function HomeScreen({
           <Text className="text-white text-lg">Sign Out</Text>
         </Pressable>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
