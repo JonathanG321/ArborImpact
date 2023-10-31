@@ -1,17 +1,21 @@
 import { useContext } from 'react';
 import { Text, View, Pressable, TextStyle, ViewStyle } from 'react-native';
-import { Input, Switch } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTailwind } from 'nativewind';
 import { z } from 'zod';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { LinearGradient } from 'expo-linear-gradient';
 import DatePicker from '../components/DatePicker';
 import { FormSwitchProps, Profile, RootStackParamList } from '../../lib/types';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
 import FormSwitch from '../components/FormSwitch';
 import FormInput from '../components/FormInput';
 import { emptyProfile } from '../../lib/templates';
+import ProfileSetupHeader from '../components/ProfileSetupHeader';
+import LineBreak from '../components/LineBreak';
+import { Input } from 'react-native-elements';
+import ScreenContainer from '../components/ScreenContainer';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 
@@ -40,7 +44,6 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
   } = useForm<Exclude<Profile, 'svg'>>({
     resolver: zodResolver(schema),
     defaultValues: emptyProfile,
-    shouldUseNativeValidation: true,
   });
 
   const onSubmit: SubmitHandler<Profile> = (data) => {
@@ -68,14 +71,12 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
   ];
 
   return (
-    <View className="p-3 mt-10">
-      <View className="py-1 flex items-center">
-        <Text className="font-bold text-xl mb-2">HI, MY NAME IS</Text>
-      </View>
+    <ScreenContainer>
+      <ProfileSetupHeader title="HI, MY NAME IS" />
       <View className="flex flex-row">
         <FormInput
           control={control}
-          className="w-1/2"
+          outerClassName="w-1/2"
           field="firstName"
           placeholder="First Name"
           inputClassName="px-3 border-b-2 rounded-bl-lg"
@@ -83,16 +84,14 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         />
         <FormInput
           control={control}
-          className="w-1/2"
+          outerClassName="w-1/2"
           field="lastName"
           placeholder="Last Name"
           inputClassName="px-3 border-b-2 rounded-br-lg"
           inputContainerStyle={useTailwind({ className: 'border-0 pr-1' }) as ViewStyle}
         />
       </View>
-      <View className="py-1 flex items-center">
-        <Text className="font-bold text-xl mb-2">AND I WAS BORN ON</Text>
-      </View>
+      <ProfileSetupHeader title="AND I WAS BORN ON" />
       <View className="mx-4 self-stretch">
         <Controller
           control={control}
@@ -114,9 +113,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           name="birthDate"
         />
       </View>
-      <View className="py-1 mt-6 flex items-center">
-        <Text className="font-bold text-xl mb-2">CURRENTLY BASED OUT ON</Text>
-      </View>
+      <ProfileSetupHeader title="CURRENTLY BASED OUT ON" />
       <FormInput
         control={control}
         field="location"
@@ -124,18 +121,16 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         inputClassName="px-3 border-b-2 rounded-b-lg"
         inputContainerStyle={useTailwind({ className: 'border-0 px-2.5' }) as ViewStyle}
       />
-      <View className="px-2 mb-2">
-        <View className="border-b-2 mx-2" />
-      </View>
+      <LineBreak />
       <Text className="text-2xl mb-6 ml-6 text-[#5a5a5b]">I choose to fund projects because:</Text>
       {fundReasonProps.map((props) => (
-        <FormSwitch {...props} />
+        <FormSwitch key={props.description} {...props} />
       ))}
       <View className="py-1 self-stretch">
-        <Pressable className="flex items-center px-3 py-1" onPress={(e) => onSubmit(getValues(), e)}>
-          <Text className="text-lg">Next</Text>
+        <Pressable className="flex items-end px-3 py-1" onPress={(e) => onSubmit(getValues(), e)}>
+          <Text className="text-lg mr-5">Next {'-->'}</Text>
         </Pressable>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }

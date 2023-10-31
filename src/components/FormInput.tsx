@@ -6,7 +6,7 @@ import { Input } from 'react-native-elements';
 type Props<T extends FieldValues> = {
   control: Control<T> | undefined;
   field: Path<T>;
-  className?: string;
+  outerClassName?: string;
   inputClassName?: string;
   inputContainerStyle?: ViewStyle;
   placeholder?: string;
@@ -16,14 +16,14 @@ type Props<T extends FieldValues> = {
 export default function FormInput<T extends FieldValues>({
   control,
   field,
-  className,
-  inputClassName,
-  inputContainerStyle,
-  placeholder,
+  outerClassName = '',
+  inputClassName = '',
+  inputContainerStyle = undefined,
+  placeholder = '',
   rules = { required: true, minLength: 2 },
 }: Props<T>) {
   return (
-    <View className={className}>
+    <View className={outerClassName}>
       <Controller
         control={control}
         rules={rules}
