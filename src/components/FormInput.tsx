@@ -3,6 +3,7 @@ import { Control, Controller, FieldValues, Path, RegisterOptions } from 'react-h
 import { ViewStyle } from 'react-native';
 import { View } from 'react-native';
 import { Input } from 'react-native-elements';
+import InfoIcon from './InfoIcon';
 
 type Props<T extends FieldValues> = {
   control: Control<T> | undefined;
@@ -10,6 +11,7 @@ type Props<T extends FieldValues> = {
   outerClassName?: string;
   inputClassName?: string;
   inputContainerClassName?: string;
+  iconClassName?: string;
   placeholder?: string;
   rules?: Omit<RegisterOptions<T, Path<T>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'> | undefined;
   error?: string;
@@ -21,6 +23,7 @@ export default function FormInput<T extends FieldValues>({
   outerClassName = '',
   inputClassName = '',
   inputContainerClassName = '',
+  iconClassName = 'absolute top-0 right-0',
   placeholder = '',
   rules = { required: true, minLength: 2 },
   error,
@@ -41,9 +44,8 @@ export default function FormInput<T extends FieldValues>({
             inputContainerStyle={useTailwind({ className: inputContainerClassName }) as ViewStyle}
             placeholder={placeholder}
             autoCorrect={false}
-            rightIcon={{}}
-            errorStyle={useTailwind({ className: 'absolute top-10 left-3' }) as ViewStyle}
-            errorMessage={error}
+            rightIconContainerStyle={useTailwind({ className: iconClassName }) as ViewStyle}
+            rightIcon={error ? <InfoIcon message={error} isError /> : undefined}
           />
         )}
         name={field}

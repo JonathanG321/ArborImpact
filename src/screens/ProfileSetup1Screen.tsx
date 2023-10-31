@@ -19,9 +19,9 @@ export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Pro
 
 const schema = z
   .object({
-    firstName: z.string().min(2, 'First Name must be at least 2 characters long').default(''),
-    lastName: z.string().min(2, 'Last Name must be at least 2 characters long').default(''),
-    location: z.string().min(2, 'Location must be at least 2 characters long').default(''),
+    firstName: z.string().min(2, 'Too Short!').default(''),
+    lastName: z.string().min(2, 'Too Short!').default(''),
+    location: z.string().min(2, 'Too Short!').default(''),
     birthDate: z.date(),
     wantDifferenceWorld: z.boolean().default(false),
     wantDiversifyPortfolio: z.boolean().default(false),
@@ -88,6 +88,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           field="lastName"
           placeholder="Last Name"
           inputClassName="px-3 border-b-2 rounded-br-lg"
+          iconClassName="absolute top-0 right-2"
           inputContainerClassName="border-0 pr-1"
           error={formErrors.lastName?.message}
         />
@@ -121,6 +122,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         placeholder="Location"
         inputClassName="px-3 border-b-2 rounded-b-lg"
         inputContainerClassName="border-0 px-2.5"
+        iconClassName="absolute top-0 right-3"
         error={formErrors.location?.message}
       />
       <LineBreak />
