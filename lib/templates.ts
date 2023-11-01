@@ -29,3 +29,5 @@ export const SDGs = {
   SDG16: require(`../assets/sdg/SDG16.png`),
   SDG17: require(`../assets/sdg/SDG17.png`),
 };
+
+export const includedSDGs = [1, 4, 12, 13, 15];

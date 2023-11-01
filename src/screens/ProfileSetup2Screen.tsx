@@ -12,6 +12,7 @@ import { supabase } from '../../supabase/supabase';
 import SDGInput from '../components/SDGInput';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
 import { ProfileContext } from '../contexts/ProfileContext';
+import { includedSDGs } from '../../lib/templates';
 
 export type ProfileSetup2Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 2', 'Main'>;
 
@@ -62,7 +63,7 @@ export default function ProfileSetup2Screen({ navigation: { goBack, replace } }:
 
   return (
     <ScreenContainer>
-      <View className="flex justify-center items-center">
+      <View className="flex items-center h-full">
         <View className="flex flex-row justify-center">
           <Text className="text-2xl mb-6 text-[#5a5a5b] text-center mx-5">
             Select the SDGs that you're interested in
@@ -70,14 +71,15 @@ export default function ProfileSetup2Screen({ navigation: { goBack, replace } }:
         </View>
         <View className="flex flex-row justify-center items-center w-11/12 flex-wrap">
           {Array.from({ length: 17 }).map((_, index) => {
+            if (!includedSDGs.includes(index + 1)) return;
             return <SDGInput key={index} index={index + 1} setSDGValue={setValue} getValues={getValues} />;
           })}
         </View>
-      </View>
-      <View className="py-1 self-stretch">
-        <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit)}>
-          <Text className="text-lg mr-5">Done</Text>
-        </Pressable>
+        <View className="self-stretch absolute bottom-10 right-6">
+          <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit)}>
+            <Text className="text-lg mr-5">Done</Text>
+          </Pressable>
+        </View>
       </View>
     </ScreenContainer>
   );

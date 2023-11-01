@@ -27,9 +27,6 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
 
     if (error) {
       Alert.alert(error.message);
-      console.error(error);
-      setIsLoading(false);
-      return;
     }
     setIsLoading(false);
   }
