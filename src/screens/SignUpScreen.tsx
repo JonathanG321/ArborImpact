@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { supabase } from '../../supabase/supabase';
 import { Input } from 'react-native-elements';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import ScreenContainer from '../components/ScreenContainer';
+import AuthButton from '../components/AuthButton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign Up', 'Main'>;
 
@@ -36,7 +37,7 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <Input
           label="Email"
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={setEmail}
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
@@ -46,29 +47,15 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <Input
           label="Password"
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={setPassword}
           value={password}
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
         />
       </View>
-      <View className="py-1 self-stretch">
-        <Pressable
-          className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={() => signUpWithEmail()}
-        >
-          <Text className="text-white text-lg">Sign up</Text>
-        </Pressable>
-      </View>
-      <View className="mt-5 py-1 self-stretch">
-        <Pressable
-          className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={() => replace('Sign In')}
-        >
-          <Text className="text-white text-lg">Sign In Instead</Text>
-        </Pressable>
-      </View>
+      <AuthButton text="Sign Up" onClick={signUpWithEmail} />
+      <AuthButton text="Sign In Instead" onClick={() => replace('Sign In')} />
     </ScreenContainer>
   );
 }
