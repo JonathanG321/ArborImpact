@@ -7,19 +7,22 @@ import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import ScreenContainer from '../components/ScreenContainer';
 import AuthButton from '../components/AuthButton';
+import { signal } from '@preact/signals-core';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign Up', 'Main'>;
 
 export default function SignUpScreen({ navigation: { replace } }: Props) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const email = signal('');
+  const password = signal('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const { setIsLoading } = useContext(LoadingContext);
 
   async function signUpWithEmail() {
     setIsLoading(true);
     const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email: email.value,
+      password: password.value,
     });
 
     if (error) {
@@ -37,8 +40,8 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <Input
           label="Email"
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-          onChangeText={setEmail}
-          value={email}
+          onChangeText={(newEmail) => (email.value = newEmail)}
+          value={email.value}
           placeholder="email@address.com"
           autoCapitalize={'none'}
         />
@@ -47,8 +50,8 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <Input
           label="Password"
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
-          onChangeText={setPassword}
-          value={password}
+          onChangeText={(newPassword) => (password.value = newPassword)}
+          value={password.value}
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
