@@ -29,7 +29,7 @@ export default function MainNavigator() {
             component={ProfileSetup1Screen}
           />
           <Stack.Screen
-            options={{ title: 'Profile Setup 2/2' }}
+            options={{ title: 'Profile Setup 2/2', headerBackTitle: 'Back' }}
             name="Profile Setup 2"
             component={ProfileSetup2Screen}
           />

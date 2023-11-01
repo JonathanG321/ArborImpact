@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../lib/types';
 import { useContext } from 'react';
