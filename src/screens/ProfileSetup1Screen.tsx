@@ -39,7 +39,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
     handleSubmit,
     setError,
     formState: { errors: formErrors },
-  } = useForm<Exclude<Profile, 'svg'>>({ resolver: zodResolver(schema), defaultValues: emptyProfile });
+  } = useForm<Exclude<Profile, 'sdg'>>({ resolver: zodResolver(schema), defaultValues: emptyProfile });
 
   const onSubmit: SubmitHandler<Profile> = (form) => {
     console.log(form);

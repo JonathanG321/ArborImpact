@@ -24,5 +24,5 @@ export type Profile = {
   wantDiversifyPortfolio: boolean;
   wantTaxIncentives: boolean;
   wantSpecificCause: boolean;
-  svg: string[];
+  sdg: string[];
 };
