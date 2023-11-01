@@ -34,7 +34,7 @@ export default function SDGInput({ index, setSDGValue, getValues }: SDGInputProp
   return (
     <Pressable onPress={() => onPress(getValues().sdg, sdg, index)}>
       <View className={cn('m-1 border-8 border-gray-500', { 'border-yellow-600': pressed })}>
-        <Image source={SDGs[sdg]} className="w-16 h-16" PlaceholderContent={<ActivityIndicator />} />
+        <Image source={SDGs[sdg]} className="w-20 h-20" PlaceholderContent={<ActivityIndicator />} />
       </View>
     </Pressable>
   );

@@ -1,16 +1,17 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { Text } from 'react-native-elements';
-import { Alert, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
 import { Profile, RootStackParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import { SessionContext } from '../contexts/SessionContext';
 import { supabase } from '../../supabase/supabase';
 import SDGInput from '../components/SDGInput';
+import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
+import { ProfileContext } from '../contexts/ProfileContext';
 
 export type ProfileSetup2Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 2', 'Main'>;
 
@@ -20,8 +21,9 @@ const schema = z
   })
   .required();
 
-export default function ProfileSetup2Screen({ navigation: { navigate, goBack, replace } }: ProfileSetup2Props) {
+export default function ProfileSetup2Screen({ navigation: { goBack, replace } }: ProfileSetup2Props) {
   const { profileSetup } = useContext(ProfileSetupContext);
+  const { setProfile } = useContext(ProfileContext);
   const { session } = useContext(SessionContext);
 
   if (!profileSetup) {
@@ -35,10 +37,26 @@ export default function ProfileSetup2Screen({ navigation: { navigate, goBack, re
     defaultValues: { sdg: [] },
   });
 
-  const onSubmit: SubmitHandler<Pick<Profile, 'sdg'>> = ({ sdg }) => {
+  const onSubmit: SubmitHandler<Pick<Profile, 'sdg'>> = async ({ sdg }) => {
     if (!session) return;
-    const newProfile = { ...profileSetup, sdg, id: session.user.id };
-    supabase.from('profiles').upsert(newProfile);
+    const newProfile = {
+      birth_date: profileSetup.birthDate,
+      first_name: profileSetup.firstName,
+      last_name: profileSetup.lastName,
+      location: profileSetup.location,
+      want_difference_world: profileSetup.wantDifferenceWorld,
+      want_diversify_portfolio: profileSetup.wantDiversifyPortfolio,
+      want_specific_cause: profileSetup.wantSpecificCause,
+      want_tax_incentives: profileSetup.wantTaxIncentives,
+      sdg,
+      id: session.user.id,
+    };
+    const { error } = await supabase.from('profiles').upsert(newProfile);
+    if (error) {
+      Alert.alert('An error has occurred. Please try again later');
+      return;
+    }
+    setProfile({ ...profileSetup, sdg });
     replace('Home', { session });
   };
 
@@ -55,6 +73,11 @@ export default function ProfileSetup2Screen({ navigation: { navigate, goBack, re
             return <SDGInput key={index} index={index + 1} setSDGValue={setValue} getValues={getValues} />;
           })}
         </View>
+      </View>
+      <View className="py-1 self-stretch">
+        <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit)}>
+          <Text className="text-lg mr-5">Done</Text>
+        </Pressable>
       </View>
     </ScreenContainer>
   );
