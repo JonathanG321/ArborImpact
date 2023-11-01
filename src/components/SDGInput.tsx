@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Image } from 'react-native-elements';
 import { SDGs } from '../../lib/templates';
+import { cn } from '../../lib/utils';
 
 type SDGInputProps = {
   index: number;
@@ -32,8 +33,8 @@ export default function SDGInput({ index, setSDGValue, getValues }: SDGInputProp
 
   return (
     <Pressable onPress={() => onPress(getValues().sdg, sdg, index)}>
-      <View className={`m-1 border-8 ${pressed ? 'border-yellow-600' : 'border-gray-500'}`}>
-        <Image source={SDGs[sdg]} style={{ width: 70, height: 70 }} PlaceholderContent={<ActivityIndicator />} />
+      <View className={cn('m-1 border-8 border-gray-500', { 'border-yellow-600': pressed })}>
+        <Image source={SDGs[sdg]} className="w-16 h-16" PlaceholderContent={<ActivityIndicator />} />
       </View>
     </Pressable>
   );

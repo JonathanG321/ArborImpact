@@ -4,6 +4,7 @@ import { ViewStyle } from 'react-native';
 import { View } from 'react-native';
 import { Input } from 'react-native-elements';
 import InfoIcon from './InfoIcon';
+import { cn } from '../../lib/utils';
 
 type Props<T extends FieldValues> = {
   control: Control<T> | undefined;
@@ -23,14 +24,11 @@ export default function FormInput<T extends FieldValues>({
   outerClassName = '',
   inputClassName = '',
   inputContainerClassName = '',
-  iconClassName = 'absolute top-0 right-0',
+  iconClassName = '',
   placeholder = '',
   rules = { required: true, minLength: 2 },
   error,
 }: Props<T>) {
-  if (!!error && inputContainerClassName) {
-    inputContainerClassName = inputContainerClassName + ' text-[#d90000]';
-  }
   return (
     <View className={outerClassName}>
       <Controller
@@ -40,11 +38,15 @@ export default function FormInput<T extends FieldValues>({
           <Input
             {...field}
             onChangeText={field.onChange}
-            className={inputClassName}
-            inputContainerStyle={useTailwind({ className: inputContainerClassName }) as ViewStyle}
+            className={cn('px-3 border-b-2', inputClassName)}
+            inputContainerStyle={
+              useTailwind({ className: cn(inputContainerClassName, { 'text-[#d90000]': error }) }) as ViewStyle
+            }
             placeholder={placeholder}
             autoCorrect={false}
-            rightIconContainerStyle={useTailwind({ className: iconClassName }) as ViewStyle}
+            rightIconContainerStyle={
+              useTailwind({ className: cn('absolute top-0 right-0', iconClassName) }) as ViewStyle
+            }
             rightIcon={error ? <InfoIcon message={error} isError /> : undefined}
           />
         )}

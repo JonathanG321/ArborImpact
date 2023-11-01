@@ -79,7 +79,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           outerClassName="w-1/2"
           field="firstName"
           placeholder="First Name"
-          inputClassName="px-3 border-b-2 rounded-bl-lg"
+          inputClassName="rounded-bl-lg"
           inputContainerClassName="border-0 pl-1"
           error={formErrors.firstName?.message}
         />
@@ -88,8 +88,8 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           outerClassName="w-1/2"
           field="lastName"
           placeholder="Last Name"
-          inputClassName="px-3 border-b-2 rounded-br-lg"
-          iconClassName="absolute top-0 right-2"
+          inputClassName="rounded-br-lg"
+          iconClassName="right-2"
           inputContainerClassName="border-0 pr-1"
           error={formErrors.lastName?.message}
         />
@@ -121,9 +121,9 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         control={control}
         field="location"
         placeholder="Location"
-        inputClassName="px-3 border-b-2 rounded-b-lg"
+        inputClassName="rounded-b-lg"
         inputContainerClassName="border-0 px-2.5"
-        iconClassName="absolute top-0 right-3"
+        iconClassName="right-3"
         error={formErrors.location?.message}
       />
       <LineBreak />
