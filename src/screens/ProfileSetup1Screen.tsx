@@ -4,17 +4,15 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTailwind } from 'nativewind';
 import { z } from 'zod';
-import { SubmitHandler, useForm, Controller, FieldErrors, SubmitErrorHandler } from 'react-hook-form';
+import { SubmitHandler, useForm, Controller, SubmitErrorHandler } from 'react-hook-form';
 import DatePicker from '../components/DatePicker';
-import { FormSwitchProps, Profile, RootStackParamList } from '../../lib/types';
+import { Profile, RootStackParamList } from '../../lib/types';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
-import FormSwitch from '../components/FormSwitch';
 import FormInput from '../components/FormInput';
 import { emptyProfile } from '../../lib/templates';
 import ProfileSetupHeader from '../components/ProfileSetupHeader';
-import LineBreak from '../components/LineBreak';
 import ScreenContainer from '../components/ScreenContainer';
-import Avatar from '../components/Avatar';
+import AvatarSelect from '../components/AvatarSelect';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 
@@ -135,11 +133,11 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         <Controller
           control={control}
           rules={{ required: true }}
-          render={({ field: { onChange, value } }) => <Avatar image={value} onSelect={onChange} />}
+          render={({ field: { onChange, value } }) => <AvatarSelect image={value} onSelect={onChange} />}
           name="avatarImage"
         />
       </View>
-      <View className="py-1 self-stretch">
+      <View className="self-stretch absolute bottom-10 right-6">
         <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit, onError)}>
           <Text className="text-lg mr-5">Next {'-->'}</Text>
         </Pressable>

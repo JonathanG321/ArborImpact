@@ -58,7 +58,7 @@ export default function ProfileSetup2Screen({ navigation: { navigate } }: Profil
       {fundReasonProps.map((props) => (
         <FormSwitch key={props.description} {...props} />
       ))}
-      <View className="py-1 self-stretch">
+      <View className="self-stretch absolute bottom-10 right-6">
         <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit)}>
           <Text className="text-lg mr-5">Next {'-->'}</Text>
         </Pressable>
