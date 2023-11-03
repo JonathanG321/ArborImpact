@@ -11,6 +11,7 @@ import ProfileSetup3Screen from '../screens/ProfileSetup3Screen';
 import { SessionContext } from '../contexts/SessionContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import { LoadingContext } from '../contexts/LoadingContext';
+import ProfileScreen from '../screens/ProfileScreen';
 
 export default function MainNavigator() {
   const { session } = useContext(SessionContext);
@@ -32,7 +33,10 @@ export default function MainNavigator() {
       {session ? (
         <>
           {profile ? (
-            <Stack.Screen name="Home" component={HomeScreen} initialParams={{ session }} />
+            <>
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="Home" component={HomeScreen} />
+            </>
           ) : (
             <>
               <Stack.Screen
@@ -50,8 +54,7 @@ export default function MainNavigator() {
                 name="Profile Setup 3"
                 component={ProfileSetup3Screen}
               />
-              {/* <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="Settings" component={SettingsScreen} /> */}
+              {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
             </>
           )}
         </>
