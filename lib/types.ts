@@ -6,12 +6,15 @@ export type FormSwitchProps<T extends FieldValues> = {
   control: Control<T> | undefined;
   field: Path<T>;
   description: string;
+  icon: string;
+  type?: string;
 };
 
 export type RootStackParamList = {
   Home: { session: Session };
   'Profile Setup 1': undefined;
   'Profile Setup 2': undefined;
+  'Profile Setup 3': undefined;
   'Sign In': undefined;
   'Sign Up': undefined;
 };

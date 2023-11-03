@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import { RootStackParamList } from '../../lib/types';
 import ProfileSetup1Screen from '../screens/ProfileSetup1Screen';
 import ProfileSetup2Screen from '../screens/ProfileSetup2Screen';
+import ProfileSetup3Screen from '../screens/ProfileSetup3Screen';
 import { SessionContext } from '../contexts/SessionContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import { LoadingContext } from '../contexts/LoadingContext';
@@ -26,8 +27,6 @@ export default function MainNavigator() {
 
   const Stack = createNativeStackNavigator<RootStackParamList>();
 
-  console.log({ profile: !!profile, session: !!session });
-
   return (
     <Stack.Navigator id="Main">
       {session ? (
@@ -37,14 +36,19 @@ export default function MainNavigator() {
           ) : (
             <>
               <Stack.Screen
-                options={{ title: 'Profile Setup 1/2' }}
+                options={{ title: 'Profile Setup 1/3' }}
                 name="Profile Setup 1"
                 component={ProfileSetup1Screen}
               />
               <Stack.Screen
-                options={{ title: 'Profile Setup 2/2', headerBackTitle: 'Back' }}
+                options={{ title: 'Profile Setup 2/3', headerBackTitle: 'Back' }}
                 name="Profile Setup 2"
                 component={ProfileSetup2Screen}
+              />
+              <Stack.Screen
+                options={{ title: 'Profile Setup 3/3', headerBackTitle: 'Back' }}
+                name="Profile Setup 3"
+                component={ProfileSetup3Screen}
               />
               {/* <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="Settings" component={SettingsScreen} /> */}

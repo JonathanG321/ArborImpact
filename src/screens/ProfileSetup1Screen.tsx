@@ -38,10 +38,6 @@ const schema = z
         exif: z.record(z.string()).optional().nullable(),
       })
       .required(),
-    wantDifferenceWorld: z.boolean().default(false),
-    wantDiversifyPortfolio: z.boolean().default(false),
-    wantSpecificCause: z.boolean().default(false),
-    wantTaxIncentives: z.boolean().default(false),
   })
   .required();
 
@@ -65,7 +61,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
     Object.keys(err).map((key) => {
       if (key === 'root') return;
       const profileKey = key as keyof Profile;
-      const errors = {...err, avatarImage: err.avatarImage?.uri}
+      const errors = { ...err, avatarImage: err.avatarImage?.uri };
       setError(profileKey, errors[profileKey] || {});
     });
     Alert.alert('Some fields contain Errors. Please fix them before moving on.');
@@ -77,13 +73,6 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       ? `${birthDate.getMonth() + 1} / ${birthDate.toDateString().split(' ')[2]} / ${birthDate.getFullYear()}`
       : 'No value Selected';
   };
-
-  const fundReasonProps: FormSwitchProps<Profile>[] = [
-    { field: 'wantDifferenceWorld', description: 'I WANT TO MAKE A DIFFERENCE IN THE WORLD', control },
-    { field: 'wantDiversifyPortfolio', description: 'I WANT TO DIVERSIFY MY PORTFOLIO', control },
-    { field: 'wantTaxIncentives', description: 'I AM INTERESTED IN TAX INCENTIVES', control },
-    { field: 'wantSpecificCause', description: 'I AM PASSIONATE ABOUT A SPECIFIC CAUSE', control },
-  ];
 
   return (
     <ScreenContainer>
@@ -146,15 +135,10 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         <Controller
           control={control}
           rules={{ required: true }}
-          render={({ field: { onChange, value } }) => <Avatar size={200} image={value} onSelect={onChange} />}
+          render={({ field: { onChange, value } }) => <Avatar image={value} onSelect={onChange} />}
           name="avatarImage"
         />
       </View>
-      <LineBreak />
-      <Text className="text-2xl mb-6 ml-6 text-[#5a5a5b]">I choose to fund projects because:</Text>
-      {fundReasonProps.map((props) => (
-        <FormSwitch key={props.description} {...props} />
-      ))}
       <View className="py-1 self-stretch">
         <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit, onError)}>
           <Text className="text-lg mr-5">Next {'-->'}</Text>
@@ -163,4 +147,3 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
     </ScreenContainer>
   );
 }
-type d = keyof FieldErrors<Profile>;
