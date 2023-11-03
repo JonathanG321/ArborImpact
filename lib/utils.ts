@@ -6,9 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function downloadImage(path: string, bucket: string = 'avatars') {
+export async function downloadImage(path: string, setResult: (result: string) => void, bucket: string = 'avatars') {
   try {
     const { data, error } = await supabase.storage.from(bucket).download(path);
+
     if (error) {
       throw error;
     }
@@ -16,7 +17,7 @@ export async function downloadImage(path: string, bucket: string = 'avatars') {
     const fr = new FileReader();
     fr.readAsDataURL(data);
     fr.onload = () => {
-      return fr.result as string;
+      setResult(fr.result as string);
     };
   } catch (error) {
     if (error instanceof Error) {
