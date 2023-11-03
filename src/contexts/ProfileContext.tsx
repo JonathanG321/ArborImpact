@@ -1,18 +1,21 @@
 import { Session } from '@supabase/supabase-js';
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { LoadingContext } from './LoadingContext';
 import { Alert } from 'react-native';
-import { SessionContext } from './SessionContext';
 import { Profile } from '../../lib/types';
 
-export const ProfileContext = createContext<{ profile: Profile | null; setProfile: (profile: Profile) => void }>({
+export const ProfileContext = createContext<{
+  profile: Profile | null;
+  setProfile: (profile: Profile | null) => void;
+  getProfile: (session: Session | null) => void;
+}>({
   profile: null,
   setProfile: () => undefined,
+  getProfile: () => undefined,
 });
 export function ProfileContextProvider({ children }: PropsWithChildren) {
   const { setIsLoading } = useContext(LoadingContext);
-  const { session } = useContext(SessionContext);
   const [profile, setProfile] = useState<Profile | null>(null);
 
   async function getProfile(session: Session | null) {
@@ -30,9 +33,5 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
     }
   }
 
-  useEffect(() => {
-    getProfile(session); // TODO: Test this
-  }, []);
-
-  return <ProfileContext.Provider value={{ profile, setProfile }}>{children}</ProfileContext.Provider>;
+  return <ProfileContext.Provider value={{ profile, setProfile, getProfile }}>{children}</ProfileContext.Provider>;
 }

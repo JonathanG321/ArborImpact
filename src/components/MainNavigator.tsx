@@ -1,3 +1,4 @@
+import { useContext, useEffect } from 'react';
 import 'react-native-url-polyfill/auto';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from '../screens/SignInScreen';
@@ -6,35 +7,49 @@ import HomeScreen from '../screens/HomeScreen';
 import { RootStackParamList } from '../../lib/types';
 import ProfileSetup1Screen from '../screens/ProfileSetup1Screen';
 import ProfileSetup2Screen from '../screens/ProfileSetup2Screen';
-import { useContext } from 'react';
 import { SessionContext } from '../contexts/SessionContext';
 import { ProfileContext } from '../contexts/ProfileContext';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 export default function MainNavigator() {
   const { session } = useContext(SessionContext);
-  const { profile } = useContext(ProfileContext);
+  const { profile, getProfile } = useContext(ProfileContext);
+  const { isLoading } = useContext(LoadingContext);
+
+  useEffect(() => {
+    getProfile(session);
+  }, [session]);
+
+  if (isLoading) {
+    return null;
+  }
 
   const Stack = createNativeStackNavigator<RootStackParamList>();
 
-  const initialRoute = !!profile ? 'Home' : 'Profile Setup 1';
+  console.log({ profile: !!profile, session: !!session });
 
   return (
-    <Stack.Navigator initialRouteName={initialRoute} id="Main">
+    <Stack.Navigator id="Main">
       {session ? (
         <>
-          <Stack.Screen name="Home" component={HomeScreen} initialParams={{ session }} />
-          <Stack.Screen
-            options={{ title: 'Profile Setup 1/2' }}
-            name="Profile Setup 1"
-            component={ProfileSetup1Screen}
-          />
-          <Stack.Screen
-            options={{ title: 'Profile Setup 2/2', headerBackTitle: 'Back' }}
-            name="Profile Setup 2"
-            component={ProfileSetup2Screen}
-          />
-          {/* <Stack.Screen name="Profile" component={ProfileScreen} />
+          {profile ? (
+            <Stack.Screen name="Home" component={HomeScreen} initialParams={{ session }} />
+          ) : (
+            <>
+              <Stack.Screen
+                options={{ title: 'Profile Setup 1/2' }}
+                name="Profile Setup 1"
+                component={ProfileSetup1Screen}
+              />
+              <Stack.Screen
+                options={{ title: 'Profile Setup 2/2', headerBackTitle: 'Back' }}
+                name="Profile Setup 2"
+                component={ProfileSetup2Screen}
+              />
+              {/* <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="Settings" component={SettingsScreen} /> */}
+            </>
+          )}
         </>
       ) : (
         <>

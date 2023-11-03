@@ -22,8 +22,10 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
-    setIsLoading(false);
+    if (error) {
+      Alert.alert(error.message);
+      setIsLoading(false);
+    }
   }
 
   return (

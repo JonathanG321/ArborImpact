@@ -87,7 +87,6 @@ export default function ProfileSetup2Screen({ navigation: { goBack, reset } }: P
       return;
     }
     setProfile({ ...profileSetup, sdg });
-    reset({ index: 0, routes: [{ name: 'Home', params: { session } }] });
     setIsLoading(false);
   };
 
