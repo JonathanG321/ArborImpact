@@ -1,5 +1,6 @@
 import 'react-native-url-polyfill/auto';
 import { NavigationContainer } from '@react-navigation/native';
+// import { useFonts } from 'expo-font';
 import { LoadingContextProvider } from './src/contexts/LoadingContext';
 import { SessionContextProvider } from './src/contexts/SessionContext';
 import { ProfileContextProvider } from './src/contexts/ProfileContext';
@@ -7,6 +8,14 @@ import MainNavigator from './src/components/MainNavigator';
 import { ProfileSetupContextProvider } from './src/contexts/ProfileSetupContext';
 
 export default function App() {
+  // const [loaded] = useFonts({
+  //   BebasNeue: require('./assets/fonts/BebasNeueRegular.ttf'),
+  // });
+
+  // if (!loaded) {
+  //   return null;
+  // }
+
   return (
     <NavigationContainer>
       <LoadingContextProvider>

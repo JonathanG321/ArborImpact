@@ -15,9 +15,11 @@ export default {
     },
     assetBundlePatterns: ['**/*'],
     ios: {
+      bundleIdentifier: 'io.arbor.client',
       supportsTablet: true,
     },
     android: {
+      package: 'io.arbor.client',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#ffffff',
