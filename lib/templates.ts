@@ -1,8 +1,11 @@
-export const emptyProfile = {
+import { Profile } from './types';
+
+export const emptyProfile: Profile = {
   birthDate: new Date(),
   firstName: '',
   lastName: '',
   location: '',
+  avatarImage: null,
   wantDifferenceWorld: false,
   wantDiversifyPortfolio: false,
   wantSpecificCause: false,

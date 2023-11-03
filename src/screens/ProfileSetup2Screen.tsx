@@ -13,6 +13,7 @@ import SDGInput from '../components/SDGInput';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import { includedSDGs } from '../../lib/templates';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 export type ProfileSetup2Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 2', 'Main'>;
 
@@ -22,7 +23,8 @@ const schema = z
   })
   .required();
 
-export default function ProfileSetup2Screen({ navigation: { goBack, replace } }: ProfileSetup2Props) {
+export default function ProfileSetup2Screen({ navigation: { goBack, reset } }: ProfileSetup2Props) {
+  const { setIsLoading } = useContext(LoadingContext);
   const { profileSetup } = useContext(ProfileSetupContext);
   const { setProfile } = useContext(ProfileContext);
   const { session } = useContext(SessionContext);
@@ -40,6 +42,25 @@ export default function ProfileSetup2Screen({ navigation: { goBack, replace } }:
 
   const onSubmit: SubmitHandler<Pick<Profile, 'sdg'>> = async ({ sdg }) => {
     if (!session) return;
+    if (!profileSetup.avatarImage) {
+      throw new Error('Avatar Image Does Not Exist!');
+    }
+    setIsLoading(true);
+
+    const file = profileSetup.avatarImage;
+
+    const photo = {
+      uri: file.uri,
+      type: file.type,
+      name: file.fileName,
+    };
+
+    const formData = new FormData();
+    formData.append('file', photo as any);
+
+    const fileExt = file.fileName?.split('.').pop();
+    const filePath = `${Math.random()}.${fileExt}`;
+
     const newProfile = {
       birth_date: profileSetup.birthDate,
       first_name: profileSetup.firstName,
@@ -49,16 +70,25 @@ export default function ProfileSetup2Screen({ navigation: { goBack, replace } }:
       want_diversify_portfolio: profileSetup.wantDiversifyPortfolio,
       want_specific_cause: profileSetup.wantSpecificCause,
       want_tax_incentives: profileSetup.wantTaxIncentives,
+      avatar_url: filePath,
       sdg,
       id: session.user.id,
     };
-    const { error } = await supabase.from('profiles').upsert(newProfile);
+    const [{ error }, { error: avatarError }] = await Promise.all([
+      supabase.from('profiles').upsert(newProfile),
+      supabase.storage.from('avatars').upload(filePath, formData),
+    ]);
+    if (avatarError) {
+      Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
+      return;
+    }
     if (error) {
       Alert.alert('An error has occurred. Please try again later');
       return;
     }
     setProfile({ ...profileSetup, sdg });
-    replace('Home', { session });
+    reset({ index: 0, routes: [{ name: 'Home', params: { session } }] });
+    setIsLoading(false);
   };
 
   return (

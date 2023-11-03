@@ -1,4 +1,5 @@
 import { Session } from '@supabase/supabase-js';
+import { ImagePickerAsset } from 'expo-image-picker';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
 export type FormSwitchProps<T extends FieldValues> = {
@@ -20,6 +21,7 @@ export type Profile = {
   lastName: string;
   birthDate: Date;
   location: string;
+  avatarImage: ImagePickerAsset | null;
   wantDifferenceWorld: boolean;
   wantDiversifyPortfolio: boolean;
   wantTaxIncentives: boolean;

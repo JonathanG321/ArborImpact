@@ -14,6 +14,7 @@ import { emptyProfile } from '../../lib/templates';
 import ProfileSetupHeader from '../components/ProfileSetupHeader';
 import LineBreak from '../components/LineBreak';
 import ScreenContainer from '../components/ScreenContainer';
+import Avatar from '../components/Avatar';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 
@@ -23,6 +24,20 @@ const schema = z
     lastName: z.string().min(2, 'Too Short!').default(''),
     location: z.string().min(2, 'Too Short!').default(''),
     birthDate: z.date(),
+    avatarImage: z
+      .object({
+        height: z.number(),
+        uri: z.string(),
+        width: z.number(),
+        assetId: z.string().optional().nullable(),
+        base64: z.string().optional().nullable(),
+        duration: z.number().optional().nullable(),
+        fileName: z.string().optional().nullable(),
+        fileSize: z.number().optional(),
+        type: z.string().optional(),
+        exif: z.record(z.string()).optional().nullable(),
+      })
+      .required(),
     wantDifferenceWorld: z.boolean().default(false),
     wantDiversifyPortfolio: z.boolean().default(false),
     wantSpecificCause: z.boolean().default(false),
@@ -46,10 +61,11 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
     navigate('Profile Setup 2');
   };
 
-  const onError: SubmitErrorHandler<Profile> = async (errors) => {
-    Object.keys(errors).map((key) => {
+  const onError: SubmitErrorHandler<Profile> = async (err) => {
+    Object.keys(err).map((key) => {
       if (key === 'root') return;
       const profileKey = key as keyof Profile;
+      const errors = {...err, avatarImage: err.avatarImage?.uri}
       setError(profileKey, errors[profileKey] || {});
     });
     Alert.alert('Some fields contain Errors. Please fix them before moving on.');
@@ -125,6 +141,15 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         iconClassName="right-3"
         error={formErrors.location?.message}
       />
+      <ProfileSetupHeader title="THIS IS ME!" />
+      <View>
+        <Controller
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, value } }) => <Avatar size={200} image={value} onSelect={onChange} />}
+          name="avatarImage"
+        />
+      </View>
       <LineBreak />
       <Text className="text-2xl mb-6 ml-6 text-[#5a5a5b]">I choose to fund projects because:</Text>
       {fundReasonProps.map((props) => (
