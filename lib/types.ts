@@ -1,14 +1,19 @@
-import { Session } from '@supabase/supabase-js';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { Control, FieldValues, Path } from 'react-hook-form';
+
+export type WantsItemProps = {
+  description: string;
+  icon: string;
+  type?: string;
+  descriptionClassName?: string;
+  iconSize?: number;
+  iconColor?: string;
+};
 
 export type FormSwitchProps<T extends FieldValues> = {
   control: Control<T> | undefined;
   field: Path<T>;
-  description: string;
-  icon: string;
-  type?: string;
-};
+} & WantsItemProps;
 
 export type RootStackParamList = {
   Home: undefined;
