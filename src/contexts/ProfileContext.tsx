@@ -18,19 +18,22 @@ export const ProfileContext = createContext<{
 export function ProfileContextProvider({ children }: PropsWithChildren) {
   const { setIsLoading } = useContext(LoadingContext);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [newImage, setNewImage] = useState<string | null>(null);
 
   async function getProfile(session: Session | null) {
     try {
       setIsLoading(true);
       if (session && !session?.user) throw new Error('No user on the session!');
+      if (!session) {
+        setIsLoading(false);
+        return;
+      }
       const { error, status, data } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
       if (error && status !== 406) throw error;
       if (error) return;
       const dbProfile = data as DBProfile;
-      await downloadImage((data as DBProfile).avatar_url, setNewImage);
+      const image = await downloadImage((data as DBProfile).avatar_url);
       const profile: Profile = {
-        avatarImage: newImage ? { uri: newImage, width: 200, height: 200 } : null,
+        avatarImage: image ? { uri: image, width: 200, height: 200 } : null,
         birthDate: dbProfile.birth_date,
         firstName: dbProfile.first_name,
         lastName: dbProfile.last_name,
