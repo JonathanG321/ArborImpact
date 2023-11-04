@@ -4,21 +4,24 @@ import { cn } from '../../lib/utils';
 
 interface Props {
   image?: ImagePicker.ImagePickerAsset | null;
-  className?: string;
+  classNames?: string;
 }
 
-function Avatar({ image, className }: Props) {
+function Avatar({ image, classNames }: Props) {
   return (
     <>
       {!!image ? (
         <Image
           source={image}
           accessibilityLabel="Avatar"
-          className={cn('rounded-md overflow-hidden max-w-full object-cover pt-0 w-48 h-48', className)}
+          className={cn('rounded-md overflow-hidden max-w-full object-cover pt-0 w-48 h-48', classNames)}
         />
       ) : (
         <View
-          className={cn('rounded-md overflow-hidden max-w-full bg-[#333] border border-[#bcbcbc] w-48 h-48', className)}
+          className={cn(
+            'rounded-md overflow-hidden max-w-full bg-[#333] border border-[#bcbcbc] w-48 h-48',
+            classNames
+          )}
         />
       )}
     </>
