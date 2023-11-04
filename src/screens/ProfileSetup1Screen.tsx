@@ -10,7 +10,7 @@ import { Profile, RootStackParamList } from '../../lib/types';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
 import FormInput from '../components/FormInput';
 import { emptyProfile } from '../../lib/templates';
-import ProfileSetupHeader from '../components/ProfileSetupHeader';
+import Header from '../components/Header';
 import ScreenContainer from '../components/ScreenContainer';
 import AvatarSelect from '../components/AvatarSelect';
 
@@ -74,7 +74,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
 
   return (
     <ScreenContainer>
-      <ProfileSetupHeader title="HI, MY NAME IS" />
+      <Header title="HI, MY NAME IS" />
       <View className="flex flex-row">
         <FormInput
           control={control}
@@ -96,7 +96,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           error={formErrors.lastName?.message}
         />
       </View>
-      <ProfileSetupHeader title="AND I WAS BORN ON" />
+      <Header title="AND I WAS BORN ON" />
       <View className="mx-4 self-stretch">
         <Controller
           control={control}
@@ -118,7 +118,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           name="birthDate"
         />
       </View>
-      <ProfileSetupHeader title="CURRENTLY BASED OUT ON" />
+      <Header title="CURRENTLY BASED OUT ON" />
       <FormInput
         control={control}
         field="location"
@@ -128,7 +128,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
         iconClassName="right-3"
         error={formErrors.location?.message}
       />
-      <ProfileSetupHeader title="THIS IS ME!" />
+      <Header title="THIS IS ME!" />
       <View>
         <Controller
           control={control}
