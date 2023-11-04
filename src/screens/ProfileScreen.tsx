@@ -1,15 +1,18 @@
 import { useState, useContext } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { Text, View, Alert, Pressable } from 'react-native';
-import { Input } from 'react-native-elements';
+import { Icon, Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../lib/types';
+import { RootStackParamList, WantsItemProps } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import { SessionContext } from '../contexts/SessionContext';
 import Avatar from '../components/Avatar';
 import { downloadImage } from '../../lib/utils';
+import Header from '../components/Header';
+import WantsItem from '../components/WantsItem';
+import LineBreak from '../components/LineBreak';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile', 'Main'>;
 
@@ -42,14 +45,50 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
     }
   }
 
+  const wantsItemProps: WantsItemProps[] = [
+    ...(profile?.wantDifferenceWorld
+      ? [{ description: 'I WANT TO MAKE A DIFFERENCE IN THE WORLD', icon: 'globe-outline' }]
+      : []),
+    ...(profile?.wantDiversifyPortfolio
+      ? [{ description: 'I WANT TO DIVERSIFY MY PORTFOLIO', icon: 'briefcase', type: 'font-awesome' }]
+      : []),
+    ...(profile?.wantTaxIncentives ? [{ description: 'I AM INTERESTED IN TAX INCENTIVES', icon: 'cash-outline' }] : []),
+    ...(profile?.wantSpecificCause ? [{ description: 'I AM PASSIONATE ABOUT A SPECIFIC CAUSE', icon: 'heart' }] : []),
+  ];
+
   return (
     <ScreenContainer>
-      <View>
-        <Avatar className="w-32 h-32" image={profile?.avatarImage} />
+      <View className="flex flex-row mb-2 mx-4">
+        <Avatar classNames="w-16 h-16" image={profile?.avatarImage} />
+        <View className="ml-3">
+          <Header
+            textClassNames="text-2xl mb-0"
+            centered={false}
+            title={`${profile?.firstName} ${profile?.lastName}`}
+          />
+          {wantsItemProps.map((props) => (
+            <View className="flex flex-row items-center mb-2 w-11/12">
+              <WantsItem
+                key={props.description}
+                {...props}
+                descriptionClassName="font-normal text-xs"
+                iconSize={19}
+                iconColor="#5a5a5b"
+              />
+            </View>
+          ))}
+        </View>
       </View>
-      <View className="mt-5 py-1 self-stretch">
-        <Input label="Email" value={session?.user?.email} disabled />
+      <LineBreak />
+      <View className="my-2 flex flex-row justify-around mb-4">
+        <View className="bg-yellow-300 py-3 rounded-lg items-center w-5/12">
+          <Text>Balance: USD 1.00</Text>
+        </View>
+        <View className="bg-blue-800 py-3 rounded-lg items-center w-5/12">
+          <Text className="text-white">Shares: 0</Text>
+        </View>
       </View>
+      <LineBreak />
       <View className="py-1 self-stretch">
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
