@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { Text, View, Alert, Pressable } from 'react-native';
-import { Icon, Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList, WantsItemProps } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
@@ -9,10 +8,11 @@ import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import { SessionContext } from '../contexts/SessionContext';
 import Avatar from '../components/Avatar';
-import { downloadImage } from '../../lib/utils';
+import { cn } from '../../lib/utils';
 import Header from '../components/Header';
 import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
+import TwinDisplay from '../components/TwinDisplay';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile', 'Main'>;
 
@@ -20,6 +20,7 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
   const { setIsLoading } = useContext(LoadingContext);
   const { setProfile, profile } = useContext(ProfileContext);
   const { session } = useContext(SessionContext);
+  const [isMyProjects, setIsMyProjects] = useState(true);
 
   async function updateProfile({ firstName, lastName }: { firstName: string; lastName: string }) {
     try {
@@ -81,14 +82,25 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
       </View>
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
-        <View className="bg-yellow-300 py-3 rounded-lg items-center w-5/12">
-          <Text>Balance: USD 1.00</Text>
-        </View>
-        <View className="bg-blue-800 py-3 rounded-lg items-center w-5/12">
-          <Text className="text-white">Shares: 0</Text>
-        </View>
+        <TwinDisplay text="Balance: USD 1.00" classNames="bg-yellow-300 rounded-lg" />
+        <TwinDisplay text="Shares: 0" classNames="bg-blue-800 rounded-lg" textClassNames="text-white" />
       </View>
       <LineBreak />
+      <View className="my-2 flex flex-row justify-around">
+        <TwinDisplay
+          text="MY PROJECTS"
+          textClassNames={cn('font-extrabold text-xl', { underline: isMyProjects })}
+          onPress={() => setIsMyProjects(true)}
+        />
+        <TwinDisplay
+          text="MY IMPACT"
+          textClassNames={cn('font-extrabold text-xl', { underline: !isMyProjects })}
+          onPress={() => setIsMyProjects(false)}
+        />
+      </View>
+      <View>
+        <Header textClassNames="text-2xl" centered title="UH-OH!" />
+      </View>
       <View className="py-1 self-stretch">
         <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
