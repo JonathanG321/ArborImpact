@@ -1,7 +1,8 @@
 import { Controller, FieldValues } from 'react-hook-form';
 import { View } from 'react-native';
-import { Icon, Image, Switch, Text } from 'react-native-elements';
+import { Switch } from 'react-native-elements';
 import { FormSwitchProps } from '../../lib/types';
+import WantsItem from './WantsItem';
 
 export default function FormSwitch<T extends FieldValues>({
   control,
@@ -9,6 +10,7 @@ export default function FormSwitch<T extends FieldValues>({
   description,
   icon,
   type = 'ionicon',
+  descriptionClassName,
 }: FormSwitchProps<T>) {
   return (
     <View className="mx-6 mb-3 flex flex-row items-center w-fit">
@@ -29,12 +31,7 @@ export default function FormSwitch<T extends FieldValues>({
           name={field}
         />
       </View>
-      <View className="w-1/12">
-        <Icon type={type} name={icon} size={29} />
-      </View>
-      <View className="w-9/12 mb-2 mt-2">
-        <Text className="font-bold ml-2 font-bebas-neue text-md flex flex-wrap">{description}</Text>
-      </View>
+      <WantsItem type={type} icon={icon} description={description} descriptionClassName={descriptionClassName} />
     </View>
   );
 }
