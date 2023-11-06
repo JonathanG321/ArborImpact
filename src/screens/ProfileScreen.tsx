@@ -1,50 +1,48 @@
 import { useState, useContext } from 'react';
 import { supabase } from '../../supabase/supabase';
-import { Text, View, Alert, Pressable } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList, WantsItemProps } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
-import { SessionContext } from '../contexts/SessionContext';
 import Avatar from '../components/Avatar';
 import { cn } from '../../lib/utils';
 import Header from '../components/Header';
 import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
 import TwinDisplay from '../components/TwinDisplay';
+import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
+
+const FirstRoute = () => (
+  <View className="flex mt-3 items-center">
+    <Header textClassNames="text-2xl" centered title="UH-OH!" />
+    <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">You don't have any projects yet!</Text>
+    <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">Click below to start browsing projects!</Text>
+    <View className="bg-yellow-300 rounded-lg py-3 px-4">
+      <Text className="text-[#5a5a5b] text-lg">Let's Go</Text>
+    </View>
+  </View>
+);
+
+const SecondRoute = () => <View style={{ flex: 1, backgroundColor: '#673ab7' }} />;
+
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile', 'Main'>;
 
 export default function ProfileScreen({ navigation: { replace } }: Props) {
   const { setIsLoading } = useContext(LoadingContext);
   const { setProfile, profile } = useContext(ProfileContext);
-  const { session } = useContext(SessionContext);
   const [isMyProjects, setIsMyProjects] = useState(true);
-
-  async function updateProfile({ firstName, lastName }: { firstName: string; lastName: string }) {
-    try {
-      setIsLoading(true);
-      if (!session?.user) throw new Error('No user on the session!');
-
-      const { error } = await supabase.from('profiles').upsert({
-        id: session?.user.id,
-        firstName,
-        lastName,
-        updated_at: new Date(),
-      });
-
-      if (error) {
-        throw error;
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [index, setIndex] = useState(0);
+  const routes = [
+    { key: 'first', title: 'MY PROJECTS' },
+    { key: 'second', title: 'MY IMPACT' },
+  ];
 
   const wantsItemProps: WantsItemProps[] = [
     ...(profile?.wantDifferenceWorld
@@ -59,6 +57,19 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
 
   return (
     <ScreenContainer>
+      <View className="py-1 self-stretch absolute top-[-35] right-1">
+        <Pressable
+          className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
+          onPress={async () => {
+            setIsLoading(true);
+            await supabase.auth.signOut();
+            setProfile(null);
+            setIsLoading(false);
+          }}
+        >
+          <Text className="text-white text-lg">Sign Out</Text>
+        </Pressable>
+      </View>
       <View className="flex flex-row mb-2 mx-4">
         <Avatar classNames="w-16 h-16" image={profile?.avatarImage} />
         <View className="ml-3">
@@ -86,33 +97,26 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
         <TwinDisplay text="Shares: 0" classNames="bg-blue-800 rounded-lg" textClassNames="text-white" />
       </View>
       <LineBreak />
-      <View className="my-2 flex flex-row justify-around">
-        <TwinDisplay
-          text="MY PROJECTS"
-          textClassNames={cn('font-extrabold text-xl', { underline: isMyProjects })}
-          onPress={() => setIsMyProjects(true)}
+      <View className="h-full px-4">
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          renderTabBar={(props) => (
+            <TabBar
+              {...props}
+              style={{ backgroundColor: 'transparent' }}
+              renderIndicator={(props) => (
+                <View className="" style={{ height: props.layout.height, width: props.layout.width }}>
+                  <TabBarIndicator {...props} style={{ backgroundColor: 'black', height: 3, marginBottom: 10 }} />
+                </View>
+              )}
+              renderTabBarItem={(props) => (
+                <TabBarItem {...props} labelStyle={{ color: 'black', fontWeight: '800', fontSize: 20 }} />
+              )}
+            />
+          )}
         />
-        <TwinDisplay
-          text="MY IMPACT"
-          textClassNames={cn('font-extrabold text-xl', { underline: !isMyProjects })}
-          onPress={() => setIsMyProjects(false)}
-        />
-      </View>
-      <View>
-        <Header textClassNames="text-2xl" centered title="UH-OH!" />
-      </View>
-      <View className="py-1 self-stretch">
-        <Pressable
-          className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
-          onPress={async () => {
-            setIsLoading(true);
-            await supabase.auth.signOut();
-            setProfile(null);
-            setIsLoading(false);
-          }}
-        >
-          <Text className="text-white text-lg">Sign Out</Text>
-        </Pressable>
       </View>
     </ScreenContainer>
   );
