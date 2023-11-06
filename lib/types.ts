@@ -49,4 +49,9 @@ export type DBProfile = {
   want_tax_incentives: boolean;
   want_specific_cause: boolean;
   sdg: string[];
+  projects: Project[];
+};
+
+export type Project = {
+  id: string;
 };

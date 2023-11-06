@@ -27,10 +27,15 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         setIsLoading(false);
         return;
       }
-      const { error, status, data } = await supabase.from('profiles').select(`*`).eq('id', session?.user.id).single();
+      const { error, status, data } = await supabase
+        .from('profiles')
+        .select(`*, projects(*)`)
+        .eq('id', session?.user.id)
+        .single();
       if (error && status !== 406) throw error;
       if (error) return;
       const dbProfile = data as DBProfile;
+      console.log(dbProfile);
       const image = await downloadImage((data as DBProfile).avatar_url);
       const profile: Profile = {
         avatarImage: image ? { uri: image, width: 200, height: 200 } : null,
