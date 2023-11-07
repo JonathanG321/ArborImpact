@@ -1,6 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
 import { supabase } from '../supabase/supabase';
+import { DBProject, Project } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,4 +28,19 @@ export async function downloadImage(path: string, bucket: string = 'avatars') {
       console.log('Error downloading image: ', error.message);
     }
   }
+}
+
+export async function createProjectObject(dbProjects: DBProject[]) {
+  const projectImages = await Promise.all(
+    dbProjects.map((project) => downloadImage(project.project_image_url, 'project_images'))
+  );
+  const projects = dbProjects.map(
+    ({ created_at, project_image_url, ...rest }, index) =>
+      ({
+        createdAt: new Date(created_at),
+        projectImage: projectImages[index] ? { uri: projectImages[index], width: 200, height: 200 } : null,
+        ...rest,
+      } as Project)
+  );
+  return projects;
 }
