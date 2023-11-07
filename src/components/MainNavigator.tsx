@@ -12,6 +12,7 @@ import { SessionContext } from '../contexts/SessionContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import { LoadingContext } from '../contexts/LoadingContext';
 import ProfileScreen from '../screens/ProfileScreen';
+import ProjectScreen from '../screens/ProjectsScreen';
 
 export default function MainNavigator() {
   const { session } = useContext(SessionContext);
@@ -36,6 +37,7 @@ export default function MainNavigator() {
             <>
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Projects" component={ProjectScreen} />
             </>
           ) : (
             <>
