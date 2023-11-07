@@ -18,6 +18,7 @@ export type FormSwitchProps<T extends FieldValues> = {
 export type RootStackParamList = {
   Home: undefined;
   Profile: undefined;
+  Projects: undefined;
   'Profile Setup 1': undefined;
   'Profile Setup 2': undefined;
   'Profile Setup 3': undefined;
@@ -36,6 +37,7 @@ export type Profile = {
   wantTaxIncentives: boolean;
   wantSpecificCause: boolean;
   sdg: string[];
+  projects: Project[];
 };
 
 export type DBProfile = {
@@ -49,9 +51,19 @@ export type DBProfile = {
   want_tax_incentives: boolean;
   want_specific_cause: boolean;
   sdg: string[];
-  projects: Project[];
+  projects: DBProject[];
 };
 
 export type Project = {
-  id: string;
+  id: number;
+  createdAt: Date;
+  name: string;
+  projectImage: ImagePickerAsset | null;
+};
+
+export type DBProject = {
+  id: number;
+  created_at: string;
+  name: string;
+  project_image_url: string;
 };
