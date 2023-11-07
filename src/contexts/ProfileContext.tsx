@@ -3,8 +3,8 @@ import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { LoadingContext } from './LoadingContext';
 import { Alert } from 'react-native';
-import { DBProfile, Profile } from '../../lib/types';
-import { downloadImage } from '../../lib/utils';
+import { DBProfile, Profile, Project } from '../../lib/types';
+import { createProjectObject, downloadImage } from '../../lib/utils';
 
 export const ProfileContext = createContext<{
   profile: Profile | null;
@@ -35,7 +35,10 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
       if (error && status !== 406) throw error;
       if (error) return;
       const dbProfile = data as DBProfile;
-      const image = await downloadImage(dbProfile.avatar_url);
+      const [image, projects] = await Promise.all([
+        downloadImage(dbProfile.avatar_url),
+        createProjectObject(dbProfile.projects),
+      ]);
       const profile: Profile = {
         avatarImage: image ? { uri: image, width: 200, height: 200 } : null,
         birthDate: dbProfile.birth_date,
@@ -47,12 +50,11 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         wantDiversifyPortfolio: dbProfile.want_diversify_portfolio,
         wantSpecificCause: dbProfile.want_specific_cause,
         wantTaxIncentives: dbProfile.want_tax_incentives,
+        projects: projects,
       };
       setProfile(profile);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
-    } finally {
-      setIsLoading(false);
     }
   }
 
