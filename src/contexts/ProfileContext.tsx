@@ -35,8 +35,7 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
       if (error && status !== 406) throw error;
       if (error) return;
       const dbProfile = data as DBProfile;
-      console.log(dbProfile);
-      const image = await downloadImage((data as DBProfile).avatar_url);
+      const image = await downloadImage(dbProfile.avatar_url);
       const profile: Profile = {
         avatarImage: image ? { uri: image, width: 200, height: 200 } : null,
         birthDate: dbProfile.birth_date,

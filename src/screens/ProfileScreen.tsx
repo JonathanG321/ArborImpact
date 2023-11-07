@@ -7,7 +7,6 @@ import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import Avatar from '../components/Avatar';
-import { cn } from '../../lib/utils';
 import Header from '../components/Header';
 import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
@@ -37,7 +36,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile', 'Main'>;
 export default function ProfileScreen({ navigation: { replace } }: Props) {
   const { setIsLoading } = useContext(LoadingContext);
   const { setProfile, profile } = useContext(ProfileContext);
-  const [isMyProjects, setIsMyProjects] = useState(true);
   const [index, setIndex] = useState(0);
   const routes = [
     { key: 'first', title: 'MY PROJECTS' },
@@ -79,7 +77,7 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
             title={`${profile?.firstName} ${profile?.lastName}`}
           />
           {wantsItemProps.map((props) => (
-            <View className="flex flex-row items-center mb-2 w-11/12">
+            <View key={props.description} className="flex flex-row items-center mb-2 w-11/12">
               <WantsItem
                 key={props.description}
                 {...props}
