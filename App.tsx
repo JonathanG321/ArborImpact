@@ -4,9 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { LoadingContextProvider } from './src/contexts/LoadingContext';
 import { SessionContextProvider } from './src/contexts/SessionContext';
 import { ProfileContextProvider } from './src/contexts/ProfileContext';
-import MainNavigator from './src/components/MainNavigator';
+import SessionNavigator from './src/components/Navigators/SessionNavigator';
 import { ProfileSetupContextProvider } from './src/contexts/ProfileSetupContext';
 import { ProjectsContextProvider } from './src/contexts/ProjectsContext';
+import { NativeBaseProvider } from 'native-base';
 
 export default function App() {
   // const [loaded] = useFonts({
@@ -18,18 +19,20 @@ export default function App() {
   // }
 
   return (
-    <NavigationContainer>
-      <LoadingContextProvider>
-        <SessionContextProvider>
-          <ProfileContextProvider>
-            <ProfileSetupContextProvider>
-              <ProjectsContextProvider>
-                <MainNavigator />
-              </ProjectsContextProvider>
-            </ProfileSetupContextProvider>
-          </ProfileContextProvider>
-        </SessionContextProvider>
-      </LoadingContextProvider>
-    </NavigationContainer>
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <LoadingContextProvider>
+          <SessionContextProvider>
+            <ProfileContextProvider>
+              <ProfileSetupContextProvider>
+                <ProjectsContextProvider>
+                  <SessionNavigator />
+                </ProjectsContextProvider>
+              </ProfileSetupContextProvider>
+            </ProfileContextProvider>
+          </SessionContextProvider>
+        </LoadingContextProvider>
+      </NavigationContainer>
+    </NativeBaseProvider>
   );
 }

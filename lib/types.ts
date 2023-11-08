@@ -16,14 +16,18 @@ export type FormSwitchProps<T extends FieldValues> = {
 } & WantsItemProps;
 
 export type RootStackParamList = {
-  Home: undefined;
-  Profile: undefined;
-  Projects: undefined;
   'Profile Setup 1': undefined;
   'Profile Setup 2': undefined;
   'Profile Setup 3': undefined;
   'Sign In': undefined;
   'Sign Up': undefined;
+  Main: undefined;
+};
+
+export type RootDrawerParamList = {
+  Home: undefined;
+  Profile: undefined;
+  Projects: undefined;
 };
 
 export type Profile = {

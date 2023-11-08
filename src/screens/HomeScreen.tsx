@@ -3,13 +3,13 @@ import { supabase } from '../../supabase/supabase';
 import { Text, View, Alert, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../lib/types';
+import { RootDrawerParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import { SessionContext } from '../contexts/SessionContext';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home', 'Main'>;
+type Props = NativeStackScreenProps<RootDrawerParamList, 'Home', 'Main'>;
 
 export default function HomeScreen({ navigation: { replace } }: Props) {
   const [firstName, setFirstName] = useState('');

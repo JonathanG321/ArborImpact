@@ -1,8 +1,7 @@
 import { useState, useContext } from 'react';
-import { supabase } from '../../supabase/supabase';
-import { Text, View, Pressable } from 'react-native';
+import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList, WantsItemProps } from '../../lib/types';
+import { RootDrawerParamList, WantsItemProps } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
@@ -12,6 +11,7 @@ import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
 import TwinDisplay from '../components/TwinDisplay';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
+import Menu from '../components/Menu';
 
 const FirstRoute = () => (
   <View className="flex mt-3 items-center">
@@ -31,9 +31,9 @@ const renderScene = SceneMap({
   second: SecondRoute,
 });
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Profile', 'Main'>;
+type Props = NativeStackScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
-export default function ProfileScreen({ navigation: { replace } }: Props) {
+export default function ProfileScreen({ navigation: { setOptions } }: Props) {
   const { setIsLoading } = useContext(LoadingContext);
   const { setProfile, profile } = useContext(ProfileContext);
   const [index, setIndex] = useState(0);
@@ -53,10 +53,18 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
     ...(profile?.wantSpecificCause ? [{ description: 'I AM PASSIONATE ABOUT A SPECIFIC CAUSE', icon: 'heart' }] : []),
   ];
 
+  // useEffect(() => {
+  //   setOptions({
+  //     headerRight: (props: HeaderBackButtonProps) => {
+  //       return <MenuIcon />;
+  //     },
+  //   });
+  // });
+
   return (
     <ScreenContainer>
       <View className="py-1 self-stretch absolute top-[-35] right-1">
-        <Pressable
+        {/* <Pressable
           className="flex items-center rounded bg-blue-500 active:bg-blue-600 px-2 py-1"
           onPress={async () => {
             setIsLoading(true);
@@ -66,7 +74,7 @@ export default function ProfileScreen({ navigation: { replace } }: Props) {
           }}
         >
           <Text className="text-white text-lg">Sign Out</Text>
-        </Pressable>
+        </Pressable> */}
       </View>
       <View className="flex flex-row mb-2 mx-4">
         <Avatar classNames="w-16 h-16" image={profile?.avatarImage} />

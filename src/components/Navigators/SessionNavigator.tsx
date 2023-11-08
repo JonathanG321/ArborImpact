@@ -1,24 +1,26 @@
 import { useContext, useEffect } from 'react';
 import 'react-native-url-polyfill/auto';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
-import HomeScreen from '../screens/HomeScreen';
-import { RootStackParamList } from '../../lib/types';
-import ProfileSetup1Screen from '../screens/ProfileSetup1Screen';
-import ProfileSetup2Screen from '../screens/ProfileSetup2Screen';
-import ProfileSetup3Screen from '../screens/ProfileSetup3Screen';
-import { SessionContext } from '../contexts/SessionContext';
-import { ProfileContext } from '../contexts/ProfileContext';
-import { LoadingContext } from '../contexts/LoadingContext';
-import ProfileScreen from '../screens/ProfileScreen';
-import ProjectScreen from '../screens/ProjectsScreen';
-import { ProjectsContext } from '../contexts/ProjectsContext';
-import LoadingScreen from '../screens/LoadingScreen';
+import SignInScreen from '../../screens/SignInScreen';
+import SignUpScreen from '../../screens/SignUpScreen';
+import HomeScreen from '../../screens/HomeScreen';
+import { RootStackParamList } from '../../../lib/types';
+import ProfileSetup1Screen from '../../screens/ProfileSetup1Screen';
+import ProfileSetup2Screen from '../../screens/ProfileSetup2Screen';
+import ProfileSetup3Screen from '../../screens/ProfileSetup3Screen';
+import { SessionContext } from '../../contexts/SessionContext';
+import { ProfileContext } from '../../contexts/ProfileContext';
+import { LoadingContext } from '../../contexts/LoadingContext';
+import ProfileScreen from '../../screens/ProfileScreen';
+import ProjectScreen from '../../screens/ProjectsScreen';
+import { ProjectsContext } from '../../contexts/ProjectsContext';
+import LoadingScreen from '../../screens/LoadingScreen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import MainNavigator from './MainNavigator';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function MainNavigator() {
+export default function SessionNavigator() {
   const { session } = useContext(SessionContext);
   const { profile, getProfile, isLoadingProfile } = useContext(ProfileContext);
   const { getProjects } = useContext(ProjectsContext);
@@ -42,11 +44,7 @@ export default function MainNavigator() {
     <Stack.Navigator id="Main">
       {session ? (
         profile ? (
-          <>
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Projects" component={ProjectScreen} />
-          </>
+          <Stack.Screen options={{ headerShown: false }} name="Main" component={MainNavigator} />
         ) : (
           <>
             <Stack.Screen
