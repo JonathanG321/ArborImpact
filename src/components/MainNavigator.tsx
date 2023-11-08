@@ -13,53 +13,60 @@ import { ProfileContext } from '../contexts/ProfileContext';
 import { LoadingContext } from '../contexts/LoadingContext';
 import ProfileScreen from '../screens/ProfileScreen';
 import ProjectScreen from '../screens/ProjectsScreen';
+import { ProjectsContext } from '../contexts/ProjectsContext';
+import LoadingScreen from '../screens/LoadingScreen';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function MainNavigator() {
   const { session } = useContext(SessionContext);
-  const { profile, getProfile } = useContext(ProfileContext);
-  const { isLoading } = useContext(LoadingContext);
+  const { profile, getProfile, isLoadingProfile } = useContext(ProfileContext);
+  const { getProjects } = useContext(ProjectsContext);
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
-    getProfile(session);
+    async function Setup() {
+      setIsLoading(true);
+      await getProfile(session);
+      await getProjects();
+      setIsLoading(false);
+    }
+    Setup();
   }, [session]);
 
-  if (isLoading) {
-    return null;
+  if (isLoading || (!!session && isLoadingProfile)) {
+    return <LoadingScreen />;
   }
-
-  const Stack = createNativeStackNavigator<RootStackParamList>();
 
   return (
     <Stack.Navigator id="Main">
       {session ? (
-        <>
-          {profile ? (
-            <>
-              <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Projects" component={ProjectScreen} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen
-                options={{ title: 'Profile Setup 1/3' }}
-                name="Profile Setup 1"
-                component={ProfileSetup1Screen}
-              />
-              <Stack.Screen
-                options={{ title: 'Profile Setup 2/3', headerBackTitle: 'Back' }}
-                name="Profile Setup 2"
-                component={ProfileSetup2Screen}
-              />
-              <Stack.Screen
-                options={{ title: 'Profile Setup 3/3', headerBackTitle: 'Back' }}
-                name="Profile Setup 3"
-                component={ProfileSetup3Screen}
-              />
-              {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
-            </>
-          )}
-        </>
+        profile ? (
+          <>
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Projects" component={ProjectScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              options={{ title: 'Profile Setup 1/3' }}
+              name="Profile Setup 1"
+              component={ProfileSetup1Screen}
+            />
+            <Stack.Screen
+              options={{ title: 'Profile Setup 2/3', headerBackTitle: 'Back' }}
+              name="Profile Setup 2"
+              component={ProfileSetup2Screen}
+            />
+            <Stack.Screen
+              options={{ title: 'Profile Setup 3/3', headerBackTitle: 'Back' }}
+              name="Profile Setup 3"
+              component={ProfileSetup3Screen}
+            />
+            {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
+          </>
+        )
       ) : (
         <>
           <Stack.Screen name="Sign In" component={SignInScreen} />

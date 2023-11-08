@@ -1,32 +1,32 @@
 import { Session } from '@supabase/supabase-js';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useState } from 'react';
 import { supabase } from '../../supabase/supabase';
-import { LoadingContext } from './LoadingContext';
 import { Alert } from 'react-native';
-import { DBProfile, Profile, Project } from '../../lib/types';
+import { DBProfile, Profile } from '../../lib/types';
 import { createProjectObject, downloadImage } from '../../lib/utils';
 
 export const ProfileContext = createContext<{
   profile: Profile | null;
+  isLoadingProfile: boolean;
   setProfile: (profile: Profile | null) => void;
-  getProfile: (session: Session | null) => void;
+  getProfile: (session: Session | null) => Promise<void | boolean>;
 }>({
   profile: null,
+  isLoadingProfile: false,
   setProfile: () => undefined,
-  getProfile: () => undefined,
+  getProfile: () => Promise.resolve<void>(undefined),
 });
 export function ProfileContextProvider({ children }: PropsWithChildren) {
-  const { setIsLoading } = useContext(LoadingContext);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
   async function getProfile(session: Session | null) {
     try {
-      setIsLoading(true);
       if (session && !session?.user) throw new Error('No user on the session!');
       if (!session) {
-        setIsLoading(false);
-        return;
+        return false;
       }
+      setIsLoadingProfile(true);
       const { error, status, data } = await supabase
         .from('profiles')
         .select(`*, projects(*)`)
@@ -53,10 +53,16 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         projects: projects,
       };
       setProfile(profile);
+      setIsLoadingProfile(false);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
+      setIsLoadingProfile(false);
     }
   }
 
-  return <ProfileContext.Provider value={{ profile, setProfile, getProfile }}>{children}</ProfileContext.Provider>;
+  return (
+    <ProfileContext.Provider value={{ profile, setProfile, getProfile, isLoadingProfile }}>
+      {children}
+    </ProfileContext.Provider>
+  );
 }

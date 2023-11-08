@@ -1,7 +1,10 @@
 import { createContext, PropsWithChildren, useState } from 'react';
 import LoadingScreen from '../screens/LoadingScreen';
 
-export const LoadingContext = createContext<{ isLoading: boolean; setIsLoading: (isLoading: boolean) => void }>({
+export const LoadingContext = createContext<{
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+}>({
   isLoading: true,
   setIsLoading: () => undefined,
 });
