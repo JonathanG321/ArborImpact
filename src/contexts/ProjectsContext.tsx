@@ -25,7 +25,6 @@ export function ProjectsContextProvider({ children }: PropsWithChildren) {
       setProjects(projects);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
-    } finally {
     }
   }
 

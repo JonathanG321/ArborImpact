@@ -3,6 +3,7 @@ import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
+  DrawerToggleButton,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
 import ProfileScreen from '../../screens/ProfileScreen';
@@ -36,9 +37,12 @@ function DrawerContent(props: DrawerContentComponentProps) {
 
 export default function MainNavigator() {
   const Drawer = createDrawerNavigator<RootDrawerParamList>();
-
   return (
-    <Drawer.Navigator initialRouteName="Profile" drawerContent={DrawerContent}>
+    <Drawer.Navigator
+      initialRouteName="Profile"
+      screenOptions={{ headerLeft: () => null, headerRight: () => <DrawerToggleButton /> }}
+      drawerContent={DrawerContent}
+    >
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Projects" component={ProjectScreen} />
