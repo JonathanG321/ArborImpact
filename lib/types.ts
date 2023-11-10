@@ -75,7 +75,8 @@ export type DBProfile = {
   want_diversify_portfolio: boolean;
   want_tax_incentives: boolean;
   want_specific_cause: boolean;
-  sdg: string[];
+  sdg: SDG[];
+  donation_currency: string;
   projects: DBProject[];
 };
 
@@ -92,6 +93,8 @@ export type Project = {
   fundingGoal: number;
   goalDate: Date;
   sdg: SDG;
+  donationCurrency: string;
+  donations: number[];
   extraImages: ImagePickerAsset[] | null;
 };
 
@@ -108,5 +111,7 @@ export type DBProject = {
   funding_goal: number;
   goal_date: Date;
   sdg: SDG;
+  donations: { donation: number }[];
+  donation_currency: string;
   extra_images: string[];
 };

@@ -51,11 +51,14 @@ export async function createProjectObject(dbProjects: DBProject[]) {
         impact_goal,
         impact_goal_unit,
         impact_type,
+        donations,
+        donation_currency,
         ...rest
       },
       index
-    ) =>
-      ({
+    ) => {
+      console.log(donations);
+      return {
         createdAt: new Date(created_at),
         projectImage: projectMainImages[index] ? { uri: projectMainImages[index], width: 200, height: 200 } : null,
         fundingGoal: funding_goal,
@@ -63,11 +66,14 @@ export async function createProjectObject(dbProjects: DBProject[]) {
         impactGoal: impact_goal,
         impactGoalUnit: impact_goal_unit,
         impactType: impact_type,
+        donationCurrency: donation_currency,
+        donations: donations ? donations.map((donation) => donation.donation) : [],
         extraImages: projectExtraImages[index]
           ? projectExtraImages[index].map((image) => ({ uri: image, width: 200, height: 200 }))
           : null,
         ...rest,
-      } as Project)
+      } as Project;
+    }
   );
   return projects;
 }
