@@ -11,7 +11,7 @@ import { Text } from 'react-native-elements';
 
 type Props = NativeStackScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 
-export default function ProjectScreen({ navigation: { replace } }: Props) {
+export default function ProjectsScreen({ navigation: { replace } }: Props) {
   const { projects, getProjects } = useContext(ProjectsContext);
   const headerHeight = useHeaderHeight();
 
