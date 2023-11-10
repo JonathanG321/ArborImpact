@@ -59,7 +59,7 @@ export async function createProjectObject(dbProjects: DBProject[]) {
     ) => {
       console.log(donations);
       return {
-        createdAt: new Date(created_at),
+        createdAt: created_at,
         projectImage: projectMainImages[index] ? { uri: projectMainImages[index], width: 200, height: 200 } : null,
         fundingGoal: funding_goal,
         goalDate: goal_date,

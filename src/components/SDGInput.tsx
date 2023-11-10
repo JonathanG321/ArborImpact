@@ -1,5 +1,5 @@
 import { UseFormGetValues, UseFormSetValue } from 'react-hook-form';
-import { Profile } from '../../lib/types';
+import { Profile, SDG } from '../../lib/types';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Image } from 'react-native-elements';
@@ -20,7 +20,7 @@ export default function SDGInput({ index, setSDGValue, getValues }: SDGInputProp
 
   const sdg = `SDG${index}` as keyof typeof SDGs;
 
-  function onPress(sdgValues: string[], currentSDG: string, i: number) {
+  function onPress(sdgValues: SDG[], currentSDG: SDG, i: number) {
     if (!sdgValues.includes(currentSDG)) {
       sdgValues.push(currentSDG);
       setPressed(true);

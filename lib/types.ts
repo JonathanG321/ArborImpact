@@ -54,7 +54,7 @@ export type SDG =
 export type Profile = {
   firstName: string;
   lastName: string;
-  birthDate: Date;
+  birthDate: string;
   location: string;
   avatarImage: ImagePickerAsset | null;
   wantDifferenceWorld: boolean;
@@ -68,7 +68,7 @@ export type Profile = {
 export type DBProfile = {
   first_name: string;
   last_name: string;
-  birth_date: Date;
+  birth_date: string;
   location: string;
   avatar_url: string;
   want_difference_world: boolean;
@@ -82,7 +82,7 @@ export type DBProfile = {
 
 export type Project = {
   id: number;
-  createdAt: Date;
+  createdAt: string;
   name: string;
   projectImage: ImagePickerAsset | null;
   region: string;
@@ -91,7 +91,7 @@ export type Project = {
   activity: string;
   impactType: string;
   fundingGoal: number;
-  goalDate: Date;
+  goalDate: string;
   sdg: SDG;
   donationCurrency: string;
   donations: number[];
@@ -109,7 +109,7 @@ export type DBProject = {
   activity: string;
   impact_type: string;
   funding_goal: number;
-  goal_date: Date;
+  goal_date: string;
   sdg: SDG;
   donations: { donation: number }[];
   donation_currency: string;

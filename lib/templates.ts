@@ -1,7 +1,7 @@
 import { Profile } from './types';
 
 export const emptyProfile: Profile = {
-  birthDate: new Date(),
+  birthDate: new Date().toDateString(),
   firstName: '',
   lastName: '',
   location: '',
