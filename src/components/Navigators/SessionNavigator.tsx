@@ -3,20 +3,16 @@ import 'react-native-url-polyfill/auto';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from '../../screens/SignInScreen';
 import SignUpScreen from '../../screens/SignUpScreen';
-import HomeScreen from '../../screens/HomeScreen';
-import { RootStackParamList } from '../../../lib/types';
 import ProfileSetup1Screen from '../../screens/ProfileSetup1Screen';
 import ProfileSetup2Screen from '../../screens/ProfileSetup2Screen';
 import ProfileSetup3Screen from '../../screens/ProfileSetup3Screen';
 import { SessionContext } from '../../contexts/SessionContext';
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { LoadingContext } from '../../contexts/LoadingContext';
-import ProfileScreen from '../../screens/ProfileScreen';
-import ProjectScreen from '../../screens/ProjectsScreen';
 import { ProjectsContext } from '../../contexts/ProjectsContext';
 import LoadingScreen from '../../screens/LoadingScreen';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainNavigator from './MainNavigator';
+import { RootStackParamList } from '../../../lib/types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -62,7 +58,6 @@ export default function SessionNavigator() {
               name="Profile Setup 3"
               component={ProfileSetup3Screen}
             />
-            {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
           </>
         )
       ) : (
