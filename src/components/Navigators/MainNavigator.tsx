@@ -8,7 +8,8 @@ import {
 } from '@react-navigation/drawer';
 import ProfileScreen from '../../screens/ProfileScreen';
 import HomeScreen from '../../screens/HomeScreen';
-import ProjectScreen from '../../screens/ProjectsScreen';
+import ProjectsScreen from '../../screens/ProjectsScreen';
+import ProjectScreen from '../../screens/ProjectScreen';
 import { RootDrawerParamList } from '../../../lib/types';
 import { supabase } from '../../../supabase/supabase';
 import { useContext } from 'react';
@@ -45,7 +46,8 @@ export default function MainNavigator() {
     >
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Projects" component={ProjectScreen} />
+      <Drawer.Screen name="Projects" component={ProjectsScreen} />
+      <Drawer.Screen name="Project" component={ProjectScreen} options={{ drawerItemStyle: { display: 'none' } }} />
     </Drawer.Navigator>
   );
 }
