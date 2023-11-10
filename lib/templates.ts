@@ -11,6 +11,7 @@ export const emptyProfile: Profile = {
   wantSpecificCause: false,
   wantTaxIncentives: false,
   sdg: [],
+  projects: [],
 };
 
 export const SDGs = {

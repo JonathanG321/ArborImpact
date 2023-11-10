@@ -1,3 +1,4 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
@@ -21,14 +22,34 @@ export type RootStackParamList = {
   'Profile Setup 3': undefined;
   'Sign In': undefined;
   'Sign Up': undefined;
-  Main: undefined;
+  Main: NavigatorScreenParams<RootDrawerParamList>;
 };
 
 export type RootDrawerParamList = {
   Home: undefined;
   Profile: undefined;
   Projects: undefined;
+  Project: { project: Project };
 };
+
+export type SDG =
+  | 'SDG1'
+  | 'SDG2'
+  | 'SDG3'
+  | 'SDG4'
+  | 'SDG5'
+  | 'SDG6'
+  | 'SDG7'
+  | 'SDG8'
+  | 'SDG9'
+  | 'SDG10'
+  | 'SDG11'
+  | 'SDG12'
+  | 'SDG13'
+  | 'SDG14'
+  | 'SDG15'
+  | 'SDG16'
+  | 'SDG17';
 
 export type Profile = {
   firstName: string;
@@ -40,7 +61,7 @@ export type Profile = {
   wantDiversifyPortfolio: boolean;
   wantTaxIncentives: boolean;
   wantSpecificCause: boolean;
-  sdg: string[];
+  sdg: SDG[];
   projects: Project[];
 };
 
@@ -63,6 +84,15 @@ export type Project = {
   createdAt: Date;
   name: string;
   projectImage: ImagePickerAsset | null;
+  region: string;
+  impactGoal: number;
+  impactGoalUnit: string;
+  activity: string;
+  impactType: string;
+  fundingGoal: number;
+  goalDate: Date;
+  sdg: SDG;
+  extraImages: ImagePickerAsset[] | null;
 };
 
 export type DBProject = {
@@ -70,4 +100,13 @@ export type DBProject = {
   created_at: string;
   name: string;
   project_image_url: string;
+  region: string;
+  impact_goal: number;
+  impact_goal_unit: string;
+  activity: string;
+  impact_type: string;
+  funding_goal: number;
+  goal_date: Date;
+  sdg: SDG;
+  extra_images: string[];
 };
