@@ -10,9 +10,9 @@ type Props = {
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
 };
 
-export default function TwinDisplay({ textClassNames, text, onPress, classNames }: Props) {
+export default function ButtonDisplay({ textClassNames, text, onPress, classNames }: Props) {
   return (
-    <View className={cn('py-3 items-center w-5/12', classNames)}>
+    <View className={cn('py-3 items-center flex-1 bg-yellow-300 rounded-lg', classNames)}>
       <Pressable onPress={onPress}>
         <Text className={textClassNames}>{text}</Text>
       </Pressable>

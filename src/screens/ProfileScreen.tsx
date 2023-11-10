@@ -8,7 +8,7 @@ import Avatar from '../components/Avatar';
 import Header from '../components/Header';
 import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
-import TwinDisplay from '../components/TwinDisplay';
+import ButtonDisplay from '../components/ButtonDisplay';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
 
 const FirstRoute = () => (
@@ -75,8 +75,8 @@ export default function ProfileScreen({ navigation: {} }: Props) {
       </View>
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
-        <TwinDisplay text="Balance: USD 1.00" classNames="bg-yellow-300 rounded-lg" />
-        <TwinDisplay text="Shares: 0" classNames="bg-blue-800 rounded-lg" textClassNames="text-white" />
+        <ButtonDisplay text="Balance: USD 1.00" classNames="ml-4 mr-2" />
+        <ButtonDisplay text="Shares: 0" classNames="bg-blue-800 ml-2 mr-4" textClassNames="text-white" />
       </View>
       <LineBreak />
       <View className="h-full px-4">
