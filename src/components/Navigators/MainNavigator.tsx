@@ -6,6 +6,7 @@ import {
   DrawerToggleButton,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
+import { HeaderBackButton } from '@react-navigation/elements';
 import ProfileScreen from '../../screens/ProfileScreen';
 import HomeScreen from '../../screens/HomeScreen';
 import ProjectsScreen from '../../screens/ProjectsScreen';
@@ -41,13 +42,20 @@ export default function MainNavigator() {
   return (
     <Drawer.Navigator
       initialRouteName="Profile"
-      screenOptions={{ headerLeft: () => null, headerRight: () => <DrawerToggleButton /> }}
+      screenOptions={{ headerLeft: () => null, headerRight: () => <DrawerToggleButton />, drawerPosition: 'right' }}
       drawerContent={DrawerContent}
     >
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Projects" component={ProjectsScreen} />
-      <Drawer.Screen name="Project" component={ProjectScreen} options={{ drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen
+        name="Project"
+        component={ProjectScreen}
+        options={{
+          drawerItemStyle: { display: 'none' },
+          headerLeft: () => <HeaderBackButton />,
+        }}
+      />
     </Drawer.Navigator>
   );
 }
