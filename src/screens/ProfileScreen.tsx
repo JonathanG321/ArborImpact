@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootDrawerParamList, WantsItemProps } from '../../lib/types';
+import { RootDrawerParamList, SDG, WantsItemProps } from '../../lib/types';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import Avatar from '../components/Avatar';
@@ -10,24 +10,8 @@ import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
-
-const FirstRoute = () => (
-  <View className="flex mt-3 items-center">
-    <Header textClassNames="text-2xl" centered title="UH-OH!" />
-    <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">You don't have any projects yet!</Text>
-    <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">Click below to start browsing projects!</Text>
-    <View className="bg-yellow-300 rounded-lg py-3 px-4">
-      <Text className="text-[#5a5a5b] text-lg">Let's Go</Text>
-    </View>
-  </View>
-);
-
-const SecondRoute = () => <View style={{ flex: 1, backgroundColor: '#673ab7' }} />;
-
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
+import { SDGs } from '../../lib/templates';
+import { Image } from 'react-native-elements';
 
 type Props = NativeStackScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -38,6 +22,36 @@ export default function ProfileScreen({ navigation: {} }: Props) {
     { key: 'first', title: 'MY PROJECTS' },
     { key: 'second', title: 'MY IMPACT' },
   ];
+
+  const renderScene = SceneMap({
+    first: () => (
+      <View className="flex mt-3 items-center">
+        <Header textClassNames="text-2xl" centered title="UH-OH!" />
+        <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">You don't have any projects yet!</Text>
+        <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">Click below to start browsing projects!</Text>
+        <View className="bg-yellow-300 rounded-lg py-3 px-4">
+          <Text className="text-[#5a5a5b] text-lg">Let's Go</Text>
+        </View>
+      </View>
+    ),
+    second: () => {
+      const impactedSDGsList = profile?.projects.map((project) => project.sdg) || [];
+      const sortedImpactedSDGsList = (Object.keys(SDGs) as SDG[]).filter((key) => impactedSDGsList.includes(key));
+      return (
+        <View className="flex mt-3 items-center">
+          <Header textClassNames="text-2xl mb-4" centered title="IMPACTED COMMUNITIES" />
+          {sortedImpactedSDGsList.map((sdg) => (
+            <Image
+              key={sdg}
+              source={SDGs[sdg]}
+              className="h-28 w-28 rounded-xl m-4"
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          ))}
+        </View>
+      );
+    },
+  });
 
   const wantsItemProps: WantsItemProps[] = [
     ...(profile?.wantDifferenceWorld
