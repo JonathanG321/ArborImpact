@@ -56,9 +56,8 @@ export async function createProjectObject(dbProjects: DBProject[]) {
         ...rest
       },
       index
-    ) => {
-      console.log(donations);
-      return {
+    ) =>
+      ({
         createdAt: created_at,
         projectImage: projectMainImages[index] ? { uri: projectMainImages[index], width: 200, height: 200 } : null,
         fundingGoal: funding_goal,
@@ -72,8 +71,7 @@ export async function createProjectObject(dbProjects: DBProject[]) {
           ? projectExtraImages[index].map((image) => ({ uri: image, width: 200, height: 200 }))
           : null,
         ...rest,
-      } as Project;
-    }
+      } as Project)
   );
   return projects;
 }
