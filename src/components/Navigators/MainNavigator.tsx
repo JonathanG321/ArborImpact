@@ -3,6 +3,7 @@ import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
+  DrawerNavigationProp,
   DrawerToggleButton,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
@@ -16,6 +17,7 @@ import { supabase } from '../../../supabase/supabase';
 import { useContext } from 'react';
 import { LoadingContext } from '../../contexts/LoadingContext';
 import { ProfileContext } from '../../contexts/ProfileContext';
+import { useNavigation } from '@react-navigation/native';
 
 function DrawerContent(props: DrawerContentComponentProps) {
   const { setProfile } = useContext(ProfileContext);
@@ -53,7 +55,10 @@ export default function MainNavigator() {
         component={ProjectScreen}
         options={{
           drawerItemStyle: { display: 'none' },
-          headerLeft: () => <HeaderBackButton />,
+          headerLeft: () => {
+            const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
+            return <HeaderBackButton onPress={() => navigate('Projects')} />;
+          },
         }}
       />
     </Drawer.Navigator>
