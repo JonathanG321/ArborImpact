@@ -9,7 +9,6 @@ import {
 } from '@react-navigation/drawer';
 import { HeaderBackButton } from '@react-navigation/elements';
 import ProfileScreen from '../../screens/ProfileScreen';
-import HomeScreen from '../../screens/HomeScreen';
 import ProjectsScreen from '../../screens/ProjectsScreen';
 import ProjectScreen from '../../screens/ProjectScreen';
 import { RootDrawerParamList } from '../../../lib/types';
@@ -48,7 +47,6 @@ export default function MainNavigator() {
       drawerContent={DrawerContent}
     >
       <Drawer.Screen name="Profile" component={ProfileScreen} />
-      <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Projects" component={ProjectsScreen} />
       <Drawer.Screen
         name="Project"
