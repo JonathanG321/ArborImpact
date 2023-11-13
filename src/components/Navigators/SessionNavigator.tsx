@@ -62,8 +62,8 @@ export default function SessionNavigator() {
         )
       ) : (
         <>
-          <Stack.Screen name="Sign In" component={SignInScreen} />
           <Stack.Screen name="Sign Up" component={SignUpScreen} />
+          <Stack.Screen name="Sign In" component={SignInScreen} />
         </>
       )}
     </Stack.Navigator>
