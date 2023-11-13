@@ -1,82 +1,117 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Alert, TextStyle, TouchableOpacity, View } from 'react-native';
-import { supabase } from '../../supabase/supabase';
-import { Input, Text } from 'react-native-elements';
+import { CheckBox, Text } from 'react-native-elements';
+import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { z } from 'zod';
+import { useTailwind } from 'nativewind';
+import { supabase } from '../../supabase/supabase';
 import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import ScreenContainer from '../components/ScreenContainer';
 import AuthButton from '../components/AuthButton';
-import { useTailwind } from 'nativewind';
 import { cn } from '../../lib/utils';
 import LineBreak from '../components/LineBreak';
+import Header from '../components/Header';
+import { zodResolver } from '@hookform/resolvers/zod';
+import AuthInput from '../components/AuthInput';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign Up', 'Main'>;
 
+type LoginForm = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  disclaimer: boolean;
+};
+
+const schema = z
+  .object({
+    email: z.string().min(2, 'Too Short!').default(''),
+    password: z.string().min(6, 'Password must be at least 6 letters').default(''),
+    passwordConfirm: z.string().min(6, 'Password must be at least 6 letters').default(''),
+    disclaimer: z.boolean().default(false),
+  })
+  .superRefine(({ passwordConfirm, password }, ctx) => {
+    if (passwordConfirm !== password) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'The passwords did not match',
+      });
+    }
+  });
+
 export default function SignUpScreen({ navigation: { replace } }: Props) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [disclaimer, setDisclaimer] = useState(false);
-  const [passError, setPassError] = useState<string | null>(null);
   const { setIsLoading } = useContext(LoadingContext);
 
-  async function signUpWithEmail() {
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    setError,
+    formState: { errors: formErrors },
+  } = useForm<LoginForm>({ resolver: zodResolver(schema) });
+
+  const onSubmit: SubmitHandler<LoginForm> = async (form) => {
     setIsLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
+    const { passwordConfirm: _, ...login } = form;
+    const { error } = await supabase.auth.signUp(login);
 
     if (error) {
       Alert.alert(error.message);
       setIsLoading(false);
     }
-  }
+  };
+
+  const onError: SubmitErrorHandler<LoginForm> = async (errors) => {
+    Object.keys(errors).map((key) => {
+      const LoginFormKey = key as keyof LoginForm;
+      setError(LoginFormKey, errors[LoginFormKey] || {});
+    });
+    Alert.alert('Some fields contain Errors. Please fix them before moving on.');
+  };
 
   return (
     <ScreenContainer>
+      <Header textClassNames="text-3xl" title="LET'S FUND THE AGE OF ACTION, YOU'RE ONE STEP CLOSER." />
+      <Text className="text-xl text-gray-600 text-center mb-2">We're so excited to get started with you.</Text>
+      <LineBreak classNames="w-fit border-gray-400 mb-4" />
       <Text className="text-2xl text-center mb-2">Create your Arbor Account</Text>
       <View className="flex flex-row justify-center">
         <LineBreak classNames="w-1/2 border-gray-400" />
       </View>
-      <View className="mt-5 py-1 self-stretch">
-        <Input
-          label="Email"
-          className="border pl-3"
-          labelStyle={useTailwind({ className: 'font-normal text-black text-xl mb-2' }) as TextStyle}
-          onChangeText={setEmail}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={'none'}
-        />
-      </View>
-      <View className="py-1 self-stretch">
-        <Input
-          label="Password"
-          className={cn('border pl-3', { 'border-red-600': !!passError })}
-          labelStyle={useTailwind({ className: 'font-normal text-black text-xl mb-2' }) as TextStyle}
-          onChangeText={setPassword}
-          value={password}
-          secureTextEntry={true}
-          placeholder="password"
-          autoCapitalize={'none'}
-        />
-      </View>
-      <View className="py-1 self-stretch">
-        <Input
-          label="Confirm Password"
-          className={cn('border pl-3', { 'border-red-600': !!passError })}
-          labelStyle={useTailwind({ className: 'font-normal text-black text-xl mb-2' }) as TextStyle}
-          onChangeText={setPasswordConfirm}
-          value={passwordConfirm}
-          secureTextEntry={true}
-          placeholder="password"
-          autoCapitalize={'none'}
-        />
-      </View>
-      <AuthButton text="Create Account" onClick={signUpWithEmail} />
-      <View className="flex flex-row justify-center">
+      <AuthInput control={control} field="email" label="Email" error={formErrors.email} />
+      <AuthInput control={control} field="password" label="Password" error={formErrors.password} />
+      <AuthInput
+        control={control}
+        field="passwordConfirm"
+        label="Confirm Password"
+        placeholder="password"
+        error={formErrors.passwordConfirm}
+      />
+      <Controller
+        control={control}
+        rules={{ required: true }}
+        render={({ field: { onChange, value } }) => (
+          <View className="mb-5">
+            <CheckBox
+              iconType="ionicon"
+              checkedIcon="checkbox"
+              uncheckedIcon="square-outline"
+              checkedColor="black"
+              uncheckedColor="black"
+              title="Disclaimer email jargon and more consent stuff, lots of text ask to see the terms and conditions etc."
+              textStyle={useTailwind({ className: cn('flex-1 font-normal mr-0') }) as TextStyle}
+              size={30}
+              checked={value}
+              onPress={() => setValue('disclaimer', !value)}
+            />
+          </View>
+        )}
+        name="disclaimer"
+      />
+      <AuthButton text="Create Account" icon="→" onClick={() => handleSubmit(onSubmit, onError)} />
+      <View className="flex flex-row justify-center mt-5">
         <Text className="text-lg flex text-center mr-2">Already Have an Account?</Text>
         <TouchableOpacity className="flex items-center" onPress={() => replace('Sign In')}>
           <Text className="text-blue-400 text-lg">Sign In</Text>
