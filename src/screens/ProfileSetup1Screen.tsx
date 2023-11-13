@@ -66,7 +66,8 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
   };
 
   const handleDateText = (): string => {
-    const birthDate = getValues().birthDate;
+    const birthDateString = getValues().birthDate;
+    const birthDate = new Date(birthDateString);
     return birthDate
       ? `${birthDate.getMonth() + 1} / ${birthDate.toDateString().split(' ')[2]} / ${birthDate.getFullYear()}`
       : 'No value Selected';
@@ -103,7 +104,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <DatePicker
-              value={value}
+              value={new Date(value)}
               className="border-b-2 rounded-b-lg"
               style={useTailwind({ className: 'h-10' }) as ViewStyle}
               textInputStyle={useTailwind({ className: 'font-bold text-xl px-2' }) as TextStyle}
@@ -111,7 +112,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
               isNullable={false}
               onDateChange={(date) => {
                 if (!date) return;
-                onChange({ target: { value: date } });
+                onChange({ target: { value: date.toDateString() } });
               }}
             />
           )}
