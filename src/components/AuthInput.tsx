@@ -11,9 +11,17 @@ type Props<T extends FieldValues> = {
   field: Path<T>;
   placeholder?: string;
   label: string;
+  secure?: boolean;
 };
 
-export default function AuthInput<T extends FieldValues>({ control, error, field, placeholder, label }: Props<T>) {
+export default function AuthInput<T extends FieldValues>({
+  control,
+  error,
+  field,
+  placeholder,
+  label,
+  secure = false,
+}: Props<T>) {
   return (
     <Controller
       control={control}
@@ -26,7 +34,7 @@ export default function AuthInput<T extends FieldValues>({ control, error, field
           containerStyle={useTailwind({ className: 'py-0' }) as ViewStyle}
           onChangeText={onChange}
           value={value}
-          secureTextEntry={true}
+          secureTextEntry={secure}
           placeholder={placeholder || field}
           autoCapitalize={'none'}
           errorMessage={error?.message}
