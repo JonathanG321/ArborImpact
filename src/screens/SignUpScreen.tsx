@@ -81,18 +81,19 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         <LineBreak classNames="w-1/2 border-gray-400" />
       </View>
       <AuthInput control={control} field="email" label="Email" error={formErrors.email} />
-      <AuthInput control={control} field="password" label="Password" error={formErrors.password} />
+      <AuthInput control={control} field="password" label="Password" error={formErrors.password} secure />
       <AuthInput
         control={control}
         field="passwordConfirm"
         label="Confirm Password"
         placeholder="password"
+        secure
         error={formErrors.passwordConfirm}
       />
       <Controller
         control={control}
         rules={{ required: true }}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { value } }) => (
           <View className="mb-5">
             <CheckBox
               iconType="ionicon"
@@ -110,7 +111,7 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         )}
         name="disclaimer"
       />
-      <AuthButton text="Create Account" icon="→" onClick={() => handleSubmit(onSubmit, onError)} />
+      <AuthButton text="Create Account" icon="→" onPress={handleSubmit(onSubmit, onError)} />
       <View className="flex flex-row justify-center mt-5">
         <Text className="text-lg flex text-center mr-2">Already Have an Account?</Text>
         <TouchableOpacity className="flex items-center" onPress={() => replace('Sign In')}>
