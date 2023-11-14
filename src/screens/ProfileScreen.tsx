@@ -15,9 +15,14 @@ import { Image } from 'react-native-elements';
 
 type Props = NativeStackScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
-export default function ProfileScreen({ navigation: {} }: Props) {
+export default function ProfileScreen({
+  navigation: {},
+  route: {
+    params: { startTab },
+  },
+}: Props) {
   const { profile } = useContext(ProfileContext);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(startTab || 0);
   const routes = [
     { key: 'first', title: 'MY PROJECTS' },
     { key: 'second', title: 'MY IMPACT' },
@@ -29,7 +34,7 @@ export default function ProfileScreen({ navigation: {} }: Props) {
         <Header textClassNames="text-2xl" centered title="UH-OH!" />
         <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">You don't have any projects yet!</Text>
         <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">Click below to start browsing projects!</Text>
-        <View className="bg-yellow-300 rounded-lg py-3 px-4">
+        <View className="bg-arbor-yellow rounded-lg py-3 px-4">
           <Text className="text-[#5a5a5b] text-lg">Let's Go</Text>
         </View>
       </View>
@@ -90,7 +95,7 @@ export default function ProfileScreen({ navigation: {} }: Props) {
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
         <ButtonDisplay text="Balance: USD 1.00" classNames="ml-4 mr-2" />
-        <ButtonDisplay text="Shares: 0" classNames="bg-blue-800 ml-2 mr-4" textClassNames="text-white" />
+        <ButtonDisplay text="Shares: 0" classNames="bg-arbor-blue ml-2 mr-4" textClassNames="text-white" />
       </View>
       <LineBreak />
       <View className="h-full px-4">
