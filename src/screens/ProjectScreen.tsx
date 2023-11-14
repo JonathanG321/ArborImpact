@@ -5,7 +5,7 @@ import ScreenContainer from '../components/ScreenContainer';
 import { ActivityIndicator, View } from 'react-native';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
-import { SDGs } from '../../lib/templates';
+import { SDGs, dayMilliseconds } from '../../lib/templates';
 import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = NativeStackScreenProps<RootDrawerParamList, 'Project'>;
@@ -16,9 +16,9 @@ export default function ProjectScreen({
   },
 }: Props) {
   return (
-    <ScreenContainer>
-      <ScrollView>
-        <View className="flex items-center flex-1">
+    <ScrollView bounces={false}>
+      <ScreenContainer>
+        <View className="flex items-center flex-1 pb-16">
           <View className="flex flex-row items-center mb-4">
             <Text className="text-2xl font-extrabold">{project.name.toLocaleUpperCase()}</Text>
             <Image
@@ -53,7 +53,8 @@ export default function ProjectScreen({
           <LineBreak />
           <View className="w-full px-4">
             <Text className="text-2xl text-blue-500 mb-1">
-              {project.donationCurrency} {project.donations.reduce((total, current) => total + current, 0).toFixed(2)}
+              {project.donationCurrency}{' '}
+              {project.donations.reduce((total, current) => total + current.donation, 0).toFixed(2)}
             </Text>
             <Text className="text-md font-extrabold mb-4">
               PLEDGED OF {project.donationCurrency} {project.fundingGoal.toLocaleString()}
@@ -61,12 +62,12 @@ export default function ProjectScreen({
             <Text className="text-2xl font-extrabold mb-1">{project.donations.length}</Text>
             <Text className="text-md font-extrabold mb-4">PROJECT FUNDERS</Text>
             <Text className="text-2xl font-extrabold mb-1">
-              {((new Date(project.goalDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)).toFixed(0)}
+              {((new Date(project.goalDate).getTime() - new Date().getTime()) / dayMilliseconds).toFixed(0)}
             </Text>
             <Text className="text-md font-extrabold mb-4">DAYS TO GO</Text>
           </View>
           <View className="w-full flex flex-row my-6">
-            <ButtonDisplay text="Donate!" classNames="mx-4 bg-blue-500" textClassNames="font-bold" />
+            <ButtonDisplay text="Donate!" classNames="mx-4 bg-arbor-blue" textClassNames="font-bold text-white" />
           </View>
           <Text className="text-xl font-extrabold mb-4">IMAGE AND VIDEO GALLERY</Text>
           <LineBreak />
@@ -76,7 +77,7 @@ export default function ProjectScreen({
             ))}
           </View>
         </View>
-      </ScrollView>
-    </ScreenContainer>
+      </ScreenContainer>
+    </ScrollView>
   );
 }
