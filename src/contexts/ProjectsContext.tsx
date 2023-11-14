@@ -18,7 +18,10 @@ export function ProjectsContextProvider({ children }: PropsWithChildren) {
 
   async function getProjects() {
     try {
-      const { error, status, data } = await supabase.from('projects').select(`*, donations(donation)`);
+      const { error, status, data } = await supabase
+        .from('projects')
+        .select(`*, donations(donation, created_at)`)
+        .order('created_at', { foreignTable: 'donations', ascending: false });
       if (error && status !== 406) throw error;
       if (error) return;
       const projects = await createProjectObject(data as DBProject[]);
