@@ -10,13 +10,15 @@ module.exports = {
     // fontFamily: {
     //   "bebas-neue": ["./assets/fonts/BebasNeueRegular.ttf"]
     // },
-    // extend: {
-    //   colors: {
-    //     arbor: {
-    //       blue: '#E5F0FF'
-    //     }
-    //   }
-    // },
+    extend: {
+      colors: {
+        arbor: {
+          bg: '#E5F0FF',
+          yellow: "#ebe378",
+          blue: "#212697"
+        }
+      }
+    },
   },
   plugins: [],
 }
