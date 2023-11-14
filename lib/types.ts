@@ -27,7 +27,7 @@ export type RootStackParamList = {
 
 export type RootDrawerParamList = {
   Home: undefined;
-  Profile: undefined;
+  Profile: { startTab?: 0 | 1 };
   Projects: undefined;
   Project: { project: Project };
 };
@@ -94,7 +94,7 @@ export type Project = {
   goalDate: string;
   sdg: SDG;
   donationCurrency: string;
-  donations: number[];
+  donations: Donation[];
   extraImages: ImagePickerAsset[] | null;
 };
 
@@ -111,7 +111,10 @@ export type DBProject = {
   funding_goal: number;
   goal_date: string;
   sdg: SDG;
-  donations: { donation: number }[];
+  donations: DBDonation[];
   donation_currency: string;
   extra_images: string[];
 };
+
+export type DBDonation = { donation: number; created_at: string };
+export type Donation = { donation: number; createdAt: string };

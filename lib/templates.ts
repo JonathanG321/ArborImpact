@@ -14,6 +14,8 @@ export const emptyProfile: Profile = {
   projects: [],
 };
 
+export const dayMilliseconds = 1000 * 60 * 60 * 24;
+
 export const SDGs = {
   SDG1: require(`../assets/sdg/SDG1.png`),
   SDG2: require(`../assets/sdg/SDG2.png`),

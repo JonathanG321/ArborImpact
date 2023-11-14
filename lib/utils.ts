@@ -66,7 +66,9 @@ export async function createProjectObject(dbProjects: DBProject[]) {
         impactGoalUnit: impact_goal_unit,
         impactType: impact_type,
         donationCurrency: donation_currency,
-        donations: donations ? donations.map((donation) => donation.donation) : [],
+        donations: donations
+          ? donations.map((donation) => ({ donation: donation.donation, createdAt: donation.created_at }))
+          : [],
         extraImages: projectExtraImages[index]
           ? projectExtraImages[index].map((image) => ({ uri: image, width: 200, height: 200 }))
           : null,
