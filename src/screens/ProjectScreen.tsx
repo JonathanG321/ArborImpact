@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image, Input, Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
-import { ActivityIndicator, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { useTailwind } from 'nativewind';
-import { TextStyle } from 'react-native';
+import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
 import CurrencyInput from 'react-native-currency-input';
-import { RootDrawerParamList } from '../../lib/types';
+import { DBDonation, Donation, RootDrawerParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
 import { SDGs, dayMilliseconds } from '../../lib/templates';
 import { cn } from '../../lib/utils';
+import { SessionContext } from '../contexts/SessionContext';
+import { supabase } from '../../supabase/supabase';
 
 type Props = NativeStackScreenProps<RootDrawerParamList, 'Project'>;
 
@@ -21,7 +21,32 @@ export default function ProjectScreen({
   },
 }: Props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [donation, setDonation] = useState<number | null>(0);
+  const [donation, setDonation] = useState<number>(0);
+  const { session } = useContext(SessionContext);
+
+  async function handleDonation() {
+    if (!session) throw new Error('Session does not exist when donation button is pressed');
+
+    const { data, error: donationRetrievalError } = await supabase
+      .from('donations')
+      .select('donation')
+      .eq('profile_id', session?.user.id)
+      .eq('project_id', project.id);
+    const userDonation = data && data[0].donation ? (data[0].donation as Pick<DBDonation, 'donation'>['donation']) : 0;
+    if (donationRetrievalError) {
+      Alert.alert(donationRetrievalError.message);
+    }
+
+    const newDonation: Omit<DBDonation, 'created_at'> = {
+      profile_id: session.user.id,
+      project_id: project.id.toString(),
+      updated_at: new Date().toUTCString(),
+      donation: userDonation + donation,
+    };
+    const { error: donationError } = await supabase.from('donations').upsert(newDonation);
+    if (donationError) Alert.alert(donationError.message);
+  }
+
   return (
     <ScreenContainer scrollable>
       <View className="flex items-center flex-1 pb-16">
@@ -85,23 +110,37 @@ export default function ProjectScreen({
           onBackdropPress={() => setIsModalVisible(false)}
           isVisible={isModalVisible}
         >
-          <View className="bg-white h-1/5 w-8/12 rounded-2xl flex items-center py-6">
-            <Text className="text-xl font-bold">Donate how much?</Text>
+          <View className="bg-white h-1/5 w-8/12 rounded-2xl flex items-center px-4 py-6">
+            <Text className="text-xl font-bold mb-3">Donate how much?</Text>
             <CurrencyInput
-              className={cn('border pl-3')}
+              className={cn('border px-3 py-2 w-36 text-2xl flex')}
               prefix="$"
-              precision={2}
               minValue={0}
-              // labelStyle={useTailwind({ className: 'font-normal text-black text-xl mb-2' }) as TextStyle}
-              // containerStyle={useTailwind({ className: 'py-0' }) as ViewStyle}
+              delimiter=","
+              separator="."
               value={donation}
-              onChangeValue={setDonation}
+              renderTextInput={(textInputProps) => (
+                <Input
+                  {...textInputProps}
+                  onChange={(e) => {
+                    const newValue = parseFloat(
+                      e.nativeEvent.text
+                        .split('')
+                        .filter((char) => /[0-9\.]/.test(char))
+                        .join('')
+                    );
+                    if (newValue === 0) setDonation(0);
+                  }}
+                />
+              )}
+              onChangeValue={(newValue) => {
+                if (typeof newValue === 'number') {
+                  setDonation(newValue || 0);
+                }
+              }}
             />
-            {/* <Input
-              label={'Amount'}
-            /> */}
-            <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-              <Text>Hide Modal</Text>
+            <TouchableOpacity onPress={() => handleDonation()}>
+              <Text className="text-blue-400">Donate</Text>
             </TouchableOpacity>
           </View>
         </Modal>
@@ -120,4 +159,10 @@ export default function ProjectScreen({
       </View>
     </ScreenContainer>
   );
+}
+
+function arrayMove(arr: any[], fromIndex: number, toIndex: number) {
+  var element = arr[fromIndex];
+  arr.splice(fromIndex, 1);
+  arr.splice(toIndex, 0, element);
 }
