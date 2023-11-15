@@ -23,8 +23,10 @@ export default function ProjectsScreen({ navigation: { replace } }: Props) {
   const newProjects =
     projects?.filter((project) => (currentDate - new Date(project.createdAt).getTime()) / dayMilliseconds < 30) || [];
   const neglectedProjects =
-    projects?.filter(
-      (project) => (currentDate - new Date(project.donations[0].createdAt).getTime()) / dayMilliseconds < 30
+    projects?.filter((project) =>
+      !!project.donations.length
+        ? (currentDate - new Date(project.donations[0].updatedAt).getTime()) / dayMilliseconds < 7
+        : false
     ) || [];
 
   useEffect(() => {
