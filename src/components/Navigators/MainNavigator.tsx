@@ -46,12 +46,18 @@ export default function MainNavigator() {
       screenOptions={{ headerLeft: () => null, headerRight: () => <DrawerToggleButton />, drawerPosition: 'right' }}
       drawerContent={DrawerContent}
     >
-      <Drawer.Screen name="Profile" component={ProfileScreen} initialParams={{ startTab: 0 }} />
-      <Drawer.Screen name="Projects" component={ProjectsScreen} />
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileScreen}
+        initialParams={{ startTab: 0 }}
+        options={{ headerTitle: '' }}
+      />
+      <Drawer.Screen name="Projects" component={ProjectsScreen} options={{ headerTitle: '' }} />
       <Drawer.Screen
         name="Project"
         component={ProjectScreen}
         options={{
+          headerTitle: '',
           drawerItemStyle: { display: 'none' },
           headerLeft: () => {
             const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
