@@ -116,5 +116,17 @@ export type DBProject = {
   extra_images: string[];
 };
 
-export type DBDonation = { donation: number; created_at: string };
-export type Donation = { donation: number; createdAt: string };
+export type DBDonation = {
+  donation: number;
+  created_at: string;
+  updated_at: string;
+  profile_id: string;
+  project_id: string;
+};
+export type Donation = {
+  donation: number;
+  createdAt: string;
+  updatedAt: string;
+  profileId: string;
+  projectId: string;
+};
