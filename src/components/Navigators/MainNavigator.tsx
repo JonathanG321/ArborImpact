@@ -46,7 +46,7 @@ export default function MainNavigator() {
       screenOptions={{ headerLeft: () => null, headerRight: () => <DrawerToggleButton />, drawerPosition: 'right' }}
       drawerContent={DrawerContent}
     >
-      <Drawer.Screen name="Profile" component={ProfileScreen} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} initialParams={{ startTab: 0 }} />
       <Drawer.Screen name="Projects" component={ProjectsScreen} />
       <Drawer.Screen
         name="Project"

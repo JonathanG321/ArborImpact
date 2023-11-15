@@ -27,7 +27,7 @@ export type RootStackParamList = {
 
 export type RootDrawerParamList = {
   Home: undefined;
-  Profile: { startTab?: 0 | 1 };
+  Profile: { startTab: 0 | 1 };
   Projects: undefined;
   Project: { project: Project };
 };

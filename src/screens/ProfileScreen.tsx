@@ -22,7 +22,7 @@ export default function ProfileScreen({
   },
 }: Props) {
   const { profile } = useContext(ProfileContext);
-  const [index, setIndex] = useState(startTab || 0);
+  const [index, setIndex] = useState<number>(startTab);
   const routes = [
     { key: 'first', title: 'MY PROJECTS' },
     { key: 'second', title: 'MY IMPACT' },
@@ -108,7 +108,7 @@ export default function ProfileScreen({
               {...props}
               style={{ backgroundColor: 'transparent' }}
               renderIndicator={(props) => (
-                <View className="" style={{ height: props.layout.height, width: props.layout.width }}>
+                <View style={{ height: props.layout.height, width: props.layout.width }}>
                   <TabBarIndicator {...props} style={{ backgroundColor: 'black', height: 3, marginBottom: 10 }} />
                 </View>
               )}
