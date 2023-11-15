@@ -16,7 +16,7 @@ import { Image } from 'react-native-elements';
 type Props = NativeStackScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
 export default function ProfileScreen({
-  navigation: {},
+  navigation: { navigate },
   route: {
     params: { startTab },
   },
@@ -34,8 +34,8 @@ export default function ProfileScreen({
         <Header textClassNames="text-2xl" centered title="UH-OH!" />
         <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">You don't have any projects yet!</Text>
         <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">Click below to start browsing projects!</Text>
-        <View className="bg-arbor-yellow rounded-lg py-3 px-4">
-          <Text className="text-[#5a5a5b] text-lg">Let's Go</Text>
+        <View className="flex flex-row w-24">
+          <ButtonDisplay textClassNames="text-[#5a5a5b] text-lg" text="Let's Go" onPress={() => navigate('Projects')} />
         </View>
       </View>
     ),
