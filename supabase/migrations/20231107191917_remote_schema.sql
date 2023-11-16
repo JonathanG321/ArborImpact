@@ -46,29 +46,6 @@ end;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.delete_storage_object(bucket text, object text, OUT status integer, OUT content text)
- RETURNS record
- LANGUAGE plpgsql
- SECURITY DEFINER
-AS $function$
-declare
-  project_url text := 'https://zyvhfomclqlhrbkvgokr.supabase.co';
-  service_role_key text := 'SERVICE_ROLE_KEY'; --  full access needed
-  url text := project_url||'/storage/v1/object/'||bucket||'/'||object;
-begin
-  select
-      into status, content
-           result.status::int, result.content::text
-      FROM extensions.http((
-    'DELETE',
-    url,
-    ARRAY[extensions.http_header('authorization','Bearer '||service_role_key)],
-    NULL,
-    NULL)::extensions.http_request) as result;
-end;
-$function$
-;
-
 CREATE TRIGGER before_project_changes BEFORE DELETE OR UPDATE OF project_image_url ON public.projects FOR EACH ROW EXECUTE FUNCTION delete_old_project_image();
 
 
