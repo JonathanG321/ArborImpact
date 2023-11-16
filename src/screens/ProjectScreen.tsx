@@ -1,17 +1,17 @@
 import { useContext, useState } from 'react';
-import { Image, Input, Text } from 'react-native-elements';
-import Modal from 'react-native-modal';
-import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
-import CurrencyInput from 'react-native-currency-input';
-import type { DrawerScreenProps, DrawerNavigationProp } from '@react-navigation/drawer';
-import { DBDonation, Project, RootDrawerParamList } from '../../lib/types';
+import { Image, Text } from 'react-native-elements';
+import { ActivityIndicator, Alert, View } from 'react-native';
+import type { DrawerScreenProps } from '@react-navigation/drawer';
+import { DBDonation, RootDrawerParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
 import { SDGs, dayMilliseconds } from '../../lib/templates';
-import { cn } from '../../lib/utils';
 import { SessionContext } from '../contexts/SessionContext';
 import { supabase } from '../../supabase/supabase';
+import { ProjectsContext } from '../contexts/ProjectsContext';
+import DonationModal from '../components/DonationModal';
+import { ProfileContext } from '../contexts/ProfileContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 
@@ -25,6 +25,8 @@ export default function ProjectScreen({
   const [donation, setDonation] = useState<number>(0);
   const [donated, setDonated] = useState(false);
   const { session } = useContext(SessionContext);
+  const { getProjects } = useContext(ProjectsContext);
+  const { getProfile } = useContext(ProfileContext);
 
   async function handleDonation() {
     if (!session) throw new Error('Session does not exist when donation button is pressed');
@@ -42,15 +44,19 @@ export default function ProjectScreen({
 
     const newDonation: Omit<DBDonation, 'created_at'> = {
       profile_id: session.user.id,
-      project_id: project.id.toString(),
+      project_id: project.id,
       updated_at: new Date().toUTCString(),
       donation: userDonation + donation,
     };
-    const { error: donationError } = await supabase.from('donations').upsert(newDonation);
+    const [{ error: donationError }] = await Promise.all([
+      supabase.from('donations').upsert(newDonation),
+      supabase.from('profiles').update({}),
+    ]);
     if (donationError) {
       Alert.alert(donationError.message);
       return;
     }
+    await Promise.all([getProjects(), getProfile(session)]);
     setDonated(true);
   }
 
@@ -137,116 +143,5 @@ export default function ProjectScreen({
         </View>
       </View>
     </ScreenContainer>
-  );
-}
-
-type FormattedInputProps = {
-  donation: number;
-  setDonation: React.Dispatch<React.SetStateAction<number>>;
-};
-
-function FormattedInput({ donation, setDonation }: FormattedInputProps) {
-  return (
-    <CurrencyInput
-      className={cn('border px-3 py-2 w-36 text-2xl flex')}
-      prefix="$"
-      minValue={0}
-      delimiter=","
-      separator="."
-      value={donation}
-      renderTextInput={(textInputProps) => (
-        <Input
-          {...textInputProps}
-          onChange={(e) => {
-            const newValue = parseFloat(
-              e.nativeEvent.text
-                .split('')
-                .filter((char) => /[0-9\.]/.test(char))
-                .join('')
-            );
-            if (newValue === 0) setDonation(0);
-          }}
-        />
-      )}
-      onChangeValue={(newValue) => {
-        if (typeof newValue === 'number') {
-          setDonation(newValue || 0);
-        }
-      }}
-    />
-  );
-}
-
-interface DonationModalProps extends FormattedInputProps {
-  donated: boolean;
-  setDonated: React.Dispatch<React.SetStateAction<boolean>>;
-  isModalVisible: boolean;
-  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDonation: () => Promise<void>;
-  navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
-  project: Project;
-}
-
-function DonationModal({
-  donation,
-  donated,
-  setDonated,
-  isModalVisible,
-  setDonation,
-  setIsModalVisible,
-  handleDonation,
-  navigation,
-  project,
-}: DonationModalProps) {
-  if (donated) {
-    return (
-      <Modal
-        className="flex items-center"
-        onBackdropPress={() => {
-          setIsModalVisible(false);
-          setDonated(false);
-        }}
-        animationOut="fadeOut"
-        isVisible={isModalVisible}
-      >
-        <View className="bg-white h-fit w-full rounded-2xl flex items-center p-10">
-          <Text className="text-2xl font-extrabold mb-3 text-center">
-            CONGRATULATIONS! YOU HAVE SUCCESSFULLY DONATED TO {project.name.toUpperCase()}
-          </Text>
-          <Text className="text-xl text-center text-gray-600 mb-5">
-            Now that you have donated for your first project, Let's see the impact created on your portfolio.
-          </Text>
-          <View className="flex flex-row w-1/3">
-            <ButtonDisplay
-              classNames="w-fit"
-              text="→ Let's Go"
-              onPress={() => {
-                setIsModalVisible(false);
-                setDonated(false);
-                navigation.jumpTo('Profile', { startTab: 1 });
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-  return (
-    <Modal
-      className="flex items-center"
-      onBackdropPress={() => {
-        setIsModalVisible(false);
-        setDonated(false);
-      }}
-      isVisible={isModalVisible}
-    >
-      <View className="bg-white h-1/5 w-8/12 rounded-2xl flex items-center px-4 py-6">
-        <Text className="text-xl font-bold mb-3">Donate how much?</Text>
-        <FormattedInput donation={donation} setDonation={setDonation} />
-        <TouchableOpacity onPress={async () => await handleDonation()}>
-          <Text className="text-blue-400">Donate</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
   );
 }
