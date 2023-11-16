@@ -12,6 +12,7 @@ export const emptyProfile: Profile = {
   wantTaxIncentives: false,
   sdg: [],
   projects: [],
+  balance: 0,
 };
 
 export const dayMilliseconds = 1000 * 60 * 60 * 24;

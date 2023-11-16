@@ -1,6 +1,7 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { Control, FieldValues, Path } from 'react-hook-form';
+import { Database } from './supabaseTypes';
 
 export type WantsItemProps = {
   description: string;
@@ -63,22 +64,13 @@ export type Profile = {
   wantSpecificCause: boolean;
   sdg: SDG[];
   projects: Project[];
+  balance: number;
 };
 
-export type DBProfile = {
-  first_name: string;
-  last_name: string;
-  birth_date: string;
-  location: string;
-  avatar_url: string;
-  want_difference_world: boolean;
-  want_diversify_portfolio: boolean;
-  want_tax_incentives: boolean;
-  want_specific_cause: boolean;
-  sdg: SDG[];
-  donation_currency: string;
-  projects: DBProject[];
-};
+export type DBProfile = Database['public']['Tables']['profiles']['Row'];
+export interface DBProfilesWithProjects extends DBProfile {
+  projects: DBProjectsWithDonations;
+}
 
 export type Project = {
   id: number;
@@ -98,35 +90,15 @@ export type Project = {
   extraImages: ImagePickerAsset[] | null;
 };
 
-export type DBProject = {
-  id: number;
-  created_at: string;
-  name: string;
-  project_image_url: string;
-  region: string;
-  impact_goal: number;
-  impact_goal_unit: string;
-  activity: string;
-  impact_type: string;
-  funding_goal: number;
-  goal_date: string;
-  sdg: SDG;
+export type DBProject = Database['public']['Tables']['projects']['Row'];
+export interface DBProjectsWithDonations extends DBProject {
   donations: DBDonation[];
-  donation_currency: string;
-  extra_images: string[];
-};
+}
 
-export type DBDonation = {
-  donation: number;
-  created_at: string;
-  updated_at: string;
-  profile_id: string;
-  project_id: string;
-};
-export type Donation = {
-  donation: number;
+export type DBDonation = Database['public']['Tables']['donations']['Row'];
+export interface Donation extends Pick<DBDonation, 'donation'> {
   createdAt: string;
   updatedAt: string;
   profileId: string;
-  projectId: string;
-};
+  projectId: number;
+}

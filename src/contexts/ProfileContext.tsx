@@ -2,7 +2,7 @@ import { Session } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useState } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { Alert } from 'react-native';
-import { DBProfile, Profile } from '../../lib/types';
+import { Profile, SDG } from '../../lib/types';
 import { createProjectObject, downloadImage } from '../../lib/utils';
 
 export const ProfileContext = createContext<{
@@ -27,14 +27,13 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         return false;
       }
       setIsLoadingProfile(true);
-      const { error, status, data } = await supabase
-        .from('profiles')
-        .select(`*, projects(*)`)
-        .eq('id', session?.user.id)
-        .single();
+      const {
+        error,
+        status,
+        data: dbProfile,
+      } = await supabase.from('profiles').select(`*, projects(*, donations(*))`).eq('id', session?.user.id).single();
       if (error && status !== 406) throw error;
       if (error) return;
-      const dbProfile = data as DBProfile;
       const [image, projects] = await Promise.all([
         downloadImage(dbProfile.avatar_url),
         createProjectObject(dbProfile.projects),
@@ -45,12 +44,13 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         firstName: dbProfile.first_name,
         lastName: dbProfile.last_name,
         location: dbProfile.location,
-        sdg: dbProfile.sdg,
+        sdg: dbProfile.sdg as SDG[],
         wantDifferenceWorld: dbProfile.want_difference_world,
         wantDiversifyPortfolio: dbProfile.want_diversify_portfolio,
         wantSpecificCause: dbProfile.want_specific_cause,
         wantTaxIncentives: dbProfile.want_tax_incentives,
         projects: projects,
+        balance: dbProfile.balance,
       };
       setProfile(profile);
       setIsLoadingProfile(false);

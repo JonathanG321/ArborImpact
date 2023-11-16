@@ -1,8 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
 import { supabase } from '../supabase/supabase';
-import { DBProject, Project, RootStackParamList } from './types';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { DBProjectsWithDonations, Project } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,7 +30,7 @@ export async function downloadImage(path: string, bucket: string = 'avatars') {
   }
 }
 
-export async function createProjectObject(dbProjects: DBProject[]) {
+export async function createProjectObject(dbProjects: DBProjectsWithDonations[]) {
   const projectMainImages = await Promise.all(
     dbProjects.map((project) => downloadImage(project.project_image_url, 'project_images'))
   );

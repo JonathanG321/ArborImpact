@@ -24,7 +24,7 @@ export function ProjectsContextProvider({ children }: PropsWithChildren) {
         .order('created_at', { foreignTable: 'donations', ascending: false });
       if (error && status !== 406) throw error;
       if (error) return;
-      const projects = await createProjectObject(data as DBProject[]);
+      const projects = await createProjectObject(data);
       setProjects(projects);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
