@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
-import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image, Input, Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
 import CurrencyInput from 'react-native-currency-input';
-import { DBDonation, Donation, Project, RootDrawerParamList } from '../../lib/types';
+import type { DrawerScreenProps, DrawerNavigationProp } from '@react-navigation/drawer';
+import { DBDonation, Project, RootDrawerParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
@@ -13,10 +13,10 @@ import { cn } from '../../lib/utils';
 import { SessionContext } from '../contexts/SessionContext';
 import { supabase } from '../../supabase/supabase';
 
-type Props = NativeStackScreenProps<RootDrawerParamList, 'Project'>;
+type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 
 export default function ProjectScreen({
-  navigation: { navigate },
+  navigation,
   route: {
     params: { project },
   },
@@ -120,7 +120,7 @@ export default function ProjectScreen({
           donated={donated}
           setDonated={setDonated}
           handleDonation={handleDonation}
-          navigate={navigate}
+          navigation={navigation}
           project={project}
         />
         <Text className="text-xl font-extrabold mb-4">IMAGE AND VIDEO GALLERY</Text>
@@ -183,7 +183,7 @@ interface DonationModalProps extends FormattedInputProps {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   handleDonation: () => Promise<void>;
-  navigate: NativeStackNavigationProp<RootDrawerParamList, 'Project', undefined>['navigate'];
+  navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
   project: Project;
 }
 
@@ -195,7 +195,7 @@ function DonationModal({
   setDonation,
   setIsModalVisible,
   handleDonation,
-  navigate,
+  navigation,
   project,
 }: DonationModalProps) {
   if (donated) {
@@ -223,7 +223,7 @@ function DonationModal({
               onPress={() => {
                 setIsModalVisible(false);
                 setDonated(false);
-                navigate('Profile', { startTab: 1 });
+                navigation.jumpTo('Profile', { startTab: 1 });
               }}
             />
           </View>

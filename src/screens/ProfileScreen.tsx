@@ -1,6 +1,8 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Image } from 'react-native-elements';
+import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
+import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { RootDrawerParamList, SDG, WantsItemProps } from '../../lib/types';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
@@ -9,11 +11,9 @@ import Header from '../components/Header';
 import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
-import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
 import { SDGs } from '../../lib/templates';
-import { Image } from 'react-native-elements';
 
-type Props = NativeStackScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
+type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
 export default function ProfileScreen({
   navigation: { navigate },
@@ -68,6 +68,11 @@ export default function ProfileScreen({
     ...(profile?.wantTaxIncentives ? [{ description: 'I AM INTERESTED IN TAX INCENTIVES', icon: 'cash-outline' }] : []),
     ...(profile?.wantSpecificCause ? [{ description: 'I AM PASSIONATE ABOUT A SPECIFIC CAUSE', icon: 'heart' }] : []),
   ];
+
+  useEffect(() => {
+    console.log(startTab);
+    setIndex(startTab);
+  }, []);
 
   return (
     <ScreenContainer>

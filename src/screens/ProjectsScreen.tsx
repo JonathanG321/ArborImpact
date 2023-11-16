@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
 import { Dimensions } from 'react-native';
@@ -12,9 +12,9 @@ import LineBreak from '../components/LineBreak';
 import { ProfileContext } from '../contexts/ProfileContext';
 import { dayMilliseconds } from '../../lib/templates';
 
-type Props = NativeStackScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
+type Props = DrawerScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 
-export default function ProjectsScreen({ navigation: { replace } }: Props) {
+export default function ProjectsScreen({ navigation: {} }: Props) {
   const { projects, getProjects } = useContext(ProjectsContext);
   const { profile } = useContext(ProfileContext);
   const headerHeight = useHeaderHeight();
