@@ -99,7 +99,7 @@ export default function ProfileScreen({
       </View>
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
-        <ButtonDisplay text="Balance: USD 1.00" classNames="ml-4 mr-2" />
+        <ButtonDisplay text={`Balance: USD ${profile?.balance}`} classNames="ml-4 mr-2" />
         <ButtonDisplay text="Shares: 0" classNames="bg-arbor-blue ml-2 mr-4" textClassNames="text-white" />
       </View>
       <LineBreak />
