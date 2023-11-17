@@ -13,23 +13,23 @@ export interface Database {
         Row: {
           created_at: string
           donation: number
+          id: number
           profile_id: string
           project_id: number
-          updated_at: string
         }
         Insert: {
           created_at?: string
           donation?: number
+          id?: number
           profile_id: string
           project_id: number
-          updated_at?: string
         }
         Update: {
           created_at?: string
           donation?: number
+          id?: number
           profile_id?: string
           project_id?: number
-          updated_at?: string
         }
         Relationships: [
           {
