@@ -33,7 +33,6 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
   } = useForm<LoginForm>({ resolver: zodResolver(schema) });
 
   async function onSubmit(form: LoginForm) {
-    console.log({ form });
     setIsLoading(true);
     const { error } = await Queries.supabaseSignIn(form);
 
@@ -44,7 +43,6 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
   }
 
   function onError(errors: FieldErrors<LoginForm>) {
-    console.log({ errors });
     Object.keys(errors).map((key) => {
       const LoginFormKey = key as keyof LoginForm;
       setError(LoginFormKey, errors[LoginFormKey] || {});

@@ -2,6 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
 import { DBProject, DBProjectWithDonations, Donation, Project, ProjectWithDonations } from './types';
 import Queries from './supabaseQueries';
+import { Alert } from 'react-native';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,7 +26,7 @@ export async function downloadImage(path: string, bucket: string = 'avatars') {
     return image;
   } catch (error) {
     if (error instanceof Error) {
-      console.log('Error downloading image: ', error.message);
+      Alert.alert('Error downloading image: ', error.message);
     }
   }
 }

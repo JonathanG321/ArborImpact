@@ -54,7 +54,7 @@ export default function ProfileSetup2Screen({ navigation: { navigate } }: Profil
 
   return (
     <ScreenContainer>
-      <Text className="text-2xl mb-6 ml-6 text-[#5a5a5b]">I choose to fund projects because:</Text>
+      <Text className="text-2xl mb-6 ml-6 text-arbor-grey">I choose to fund projects because:</Text>
       {fundReasonProps.map((props) => (
         <FormSwitch key={props.description} {...props} />
       ))}

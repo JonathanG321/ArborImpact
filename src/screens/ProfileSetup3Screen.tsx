@@ -64,7 +64,6 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
 
     if (avatarError) {
       Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
-      console.log({ avatarError, photo });
       setIsLoading(false);
       return;
     }
@@ -98,7 +97,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     <ScreenContainer>
       <View className="flex items-center h-full">
         <View className="flex flex-row justify-center">
-          <Text className="text-2xl mb-6 text-[#5a5a5b] text-center mx-5">
+          <Text className="text-2xl mb-6 text-arbor-grey text-center mx-5">
             Select the SDGs that you're interested in
           </Text>
         </View>
