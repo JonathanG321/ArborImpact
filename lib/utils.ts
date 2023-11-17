@@ -49,7 +49,7 @@ export async function createProjectObjects(dbProjects: DBProject[]) {
   );
   return projects;
 }
-export async function createProjectWithDonationObjects(dbProjects: DBProjectWithDonations[]) {
+export async function createProjectObjectsWithDonations(dbProjects: DBProjectWithDonations[]) {
   const { projectExtraImages, projectMainImages } = await getImages(dbProjects);
   const projects = dbProjects.map((project, index) =>
     createProjectWithDonations(project, index, projectMainImages, projectExtraImages)

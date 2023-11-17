@@ -2,19 +2,20 @@ import { View } from 'react-native';
 import { Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { Project, RootDrawerParamList } from '../../lib/types';
+import { ProjectWithDonations, RootDrawerParamList } from '../../lib/types';
 import ButtonDisplay from './ButtonDisplay';
 import LineBreak from './LineBreak';
 import FormattedInput, { FormattedInputProps } from './FormattedInput';
 
 interface DonationModalProps extends FormattedInputProps {
+  userBalance: number;
   donated: boolean;
   setDonated: React.Dispatch<React.SetStateAction<boolean>>;
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   handleDonation: () => Promise<void>;
   navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
-  project: Project;
+  project: ProjectWithDonations;
 }
 
 export default function DonationModal({
@@ -26,6 +27,7 @@ export default function DonationModal({
   setIsModalVisible,
   handleDonation,
   navigation,
+  userBalance,
   project,
 }: DonationModalProps) {
   if (donated) {
@@ -81,9 +83,10 @@ export default function DonationModal({
               donation={donation}
               setDonation={(newValue) => {
                 const totalDonated = project.donations.reduce((total, donation) => total + donation.donation, 0);
+                const remainingFunding = project.fundingGoal - totalDonated;
                 const newDonation =
-                  parseFloat(newValue.toString()) > project.fundingGoal - totalDonated
-                    ? project.fundingGoal - totalDonated
+                  parseFloat(newValue.toString()) > remainingFunding || parseFloat(newValue.toString()) > userBalance
+                    ? Math.min(remainingFunding, userBalance)
                     : newValue;
                 setDonation(newDonation);
               }}

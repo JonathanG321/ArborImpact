@@ -26,34 +26,33 @@ export default function ProjectScreen({
   const [donated, setDonated] = useState(false);
   const { session } = useContext(SessionContext);
   const { getProjects } = useContext(ProjectsContext);
-  const { getProfile } = useContext(ProfileContext);
+  const { getProfile, profile } = useContext(ProfileContext);
 
   async function handleDonation() {
     if (!session) throw new Error('Session does not exist when donation button is pressed');
 
-    const { data, error: donationRetrievalError } = await supabase
-      .from('donations')
-      .select('donation')
-      .eq('profile_id', session?.user.id)
-      .eq('project_id', project.id);
-    const userDonation = data && data[0].donation ? (data[0].donation as Pick<DBDonation, 'donation'>['donation']) : 0;
-    if (donationRetrievalError) {
-      Alert.alert(donationRetrievalError.message);
+    const currentBallance = profile?.balance || 0;
+    if (currentBallance < donation) {
+      Alert.alert('You do not have enough money in your account to donate that much.');
       return;
     }
-
-    const newDonation: Omit<DBDonation, 'created_at'> = {
-      profile_id: session.user.id,
-      project_id: project.id,
-      updated_at: new Date().toUTCString(),
-      donation: userDonation + donation,
-    };
-    const [{ error: donationError }] = await Promise.all([
-      supabase.from('donations').upsert(newDonation),
-      supabase.from('profiles').update({}),
+    const [{ error: donationError }, { error: profileError }] = await Promise.all([
+      supabase.from('donations').insert({
+        profile_id: session.user.id,
+        project_id: project.id,
+        donation,
+      }),
+      supabase.from('profiles').update({
+        id: session.user.id,
+        balance: currentBallance - donation,
+      }),
     ]);
     if (donationError) {
       Alert.alert(donationError.message);
+      return;
+    }
+    if (profileError) {
+      Alert.alert(profileError.message);
       return;
     }
     await Promise.all([getProjects(), getProfile(session)]);
@@ -119,6 +118,7 @@ export default function ProjectScreen({
           />
         </View>
         <DonationModal
+          userBalance={profile?.balance || 0}
           donation={donation}
           setDonation={setDonation}
           isModalVisible={isModalVisible}
