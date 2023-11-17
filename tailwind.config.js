@@ -15,7 +15,8 @@ module.exports = {
         arbor: {
           bg: '#E5F0FF',
           yellow: "#ebe378",
-          blue: "#212697"
+          blue: "#212697",
+          grey: "#5a5a5b"
         }
       }
     },
