@@ -8,7 +8,6 @@ import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
 import { SDGs, dayMilliseconds } from '../../lib/templates';
 import { SessionContext } from '../contexts/SessionContext';
-import { ProjectsContext } from '../contexts/ProjectsContext';
 import DonationModal from '../components/DonationModal';
 import { ProfileContext } from '../contexts/ProfileContext';
 import Queries from '../../lib/supabaseQueries';
@@ -26,8 +25,9 @@ export default function ProjectScreen({
   const [donation, setDonation] = useState<number>(0);
   const [donated, setDonated] = useState(false);
   const { session } = useContext(SessionContext);
-  const { getProjects } = useContext(ProjectsContext);
-  const { getProfile, profile } = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
+  const extraImages = project.extraImages || [];
+  const projectImages = project.projectImage ? [project.projectImage].concat(extraImages) : extraImages;
 
   async function handleDonation() {
     if (!session) throw new Error('Session does not exist when donation button is pressed');
@@ -51,7 +51,6 @@ export default function ProjectScreen({
       Alert.alert(profileError.message);
       return;
     }
-    await Promise.all([getProjects(), getProfile(session)]);
     setDonated(true);
   }
 
@@ -94,7 +93,9 @@ export default function ProjectScreen({
           <Text className="text-md font-extrabold mb-4">
             PLEDGED OF {project.donationCurrency} {project.fundingGoal.toLocaleString()}
           </Text>
-          <Text className="text-2xl font-extrabold mb-1">{project.donations.length}</Text>
+          <Text className="text-2xl font-extrabold mb-1">
+            {[...new Map(project.donations.map((donation) => [donation.profileId, donation])).values()].length}
+          </Text>
           <Text className="text-md font-extrabold mb-4">PROJECT FUNDERS</Text>
           <Text className="text-2xl font-extrabold mb-1">
             {((new Date(project.goalDate).getTime() - new Date().getTime()) / dayMilliseconds).toFixed(0)}
@@ -110,7 +111,6 @@ export default function ProjectScreen({
           />
         </View>
         <DonationModal
-          userBalance={profile?.balance || 0}
           donation={donation}
           setDonation={setDonation}
           isModalVisible={isModalVisible}
@@ -123,13 +123,13 @@ export default function ProjectScreen({
         />
         <Text className="text-xl font-extrabold mb-4">IMAGE AND VIDEO GALLERY</Text>
         <LineBreak />
-        <View className="flex flex-row">
-          {project.extraImages?.map((image, i) => (
+        <View className="flex flex-row flex-wrap justify-center">
+          {projectImages.map((image, i) => (
             <Avatar
               key={image.uri + i}
               image={image}
               accessibilityLabel="Project Image"
-              classNames="w-28 h-28 rounded-md m-3"
+              classNames="w-24 h-24 rounded-md m-3"
             />
           ))}
         </View>

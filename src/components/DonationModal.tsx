@@ -6,9 +6,12 @@ import { ProjectWithDonations, RootDrawerParamList } from '../../lib/types';
 import ButtonDisplay from './ButtonDisplay';
 import LineBreak from './LineBreak';
 import FormattedInput, { FormattedInputProps } from './FormattedInput';
+import { useContext } from 'react';
+import { ProjectsContext } from '../contexts/ProjectsContext';
+import { ProfileContext } from '../contexts/ProfileContext';
+import { SessionContext } from '../contexts/SessionContext';
 
 interface DonationModalProps extends FormattedInputProps {
-  userBalance: number;
   donated: boolean;
   setDonated: React.Dispatch<React.SetStateAction<boolean>>;
   isModalVisible: boolean;
@@ -27,9 +30,12 @@ export default function DonationModal({
   setIsModalVisible,
   handleDonation,
   navigation,
-  userBalance,
   project,
 }: DonationModalProps) {
+  const { getProjects } = useContext(ProjectsContext);
+  const { getProfile } = useContext(ProfileContext);
+  const { session } = useContext(SessionContext);
+
   if (donated) {
     return (
       <Modal
@@ -56,6 +62,7 @@ export default function DonationModal({
                 setIsModalVisible(false);
                 setDonated(false);
                 setDonation(0);
+                await Promise.all([getProjects(), getProfile(session)]);
                 navigation.jumpTo('Profile', { startTab: 1 });
               }}
             />
