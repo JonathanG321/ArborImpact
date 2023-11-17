@@ -1,8 +1,8 @@
 import { createContext, PropsWithChildren, useState } from 'react';
-import { supabase } from '../../supabase/supabase';
 import { Alert } from 'react-native';
 import { ProjectWithDonations } from '../../lib/types';
 import { createProjectObjectsWithDonations } from '../../lib/utils';
+import Queries from '../../lib/supabaseQueries';
 
 export const ProjectsContext = createContext<{
   projects: ProjectWithDonations[] | null;
@@ -18,10 +18,7 @@ export function ProjectsContextProvider({ children }: PropsWithChildren) {
 
   async function getProjects() {
     try {
-      const { error, status, data } = await supabase
-        .from('projects')
-        .select(`*, donations(*)`)
-        .order('created_at', { foreignTable: 'donations', ascending: false });
+      const { error, status, data } = await Queries.getSupabaseProjectsWithDonations();
       if (error && status !== 406) throw error;
       if (error) return;
       const projects = await createProjectObjectsWithDonations(data);

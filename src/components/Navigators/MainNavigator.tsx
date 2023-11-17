@@ -12,11 +12,11 @@ import ProfileScreen from '../../screens/ProfileScreen';
 import ProjectsScreen from '../../screens/ProjectsScreen';
 import ProjectScreen from '../../screens/ProjectScreen';
 import { RootDrawerParamList } from '../../../lib/types';
-import { supabase } from '../../../supabase/supabase';
 import { useContext } from 'react';
 import { LoadingContext } from '../../contexts/LoadingContext';
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { useNavigation } from '@react-navigation/native';
+import Queries from '../../../lib/supabaseQueries';
 
 function DrawerContent(props: DrawerContentComponentProps) {
   const { setProfile } = useContext(ProfileContext);
@@ -29,7 +29,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         label="Sign Out"
         onPress={async () => {
           setIsLoading(true);
-          await supabase.auth.signOut();
+          await Queries.supabaseSignOut();
           setProfile(null);
           setIsLoading(false);
         }}

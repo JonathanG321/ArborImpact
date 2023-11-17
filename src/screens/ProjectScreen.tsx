@@ -8,10 +8,10 @@ import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
 import { SDGs, dayMilliseconds } from '../../lib/templates';
 import { SessionContext } from '../contexts/SessionContext';
-import { supabase } from '../../supabase/supabase';
 import { ProjectsContext } from '../contexts/ProjectsContext';
 import DonationModal from '../components/DonationModal';
 import { ProfileContext } from '../contexts/ProfileContext';
+import Queries from '../../lib/supabaseQueries';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 
@@ -31,22 +31,17 @@ export default function ProjectScreen({
   async function handleDonation() {
     if (!session) throw new Error('Session does not exist when donation button is pressed');
 
-    const currentBallance = profile?.balance || 0;
-    if (currentBallance < donation) {
+    const currentBalance = profile?.balance || 0;
+    if (currentBalance < donation) {
       Alert.alert('You do not have enough money in your account to donate that much.');
       return;
     }
-    const [{ error: donationError }, { error: profileError }] = await Promise.all([
-      supabase.from('donations').insert({
-        profile_id: session.user.id,
-        project_id: project.id,
-        donation,
-      }),
-      supabase.from('profiles').update({
-        id: session.user.id,
-        balance: currentBallance - donation,
-      }),
-    ]);
+    const [{ error: donationError }, { error: profileError }] = await Queries.makeSupabaseDonation(
+      session.user.id,
+      project.id,
+      donation,
+      currentBalance
+    );
     if (donationError) {
       Alert.alert(donationError.message);
       return;

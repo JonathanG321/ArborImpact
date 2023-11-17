@@ -5,7 +5,6 @@ import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from 'react-ho
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { z } from 'zod';
 import { useTailwind } from 'nativewind';
-import { supabase } from '../../supabase/supabase';
 import { RootStackParamList } from '../../lib/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import ScreenContainer from '../components/ScreenContainer';
@@ -15,6 +14,7 @@ import LineBreak from '../components/LineBreak';
 import Header from '../components/Header';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AuthInput from '../components/AuthInput';
+import Queries from '../../lib/supabaseQueries';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign Up', 'Main'>;
 
@@ -55,7 +55,7 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
   const onSubmit: SubmitHandler<LoginForm> = async (form) => {
     setIsLoading(true);
     const { passwordConfirm: _, ...login } = form;
-    const { error } = await supabase.auth.signUp(login);
+    const { error } = await Queries.supabaseSignUp(login);
 
     if (error) {
       Alert.alert(error.message);

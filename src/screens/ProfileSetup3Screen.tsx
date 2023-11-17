@@ -5,15 +5,15 @@ import { Alert, Pressable, View } from 'react-native';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Profile, RootStackParamList } from '../../lib/types';
+import { DBProfile, Profile, RootStackParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import { SessionContext } from '../contexts/SessionContext';
-import { supabase } from '../../supabase/supabase';
 import SDGInput from '../components/SDGInput';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
 import { ProfileContext } from '../contexts/ProfileContext';
 import { includedSDGs } from '../../lib/templates';
 import { LoadingContext } from '../contexts/LoadingContext';
+import Queries from '../../lib/supabaseQueries';
 
 export type ProfileSetup3Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 3', 'Main'>;
 
@@ -60,7 +60,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
 
     const fileExt = file.fileName?.split('.').pop();
     const filePath = `${Math.random()}.${fileExt}`;
-    const { error: avatarError } = await supabase.storage.from('avatars').upload(filePath, formData);
+    const { error: avatarError } = await Queries.uploadSupabaseImage(filePath, 'avatars', formData);
 
     if (avatarError) {
       Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
@@ -69,7 +69,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       return;
     }
 
-    const newProfile = {
+    const newProfile: DBProfile = {
       birth_date: profileSetup.birthDate,
       first_name: profileSetup.firstName,
       last_name: profileSetup.lastName,
@@ -81,8 +81,10 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       avatar_url: filePath,
       sdg,
       id: session.user.id,
+      balance: 0,
+      created_at: new Date().toUTCString(),
     };
-    const { error } = await supabase.from('profiles').upsert(newProfile);
+    const { error } = await Queries.upsertSupabaseProfile(newProfile);
     if (error) {
       Alert.alert('An error has occurred. Please try again later');
       setIsLoading(false);

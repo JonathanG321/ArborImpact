@@ -1,9 +1,9 @@
 import { Session } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useState } from 'react';
-import { supabase } from '../../supabase/supabase';
 import { Alert } from 'react-native';
 import { DBProject, DonationWithProject, Profile, SDG } from '../../lib/types';
 import { createProjectObjects, downloadImage } from '../../lib/utils';
+import Queries from '../../lib/supabaseQueries';
 
 export const ProfileContext = createContext<{
   profile: Profile | null;
@@ -27,15 +27,7 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         return false;
       }
       setIsLoadingProfile(true);
-      const {
-        error,
-        status,
-        data: dbProfile,
-      } = await supabase
-        .from('profiles')
-        .select(`*, projects(*, donations(*)), donations(*, projects(*))`)
-        .eq('id', session?.user.id)
-        .single();
+      const { error, status, data: dbProfile } = await Queries.getSupabaseProfile(session?.user.id);
       if (error && status !== 406) throw error;
       if (error) return;
       const [image, projects] = await Promise.all([

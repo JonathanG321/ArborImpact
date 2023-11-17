@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
-import { supabase } from '../supabase/supabase';
 import { DBProject, DBProjectWithDonations, Donation, Project, ProjectWithDonations } from './types';
+import Queries from './supabaseQueries';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export async function downloadImage(path: string, bucket: string = 'avatars') {
   try {
-    const { data, error } = await supabase.storage.from(bucket).download(path);
+    const { data, error } = await Queries.getSupabaseImage(path, bucket);
 
     if (error) {
       throw error;
