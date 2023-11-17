@@ -2,7 +2,7 @@ import { Session } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useState } from 'react';
 import { Alert } from 'react-native';
 import { DBProject, DonationWithProject, Profile, SDG } from '../../lib/types';
-import { createProjectObjects, downloadImage } from '../../lib/utils';
+import { createProjectObjects, createProjectObjectsWithDonations, downloadImage } from '../../lib/utils';
 import Queries from '../../lib/supabaseQueries';
 
 export const ProfileContext = createContext<{
@@ -32,7 +32,7 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
       if (error) return;
       const [image, projects] = await Promise.all([
         downloadImage(dbProfile.avatar_url),
-        createProjectObjects(dbProfile.projects),
+        createProjectObjectsWithDonations(dbProfile.projects),
       ]);
       const profile: Profile = {
         avatarImage: image ? { uri: image, width: 200, height: 200 } : null,
