@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
-import { Image, Text } from 'react-native-elements';
-import { ActivityIndicator, Alert, View } from 'react-native';
+import { Text } from 'react-native-elements';
+import { Alert, View } from 'react-native';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
-import { DBDonation, RootDrawerParamList } from '../../lib/types';
+import { RootDrawerParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
@@ -12,6 +12,7 @@ import { ProjectsContext } from '../contexts/ProjectsContext';
 import DonationModal from '../components/DonationModal';
 import { ProfileContext } from '../contexts/ProfileContext';
 import Queries from '../../lib/supabaseQueries';
+import Avatar from '../components/Avatar';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 
@@ -59,11 +60,7 @@ export default function ProjectScreen({
       <View className="flex items-center flex-1 pb-16">
         <View className="flex flex-row items-center mb-4">
           <Text className="text-2xl font-extrabold">{project.name.toLocaleUpperCase()}</Text>
-          <Image
-            source={SDGs[project.sdg]}
-            className="w-10 h-10 rounded-lg ml-3"
-            PlaceholderContent={<ActivityIndicator />}
-          />
+          <Avatar image={SDGs[project.sdg]} accessibilityLabel="SDG" classNames="w-10 h-10 rounded-lg ml-3" />
         </View>
         <LineBreak />
         <View className="w-full px-4">
@@ -128,11 +125,11 @@ export default function ProjectScreen({
         <LineBreak />
         <View className="flex flex-row">
           {project.extraImages?.map((image, i) => (
-            <Image
+            <Avatar
               key={image.uri + i}
-              source={image}
-              className="w-28 h-28 rounded-md m-3"
-              PlaceholderContent={<ActivityIndicator />}
+              image={image}
+              accessibilityLabel="Project Image"
+              classNames="w-28 h-28 rounded-md m-3"
             />
           ))}
         </View>
