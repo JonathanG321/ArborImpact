@@ -12,6 +12,7 @@ export const emptyProfile: Profile = {
   wantTaxIncentives: false,
   sdg: [],
   projects: [],
+  donations: [],
   balance: 0,
 };
 

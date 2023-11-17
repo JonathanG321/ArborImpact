@@ -30,7 +30,7 @@ export type RootDrawerParamList = {
   Home: undefined;
   Profile: { startTab: 0 | 1 };
   Projects: undefined;
-  Project: { project: Project };
+  Project: { project: ProjectWithDonations };
 };
 
 export type SDG =
@@ -64,12 +64,14 @@ export type Profile = {
   wantSpecificCause: boolean;
   sdg: SDG[];
   projects: Project[];
+  donations: DonationWithProject[];
   balance: number;
 };
 
 export type DBProfile = Database['public']['Tables']['profiles']['Row'];
-export interface DBProfilesWithProjects extends DBProfile {
-  projects: DBProjectsWithDonations;
+export interface DBProfilesWithProjectsAndDonations extends DBProfile {
+  projects: DBProjectWithDonations[];
+  donations: DBDonationWithProjects[];
 }
 
 export type Project = {
@@ -86,19 +88,29 @@ export type Project = {
   goalDate: string;
   sdg: SDG;
   donationCurrency: string;
-  donations: Donation[];
   extraImages: ImagePickerAsset[] | null;
 };
+export interface ProjectWithDonations extends Project {
+  donations: Donation[];
+}
 
 export type DBProject = Database['public']['Tables']['projects']['Row'];
-export interface DBProjectsWithDonations extends DBProject {
+export interface DBProjectWithDonations extends DBProject {
   donations: DBDonation[];
 }
 
 export type DBDonation = Database['public']['Tables']['donations']['Row'];
-export interface Donation extends Pick<DBDonation, 'donation'> {
+export interface DBDonationWithProjects extends DBDonation {
+  projects: DBProject[];
+}
+
+export type Donation = {
+  donation: number;
   createdAt: string;
-  updatedAt: string;
   profileId: string;
   projectId: number;
+};
+
+export interface DonationWithProject extends Donation {
+  project: Project;
 }

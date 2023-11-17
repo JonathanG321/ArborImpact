@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
 import { supabase } from '../supabase/supabase';
-import { DBProjectsWithDonations, Project } from './types';
+import { DBProject, DBProjectWithDonations, Donation, Project, ProjectWithDonations } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -30,7 +30,7 @@ export async function downloadImage(path: string, bucket: string = 'avatars') {
   }
 }
 
-export async function createProjectObject(dbProjects: DBProjectsWithDonations[]) {
+async function getImages(dbProjects: DBProject[]) {
   const projectMainImages = await Promise.all(
     dbProjects.map((project) => downloadImage(project.project_image_url, 'project_images'))
   );
@@ -39,46 +39,72 @@ export async function createProjectObject(dbProjects: DBProjectsWithDonations[])
       async (project) => await Promise.all(project.extra_images.map((image) => downloadImage(image, 'project_images')))
     )
   );
-  const projects = dbProjects.map(
-    (
-      {
-        created_at,
-        project_image_url,
-        extra_images,
-        funding_goal,
-        goal_date,
-        impact_goal,
-        impact_goal_unit,
-        impact_type,
-        donations,
-        donation_currency,
-        ...rest
-      },
-      index
-    ) =>
-      ({
-        createdAt: created_at,
-        projectImage: projectMainImages[index] ? { uri: projectMainImages[index], width: 200, height: 200 } : null,
-        fundingGoal: funding_goal,
-        goalDate: goal_date,
-        impactGoal: impact_goal,
-        impactGoalUnit: impact_goal_unit,
-        impactType: impact_type,
-        donationCurrency: donation_currency,
-        donations: donations
-          ? donations.map((donation) => ({
-              donation: donation.donation,
-              createdAt: donation.created_at,
-              profileId: donation.profile_id,
-              projectId: donation.project_id,
-              updatedAt: donation.updated_at,
-            }))
-          : [],
-        extraImages: projectExtraImages[index]
-          ? projectExtraImages[index].map((image) => ({ uri: image, width: 200, height: 200 }))
-          : null,
-        ...rest,
-      } as Project)
+  return { projectMainImages, projectExtraImages };
+}
+
+export async function createProjectObjects(dbProjects: DBProject[]) {
+  const { projectExtraImages, projectMainImages } = await getImages(dbProjects);
+  const projects = dbProjects.map((project, index) =>
+    createProject(project, index, projectMainImages, projectExtraImages)
   );
   return projects;
+}
+export async function createProjectWithDonationObjects(dbProjects: DBProjectWithDonations[]) {
+  const { projectExtraImages, projectMainImages } = await getImages(dbProjects);
+  const projects = dbProjects.map((project, index) =>
+    createProjectWithDonations(project, index, projectMainImages, projectExtraImages)
+  );
+  return projects;
+}
+
+function createProject(
+  {
+    created_at,
+    project_image_url,
+    extra_images,
+    funding_goal,
+    goal_date,
+    impact_goal,
+    impact_goal_unit,
+    impact_type,
+    donation_currency,
+    ...rest
+  }: DBProject,
+  index: number,
+  projectMainImages: (string | undefined)[],
+  projectExtraImages: (string | undefined)[][]
+) {
+  return {
+    createdAt: created_at,
+    projectImage: projectMainImages[index] ? { uri: projectMainImages[index], width: 200, height: 200 } : null,
+    fundingGoal: funding_goal,
+    goalDate: goal_date,
+    impactGoal: impact_goal,
+    impactGoalUnit: impact_goal_unit,
+    impactType: impact_type,
+    donationCurrency: donation_currency,
+    extraImages: projectExtraImages[index]
+      ? projectExtraImages[index].map((image) => ({ uri: image, width: 200, height: 200 }))
+      : null,
+    ...rest,
+  } as Project;
+}
+function createProjectWithDonations(
+  { donations, ...rest }: DBProjectWithDonations,
+  index: number,
+  projectMainImages: (string | undefined)[],
+  projectExtraImages: (string | undefined)[][]
+) {
+  return {
+    ...createProject(rest, index, projectMainImages, projectExtraImages),
+    donations: donations.map(
+      (donation) =>
+        ({
+          donation: donation.donation,
+          createdAt: donation.created_at,
+          profileId: donation.profile_id,
+          projectId: donation.project_id,
+        } as Donation)
+    ),
+  } as ProjectWithDonations;
 }
