@@ -68,7 +68,7 @@ export type Profile = {
   wantTaxIncentives: boolean;
   wantSpecificCause: boolean;
   sdg: SDG[];
-  projects: Project[];
+  projects: ProjectWithDonations[];
   donations: DonationWithProject[];
   balance: number;
 };
