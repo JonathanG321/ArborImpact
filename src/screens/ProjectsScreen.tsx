@@ -14,7 +14,7 @@ import { dayMilliseconds } from '../../lib/templates';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 
-export default function ProjectsScreen({ navigation: {} }: Props) {
+export default function ProjectsScreen({}: Props) {
   const { projects, getProjects } = useContext(ProjectsContext);
   const { profile } = useContext(ProfileContext);
   const headerHeight = useHeaderHeight();
@@ -25,7 +25,7 @@ export default function ProjectsScreen({ navigation: {} }: Props) {
   const neglectedProjects =
     projects?.filter((project) =>
       !!project.donations.length
-        ? (currentDate - new Date(project.donations[0].updatedAt).getTime()) / dayMilliseconds < 7
+        ? (currentDate - new Date(project.donations[0].createdAt).getTime()) / dayMilliseconds < 7
         : false
     ) || [];
 
