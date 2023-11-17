@@ -84,10 +84,7 @@ export default function DonationModal({
               setDonation={(newValue) => {
                 const totalDonated = project.donations.reduce((total, donation) => total + donation.donation, 0);
                 const remainingFunding = project.fundingGoal - totalDonated;
-                const newDonation =
-                  parseFloat(newValue.toString()) > remainingFunding || parseFloat(newValue.toString()) > userBalance
-                    ? Math.min(remainingFunding, userBalance)
-                    : newValue;
+                const newDonation = parseFloat(newValue.toString()) > remainingFunding ? remainingFunding : newValue;
                 setDonation(newDonation);
               }}
             />
