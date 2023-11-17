@@ -17,6 +17,11 @@ export type FormSwitchProps<T extends FieldValues> = {
   field: Path<T>;
 } & WantsItemProps;
 
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
 export type RootStackParamList = {
   'Profile Setup 1': undefined;
   'Profile Setup 2': undefined;
@@ -69,9 +74,9 @@ export type Profile = {
 };
 
 export type DBProfile = Database['public']['Tables']['profiles']['Row'];
-export interface DBProfilesWithProjectsAndDonations extends DBProfile {
+export interface DBProfileWithProjectsAndDonations extends DBProfile {
   projects: DBProjectWithDonations[];
-  donations: DBDonationWithProjects[];
+  donations: DBDonationWithProject[];
 }
 
 export type Project = {
@@ -100,8 +105,8 @@ export interface DBProjectWithDonations extends DBProject {
 }
 
 export type DBDonation = Database['public']['Tables']['donations']['Row'];
-export interface DBDonationWithProjects extends DBDonation {
-  projects: DBProject[];
+export interface DBDonationWithProject extends DBDonation {
+  projects: DBProject;
 }
 
 export type Donation = {
