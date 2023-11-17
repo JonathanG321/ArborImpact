@@ -1,12 +1,12 @@
 import { createContext, PropsWithChildren, useState } from 'react';
 import { supabase } from '../../supabase/supabase';
 import { Alert } from 'react-native';
-import { DBProject, Project } from '../../lib/types';
-import { createProjectObject } from '../../lib/utils';
+import { ProjectWithDonations } from '../../lib/types';
+import { createProjectObjectsWithDonations } from '../../lib/utils';
 
 export const ProjectsContext = createContext<{
-  projects: Project[] | null;
-  setProjects: (projects: Project[] | null) => void;
+  projects: ProjectWithDonations[] | null;
+  setProjects: (projects: ProjectWithDonations[] | null) => void;
   getProjects: () => Promise<void>;
 }>({
   projects: null,
@@ -14,7 +14,7 @@ export const ProjectsContext = createContext<{
   getProjects: () => Promise.resolve<void>(undefined),
 });
 export function ProjectsContextProvider({ children }: PropsWithChildren) {
-  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [projects, setProjects] = useState<ProjectWithDonations[] | null>(null);
 
   async function getProjects() {
     try {
@@ -24,7 +24,7 @@ export function ProjectsContextProvider({ children }: PropsWithChildren) {
         .order('created_at', { foreignTable: 'donations', ascending: false });
       if (error && status !== 406) throw error;
       if (error) return;
-      const projects = await createProjectObject(data);
+      const projects = await createProjectObjectsWithDonations(data);
       setProjects(projects);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);

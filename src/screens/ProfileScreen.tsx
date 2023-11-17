@@ -3,7 +3,7 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import { Image } from 'react-native-elements';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
-import { RootDrawerParamList, SDG, WantsItemProps } from '../../lib/types';
+import { Donation, DonationWithProject, RootDrawerParamList, SDG, WantsItemProps } from '../../lib/types';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import Avatar from '../components/Avatar';
@@ -69,8 +69,22 @@ export default function ProfileScreen({
     ...(profile?.wantSpecificCause ? [{ description: 'I AM PASSIONATE ABOUT A SPECIFIC CAUSE', icon: 'heart' }] : []),
   ];
 
+  const donationsByProject: { [key: string]: DonationWithProject[] } = {};
+  profile?.donations.forEach((donation) => {
+    if (!donationsByProject[donation.projectId]) {
+      donationsByProject[donation.projectId] = [];
+    }
+    donationsByProject[donation.projectId].push(donation);
+  });
+
+  const shares = Object.keys(donationsByProject)
+    .map((projectKey) => {
+      const totalDonation = donationsByProject[projectKey].reduce((total, donation) => total + donation.donation, 0);
+      return (totalDonation / donationsByProject[projectKey][0].project.fundingGoal) * 100;
+    })
+    .reduce((total, currentShares) => total + currentShares, 0);
+
   useEffect(() => {
-    console.log(startTab);
     setIndex(startTab);
   }, []);
 
@@ -99,8 +113,12 @@ export default function ProfileScreen({
       </View>
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
-        <ButtonDisplay text={`Balance: USD ${profile?.balance}`} classNames="ml-4 mr-2" />
-        <ButtonDisplay text="Shares: 0" classNames="bg-arbor-blue ml-2 mr-4" textClassNames="text-white" />
+        <ButtonDisplay text={`Balance: USD ${profile?.balance.toFixed(2)}`} classNames="ml-4 mr-2" />
+        <ButtonDisplay
+          text={`Shares: ${Math.floor(shares)}`}
+          classNames="bg-arbor-blue ml-2 mr-4"
+          textClassNames="text-white"
+        />
       </View>
       <LineBreak />
       <View className="h-full px-4">
