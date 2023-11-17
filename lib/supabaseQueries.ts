@@ -1,6 +1,6 @@
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabase/supabase';
-import { DBProfile, DBProfileWithProjectsAndDonations, LoginForm } from './types';
+import { DBProfile, DBProfileWithProjectsAndDonations, LoginForm, Profile } from './types';
 
 export default {
   getSupabaseImage: async (path: string, bucket: string) => {
@@ -25,17 +25,18 @@ export default {
       .order('created_at', { foreignTable: 'donations', ascending: false })
       .order('created_at', { foreignTable: 'projects', ascending: false })
       .single();
-    const filteredProjects: DBProfileWithProjectsAndDonations['projects'] =
+    const sortedProjects: DBProfileWithProjectsAndDonations['projects'] =
       profile.data?.projects
         .map((project) => ({
           ...project,
           donations: project.donations.sort(
-            (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+            (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
           ),
         }))
         .sort(
-          (a, b) => new Date(a.donations[0].created_at).getTime() - new Date(b.donations[0].created_at).getTime()
+          (a, b) => new Date(b.donations[0].created_at).getTime() - new Date(a.donations[0].created_at).getTime()
         ) || [];
+    const filteredProjects = [...new Map(sortedProjects.map((project) => [project.id, project])).values()];
     return {
       ...profile,
       data: { ...profile.data, projects: filteredProjects || [] } as DBProfileWithProjectsAndDonations,
@@ -64,10 +65,12 @@ export default {
         project_id: projectId,
         donation,
       }),
-      supabase.from('profiles').update({
-        id: userId,
-        balance: currentBalance - donation,
-      }),
+      supabase
+        .from('profiles')
+        .update({
+          balance: currentBalance - donation,
+        })
+        .eq('id', userId),
     ]);
   },
 
