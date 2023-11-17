@@ -1,9 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { Image } from 'react-native-elements';
+import { View } from 'react-native';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
-import { Donation, DonationWithProject, RootDrawerParamList, SDG, WantsItemProps } from '../../lib/types';
+import { DonationWithProject, RootDrawerParamList, WantsItemProps } from '../../lib/types';
 import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import Avatar from '../components/Avatar';
@@ -11,7 +10,9 @@ import Header from '../components/Header';
 import WantsItem from '../components/WantsItem';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
-import { SDGs } from '../../lib/templates';
+import NoProjectsPlaceholder from '../components/NoProjectsPlaceholder';
+import MyImpact from '../components/MyImpact';
+import MyProjects from '../components/MyProjects';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -29,33 +30,9 @@ export default function ProfileScreen({
   ];
 
   const renderScene = SceneMap({
-    first: () => (
-      <View className="flex mt-3 items-center">
-        <Header textClassNames="text-2xl" centered title="UH-OH!" />
-        <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">You don't have any projects yet!</Text>
-        <Text className="text-2xl mb-6 text-[#5a5a5b] text-center">Click below to start browsing projects!</Text>
-        <View className="flex flex-row w-24">
-          <ButtonDisplay textClassNames="text-[#5a5a5b] text-lg" text="Let's Go" onPress={() => navigate('Projects')} />
-        </View>
-      </View>
-    ),
-    second: () => {
-      const impactedSDGsList = profile?.projects.map((project) => project.sdg) || [];
-      const sortedImpactedSDGsList = (Object.keys(SDGs) as SDG[]).filter((key) => impactedSDGsList.includes(key));
-      return (
-        <View className="flex mt-3 items-center">
-          <Header textClassNames="text-2xl mb-4" centered title="IMPACTED COMMUNITIES" />
-          {sortedImpactedSDGsList.map((sdg) => (
-            <Image
-              key={sdg}
-              source={SDGs[sdg]}
-              className="h-28 w-28 rounded-xl m-4"
-              PlaceholderContent={<ActivityIndicator />}
-            />
-          ))}
-        </View>
-      );
-    },
+    first: () =>
+      !profile?.projects ? <NoProjectsPlaceholder navigate={navigate} /> : <MyProjects projects={profile?.projects} />,
+    second: () => <MyImpact projects={profile?.projects} />,
   });
 
   const wantsItemProps: WantsItemProps[] = [
@@ -113,7 +90,7 @@ export default function ProfileScreen({
       </View>
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
-        <ButtonDisplay text={`Balance: USD ${profile?.balance.toFixed(2)}`} classNames="ml-4 mr-2" />
+        <ButtonDisplay text={`Balance: USD $${profile?.balance.toFixed(2)}`} classNames="ml-4 mr-2" />
         <ButtonDisplay
           text={`Shares: ${Math.floor(shares)}`}
           classNames="bg-arbor-blue ml-2 mr-4"
@@ -125,7 +102,13 @@ export default function ProfileScreen({
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
-          onIndexChange={setIndex}
+          onIndexChange={(newI) => {
+            if (!!profile?.projects) {
+              setIndex(newI);
+            } else {
+              setIndex(0);
+            }
+          }}
           renderTabBar={(props) => (
             <TabBar
               {...props}
