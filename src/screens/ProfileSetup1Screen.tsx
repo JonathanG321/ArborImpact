@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { Text, View, Pressable, TextStyle, ViewStyle, Alert } from 'react-native';
+import { useContext, useEffect } from 'react';
+import { Text, View, TextStyle, ViewStyle, Alert, TouchableOpacity } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTailwind } from 'nativewind';
@@ -13,6 +13,7 @@ import { emptyProfile } from '../../lib/templates';
 import Header from '../components/Header';
 import ScreenContainer from '../components/ScreenContainer';
 import AvatarSelect from '../components/AvatarSelect';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 
@@ -21,7 +22,7 @@ const schema = z
     firstName: z.string().min(2, 'Too Short!').default(''),
     lastName: z.string().min(2, 'Too Short!').default(''),
     location: z.string().min(2, 'Too Short!').default(''),
-    birthDate: z.date(),
+    birthDate: z.string(),
     avatarImage: z
       .object({
         height: z.number(),
@@ -41,6 +42,7 @@ const schema = z
 
 export default function ProfileSetup1Screen({ navigation: { navigate } }: ProfileSetup1Props) {
   const { setProfileSetup } = useContext(ProfileSetupContext);
+  const { setIsLoading } = useContext(LoadingContext);
 
   const {
     control,
@@ -72,6 +74,10 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       ? `${birthDate.getMonth() + 1} / ${birthDate.toDateString().split(' ')[2]} / ${birthDate.getFullYear()}`
       : 'No value Selected';
   };
+  
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   return (
     <ScreenContainer>
@@ -138,10 +144,10 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           name="avatarImage"
         />
       </View>
-      <View className="self-stretch absolute bottom-16 right-3">
-        <Pressable onPress={handleSubmit(onSubmit, onError)}>
-          <Text className="text-lg mr-5">Next →</Text>
-        </Pressable>
+      <View className="flex flex-row justify-end mt-10 mr-5">
+        <TouchableOpacity onPress={handleSubmit(onSubmit, onError)}>
+          <Text className="text-lg">Next →</Text>
+        </TouchableOpacity>
       </View>
     </ScreenContainer>
   );

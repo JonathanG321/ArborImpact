@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Text, View, Pressable } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -58,10 +58,10 @@ export default function ProfileSetup2Screen({ navigation: { navigate } }: Profil
       {fundReasonProps.map((props) => (
         <FormSwitch key={props.description} {...props} />
       ))}
-      <View className="self-stretch absolute bottom-16 right-3">
-        <Pressable onPress={handleSubmit(onSubmit)}>
+      <View className="flex flex-row justify-end mt-5">
+        <TouchableOpacity onPress={handleSubmit(onSubmit)}>
           <Text className="text-lg mr-5">Next →</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </ScreenContainer>
   );
