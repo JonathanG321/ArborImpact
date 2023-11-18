@@ -53,14 +53,18 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
   } = useForm<LoginForm>({ resolver: zodResolver(schema) });
 
   const onSubmit: SubmitHandler<LoginForm> = async (form) => {
+    if (!form.disclaimer) {
+      Alert.alert('You must accept the disclaimer before creating your account');
+      return;
+    }
     setIsLoading(true);
     const { passwordConfirm: _, ...login } = form;
     const { error } = await Queries.supabaseSignUp(login);
 
     if (error) {
       Alert.alert(error.message);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   const onError: SubmitErrorHandler<LoginForm> = async (errors) => {
