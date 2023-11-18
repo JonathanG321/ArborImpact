@@ -6,35 +6,28 @@ import SignUpScreen from '../../screens/SignUpScreen';
 import ProfileSetup1Screen from '../../screens/ProfileSetup1Screen';
 import ProfileSetup2Screen from '../../screens/ProfileSetup2Screen';
 import ProfileSetup3Screen from '../../screens/ProfileSetup3Screen';
-import { SessionContext } from '../../contexts/SessionContext';
-import { ProfileContext } from '../../contexts/ProfileContext';
 import { LoadingContext } from '../../contexts/LoadingContext';
 import { ProjectsContext } from '../../contexts/ProjectsContext';
-import LoadingScreen from '../../screens/LoadingScreen';
 import MainNavigator from './MainNavigator';
 import { RootStackParamList } from '../../../lib/types';
+import { UserContext } from '../../contexts/UserContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function SessionNavigator() {
-  const { session } = useContext(SessionContext);
-  const { profile, getProfile, isLoadingProfile } = useContext(ProfileContext);
+  const { session, profile, userSetup } = useContext(UserContext);
   const { getProjects } = useContext(ProjectsContext);
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
+  const { setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     async function Setup() {
       setIsLoading(true);
-      await getProfile(session);
       await getProjects();
+      await userSetup();
       setIsLoading(false);
     }
     Setup();
-  }, [session]);
-
-  if (isLoading || (!!session && isLoadingProfile)) {
-    return <LoadingScreen />;
-  }
+  }, []);
 
   return (
     <Stack.Navigator id="Main">

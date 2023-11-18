@@ -14,12 +14,12 @@ import ProjectScreen from '../../screens/ProjectScreen';
 import { RootDrawerParamList } from '../../../lib/types';
 import { useContext } from 'react';
 import { LoadingContext } from '../../contexts/LoadingContext';
-import { ProfileContext } from '../../contexts/ProfileContext';
 import { useNavigation } from '@react-navigation/native';
 import Queries from '../../../lib/supabaseQueries';
+import { UserContext } from '../../contexts/UserContext';
 
 function DrawerContent(props: DrawerContentComponentProps) {
-  const { setProfile } = useContext(ProfileContext);
+  const { setProfile } = useContext(UserContext);
   const { setIsLoading } = useContext(LoadingContext);
 
   return (

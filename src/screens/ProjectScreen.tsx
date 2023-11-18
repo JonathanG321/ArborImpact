@@ -7,11 +7,10 @@ import ScreenContainer from '../components/ScreenContainer';
 import LineBreak from '../components/LineBreak';
 import ButtonDisplay from '../components/ButtonDisplay';
 import { SDGs, dayMilliseconds } from '../../lib/templates';
-import { SessionContext } from '../contexts/SessionContext';
 import DonationModal from '../components/DonationModal';
-import { ProfileContext } from '../contexts/ProfileContext';
 import Queries from '../../lib/supabaseQueries';
 import Avatar from '../components/Avatar';
+import { UserContext } from '../contexts/UserContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 
@@ -24,8 +23,7 @@ export default function ProjectScreen({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [donation, setDonation] = useState<number>(0);
   const [donated, setDonated] = useState(false);
-  const { session } = useContext(SessionContext);
-  const { profile } = useContext(ProfileContext);
+  const { session, profile } = useContext(UserContext);
   const extraImages = project.extraImages || [];
   const projectImages = project.projectImage ? [project.projectImage].concat(extraImages) : extraImages;
 

@@ -1,24 +1,31 @@
 import { Session } from '@supabase/supabase-js';
-import { createContext, PropsWithChildren, useState } from 'react';
-import { Alert } from 'react-native';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import Queries from '../../lib/supabaseQueries';
 import { DBProject, DonationWithProject, Profile, SDG } from '../../lib/types';
 import { createProjectObjects, createProjectObjectsWithDonations, downloadImage } from '../../lib/utils';
-import Queries from '../../lib/supabaseQueries';
+import { Alert } from 'react-native';
+import { LoadingContext } from './LoadingContext';
+import { supabase } from '../../supabase/supabase';
 
-export const ProfileContext = createContext<{
+export const UserContext = createContext<{
+  session: Session | null;
+  setSession: (session: Session) => void;
+  userSetup: () => Promise<void>;
   profile: Profile | null;
-  isLoadingProfile: boolean;
   setProfile: (profile: Profile | null) => void;
   getProfile: (session: Session | null) => Promise<void | boolean>;
 }>({
+  session: null,
+  setSession: () => undefined,
+  userSetup: () => Promise.resolve<void>(undefined),
   profile: null,
-  isLoadingProfile: false,
   setProfile: () => undefined,
   getProfile: () => Promise.resolve<void>(undefined),
 });
-export function ProfileContextProvider({ children }: PropsWithChildren) {
+export function UserContextProvider({ children }: PropsWithChildren) {
+  const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+  const { setIsLoading } = useContext(LoadingContext);
 
   async function getProfile(session: Session | null) {
     try {
@@ -26,7 +33,7 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
       if (!session) {
         return false;
       }
-      setIsLoadingProfile(true);
+      setIsLoading(true);
       const { error, status, data: dbProfile } = await Queries.getSupabaseProfile(session?.user.id);
       if (error && status !== 406) throw error;
       if (error) return;
@@ -63,16 +70,29 @@ export function ProfileContextProvider({ children }: PropsWithChildren) {
         ),
       };
       setProfile(profile);
-      setIsLoadingProfile(false);
+      setTimeout(() => setIsLoading(false), 1000);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
-      setIsLoadingProfile(false);
+      setIsLoading(false);
     }
   }
 
+  async function userSetup() {
+    const session = await Queries.getSupabaseSession(setSession);
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      getProfile(session);
+    });
+    await getProfile(session);
+  }
+
+  useEffect(() => {
+    userSetup();
+  }, []);
+
   return (
-    <ProfileContext.Provider value={{ profile, setProfile, getProfile, isLoadingProfile }}>
+    <UserContext.Provider value={{ session, setSession, userSetup, profile, setProfile, getProfile }}>
       {children}
-    </ProfileContext.Provider>
+    </UserContext.Provider>
   );
 }

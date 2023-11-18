@@ -1,19 +1,18 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { Text } from 'react-native-elements';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DBProfile, Profile, RootStackParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
-import { SessionContext } from '../contexts/SessionContext';
 import SDGInput from '../components/SDGInput';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
-import { ProfileContext } from '../contexts/ProfileContext';
 import { includedSDGs } from '../../lib/templates';
 import { LoadingContext } from '../contexts/LoadingContext';
 import Queries from '../../lib/supabaseQueries';
+import { UserContext } from '../contexts/UserContext';
 
 export type ProfileSetup3Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 3', 'Main'>;
 
@@ -26,8 +25,7 @@ const schema = z
 export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: ProfileSetup3Props) {
   const { setIsLoading } = useContext(LoadingContext);
   const { profileSetup } = useContext(ProfileSetupContext);
-  const { setProfile } = useContext(ProfileContext);
-  const { session } = useContext(SessionContext);
+  const { setProfile, session } = useContext(UserContext);
 
   if (!profileSetup) {
     Alert.alert("Profile Doesn't Exist!");
@@ -89,8 +87,8 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       setIsLoading(false);
       return;
     }
-    setProfile({ ...profileSetup, sdg });
-    setIsLoading(false);
+    setProfile({ ...profileSetup, sdg, balance: 0 });
+    setTimeout(() => setIsLoading(false), 1000);
   };
 
   return (
@@ -107,11 +105,11 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
             return <SDGInput key={index} index={index + 1} setSDGValue={setValue} getValues={getValues} />;
           })}
         </View>
-        <View className="self-stretch absolute bottom-10 right-6">
-          <Pressable className="flex items-end px-3 py-1" onPress={handleSubmit(onSubmit)}>
-            <Text className="text-lg mr-5">Done</Text>
-          </Pressable>
-        </View>
+      </View>
+      <View className="flex items-end px-3 py-1">
+        <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+          <Text className="text-lg mr-5">Done</Text>
+        </TouchableOpacity>
       </View>
     </ScreenContainer>
   );

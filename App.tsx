@@ -2,11 +2,10 @@ import 'react-native-url-polyfill/auto';
 import { NavigationContainer } from '@react-navigation/native';
 // import { useFonts } from 'expo-font';
 import { LoadingContextProvider } from './src/contexts/LoadingContext';
-import { SessionContextProvider } from './src/contexts/SessionContext';
-import { ProfileContextProvider } from './src/contexts/ProfileContext';
 import SessionNavigator from './src/components/Navigators/SessionNavigator';
 import { ProfileSetupContextProvider } from './src/contexts/ProfileSetupContext';
 import { ProjectsContextProvider } from './src/contexts/ProjectsContext';
+import { UserContextProvider } from './src/contexts/UserContext';
 
 export default function App() {
   // const [loaded] = useFonts({
@@ -20,15 +19,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <LoadingContextProvider>
-        <SessionContextProvider>
-          <ProfileContextProvider>
-            <ProfileSetupContextProvider>
-              <ProjectsContextProvider>
-                <SessionNavigator />
-              </ProjectsContextProvider>
-            </ProfileSetupContextProvider>
-          </ProfileContextProvider>
-        </SessionContextProvider>
+        <UserContextProvider>
+          <ProfileSetupContextProvider>
+            <ProjectsContextProvider>
+              <SessionNavigator />
+            </ProjectsContextProvider>
+          </ProfileSetupContextProvider>
+        </UserContextProvider>
       </LoadingContextProvider>
     </NavigationContainer>
   );

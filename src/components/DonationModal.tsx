@@ -8,8 +8,7 @@ import LineBreak from './LineBreak';
 import FormattedInput, { FormattedInputProps } from './FormattedInput';
 import { useContext } from 'react';
 import { ProjectsContext } from '../contexts/ProjectsContext';
-import { ProfileContext } from '../contexts/ProfileContext';
-import { SessionContext } from '../contexts/SessionContext';
+import { UserContext } from '../contexts/UserContext';
 
 interface DonationModalProps extends FormattedInputProps {
   donated: boolean;
@@ -33,8 +32,7 @@ export default function DonationModal({
   project,
 }: DonationModalProps) {
   const { getProjects } = useContext(ProjectsContext);
-  const { getProfile } = useContext(ProfileContext);
-  const { session } = useContext(SessionContext);
+  const { getProfile, session } = useContext(UserContext);
 
   if (donated) {
     return (

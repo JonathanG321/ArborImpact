@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { DonationWithProject, RootDrawerParamList, WantsItemProps } from '../../lib/types';
-import { ProfileContext } from '../contexts/ProfileContext';
 import ScreenContainer from '../components/ScreenContainer';
 import Avatar from '../components/Avatar';
 import Header from '../components/Header';
@@ -13,6 +12,7 @@ import ButtonDisplay from '../components/ButtonDisplay';
 import NoProjectsPlaceholder from '../components/NoProjectsPlaceholder';
 import MyImpact from '../components/MyImpact';
 import MyProjects from '../components/MyProjects';
+import { UserContext } from '../contexts/UserContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -22,7 +22,7 @@ export default function ProfileScreen({
     params: { startTab },
   },
 }: Props) {
-  const { profile } = useContext(ProfileContext);
+  const { profile } = useContext(UserContext);
   const [index, setIndex] = useState<number>(startTab);
   const routes = [
     { key: 'first', title: 'MY PROJECTS' },
@@ -31,7 +31,11 @@ export default function ProfileScreen({
 
   const renderScene = SceneMap({
     first: () =>
-      !profile?.projects ? <NoProjectsPlaceholder navigate={navigate} /> : <MyProjects projects={profile?.projects} />,
+      profile?.projects?.length ? (
+        <MyProjects projects={profile?.projects} />
+      ) : (
+        <NoProjectsPlaceholder navigate={navigate} />
+      ),
     second: () => <MyImpact projects={profile?.projects} />,
   });
 
@@ -47,12 +51,14 @@ export default function ProfileScreen({
   ];
 
   const donationsByProject: { [key: string]: DonationWithProject[] } = {};
-  profile?.donations.forEach((donation) => {
-    if (!donationsByProject[donation.projectId]) {
-      donationsByProject[donation.projectId] = [];
-    }
-    donationsByProject[donation.projectId].push(donation);
-  });
+  if (profile && profile.donations && profile.donations.length) {
+    profile.donations.forEach((donation) => {
+      if (!donationsByProject[donation.projectId]) {
+        donationsByProject[donation.projectId] = [];
+      }
+      donationsByProject[donation.projectId].push(donation);
+    });
+  }
 
   const shares = Object.keys(donationsByProject)
     .map((projectKey) => {

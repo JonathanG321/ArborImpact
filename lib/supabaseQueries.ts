@@ -8,13 +8,11 @@ export default {
   },
 
   getSupabaseSession: async (setSession: (value: React.SetStateAction<Session | null>) => void) => {
-    await supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    setSession(session);
+    return session;
   },
 
   getSupabaseProfile: async (userId: string) => {

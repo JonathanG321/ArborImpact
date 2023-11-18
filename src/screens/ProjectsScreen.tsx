@@ -9,14 +9,14 @@ import { RootDrawerParamList } from '../../lib/types';
 import { ProjectsContext } from '../contexts/ProjectsContext';
 import ProjectsCarousel from '../components/ProjectsCarousel';
 import LineBreak from '../components/LineBreak';
-import { ProfileContext } from '../contexts/ProfileContext';
 import { dayMilliseconds } from '../../lib/templates';
+import { UserContext } from '../contexts/UserContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 
 export default function ProjectsScreen({}: Props) {
   const { projects, getProjects } = useContext(ProjectsContext);
-  const { profile } = useContext(ProfileContext);
+  const { profile } = useContext(UserContext);
   const headerHeight = useHeaderHeight();
   const currentDate = new Date().getTime();
 
