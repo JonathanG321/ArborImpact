@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { TabView, SceneMap, TabBar, TabBarItem, TabBarIndicator } from 'react-native-tab-view';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { DonationWithProject, RootDrawerParamList, WantsItemProps } from '../../lib/types';
@@ -13,6 +13,8 @@ import NoProjectsPlaceholder from '../components/NoProjectsPlaceholder';
 import MyImpact from '../components/MyImpact';
 import MyProjects from '../components/MyProjects';
 import { UserContext } from '../contexts/UserContext';
+import Queries from '../../lib/supabaseQueries';
+import { cn } from '../../lib/utils';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -22,7 +24,7 @@ export default function ProfileScreen({
     params: { startTab },
   },
 }: Props) {
-  const { profile } = useContext(UserContext);
+  const { profile, session, setProfile } = useContext(UserContext);
   const [index, setIndex] = useState<number>(startTab);
   const routes = [
     { key: 'first', title: 'MY PROJECTS' },
@@ -96,7 +98,32 @@ export default function ProfileScreen({
       </View>
       <LineBreak />
       <View className="my-2 flex flex-row justify-around mb-4">
-        <ButtonDisplay text={`Balance: USD $${profile?.balance.toFixed(2)}`} classNames="ml-4 mr-2" />
+        {profile && profile.balance > 0 ? (
+          <ButtonDisplay text={`Balance: USD $${profile?.balance.toFixed(2)}`} classNames="ml-4 mr-2" />
+        ) : (
+          <ButtonDisplay
+            onPress={
+              profile?.requestingFunds
+                ? undefined
+                : async () => {
+                    const res = await Queries.requestFunds(session?.user.id);
+                    if (res && res.error) {
+                      Alert.alert(res.error.message);
+                      return;
+                    } else if (!profile) {
+                      Alert.alert('No Profile Found');
+                      return;
+                    }
+                    setProfile({ ...profile, requestingFunds: true });
+                  }
+            }
+            text={profile?.requestingFunds ? 'Refill Requested' : 'Request refill'}
+            classNames={cn('ml-4 mr-2', {
+              'bg-green-500': profile?.requestingFunds,
+              'bg-red-500': !profile?.requestingFunds,
+            })}
+          />
+        )}
         <ButtonDisplay
           text={`Shares: ${Math.floor(shares)}`}
           classNames="bg-arbor-blue ml-2 mr-4"
