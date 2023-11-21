@@ -23,32 +23,28 @@ export default function ProjectScreen({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [donation, setDonation] = useState<number>(0);
   const [donated, setDonated] = useState(false);
-  const { session, profile } = useContext(UserContext);
+  const { session, setProfile, profile } = useContext(UserContext);
   const extraImages = project.extraImages || [];
   const projectImages = project.projectImage ? [project.projectImage].concat(extraImages) : extraImages;
 
   async function handleDonation() {
     if (!session) throw new Error('Session does not exist when donation button is pressed');
 
-    const currentBalance = profile?.balance || 0;
+    const { error, currentBalance } = await Queries.getCurrentBalance(session.user.id);
+    if (error) {
+      Alert.alert('Failed to check current balance. Please wait a few minutes and try again.');
+      return;
+    }
     if (currentBalance < donation) {
       Alert.alert('You do not have enough money in your account to donate that much.');
       return;
     }
-    const [{ error: donationError }, { error: profileError }] = await Queries.makeSupabaseDonation(
-      session.user.id,
-      project.id,
-      donation,
-      currentBalance
-    );
+    const { error: donationError } = await Queries.makeSupabaseDonation(session.user.id, project.id, donation);
     if (donationError) {
       Alert.alert(donationError.message);
       return;
     }
-    if (profileError) {
-      Alert.alert(profileError.message);
-      return;
-    }
+    if (profile) setProfile({ ...profile, balance: currentBalance - donation });
     setDonated(true);
   }
 

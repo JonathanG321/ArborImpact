@@ -5,7 +5,7 @@ import { Alert, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DBProfile, Profile, RootStackParamList } from '../../lib/types';
+import { DBProfile, DBProfileWithSDGs, Profile, RootStackParamList } from '../../lib/types';
 import ScreenContainer from '../components/ScreenContainer';
 import SDGInput from '../components/SDGInput';
 import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
@@ -66,7 +66,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       return;
     }
 
-    const newProfile: DBProfile = {
+    const newProfile: DBProfileWithSDGs = {
       birth_date: profileSetup.birthDate,
       first_name: profileSetup.firstName,
       last_name: profileSetup.lastName,
@@ -76,9 +76,8 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       want_specific_cause: profileSetup.wantSpecificCause,
       want_tax_incentives: profileSetup.wantTaxIncentives,
       avatar_url: filePath,
-      sdg,
+      SDGs: profileSetup.sdg,
       id: session.user.id,
-      balance: 0,
       created_at: new Date().toUTCString(),
     };
     const { error } = await Queries.upsertSupabaseProfile(newProfile);

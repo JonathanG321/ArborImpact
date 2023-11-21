@@ -33,6 +33,7 @@ export default function DonationModal({
 }: DonationModalProps) {
   const { getProjects } = useContext(ProjectsContext);
   const { getProfile, session } = useContext(UserContext);
+  const impactShares = (donation / project.fundingGoal) * 100;
 
   if (donated) {
     return (
@@ -94,9 +95,9 @@ export default function DonationModal({
               }}
             />
             <Text className="font-bold text-lg text-center">
-              {project.donationCurrency} to {project.name}. Contributing{' '}
-              {((donation / project.fundingGoal) * 100).toFixed(0)}% of the funding goal of $
-              {project.fundingGoal.toLocaleString()} {project.donationCurrency}, receiving ### impact shares.
+              {project.donationCurrency} to {project.name}. Contributing {impactShares.toFixed(0)}% of the funding goal
+              of ${project.fundingGoal.toLocaleString()} {project.donationCurrency}, receiving{' '}
+              {Math.floor(impactShares)} impact share{Math.floor(impactShares) === 1 ? '' : 's'}.
             </Text>
           </View>
         </View>

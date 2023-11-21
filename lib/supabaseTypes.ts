@@ -11,22 +11,22 @@ export interface Database {
     Tables: {
       donations: {
         Row: {
+          amount: number
           created_at: string
-          donation: number
           id: number
           profile_id: string
           project_id: number
         }
         Insert: {
+          amount?: number
           created_at?: string
-          donation?: number
           id?: number
           profile_id: string
           project_id: number
         }
         Update: {
+          amount?: number
           created_at?: string
-          donation?: number
           id?: number
           profile_id?: string
           project_id?: number
@@ -48,17 +48,45 @@ export interface Database {
           }
         ]
       }
+      profile_sdgs: {
+        Row: {
+          profile_id: string
+          sdg_id: string
+        }
+        Insert: {
+          profile_id: string
+          sdg_id: string
+        }
+        Update: {
+          profile_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_sdgs_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string
-          balance: number
           birth_date: string
           created_at: string
           first_name: string
           id: string
           last_name: string
           location: string
-          sdg: string[]
           want_difference_world: boolean
           want_diversify_portfolio: boolean
           want_specific_cause: boolean
@@ -66,14 +94,12 @@ export interface Database {
         }
         Insert: {
           avatar_url?: string
-          balance?: number
           birth_date?: string
           created_at?: string
           first_name?: string
           id?: string
           last_name?: string
           location?: string
-          sdg?: string[]
           want_difference_world?: boolean
           want_diversify_portfolio?: boolean
           want_specific_cause?: boolean
@@ -81,14 +107,12 @@ export interface Database {
         }
         Update: {
           avatar_url?: string
-          balance?: number
           birth_date?: string
           created_at?: string
           first_name?: string
           id?: string
           last_name?: string
           location?: string
-          sdg?: string[]
           want_difference_world?: boolean
           want_diversify_portfolio?: boolean
           want_specific_cause?: boolean
@@ -144,6 +168,55 @@ export interface Database {
           project_image_url?: string
           region?: string
           sdg?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_sdg_fkey"
+            columns: ["sdg"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      recharges: {
+        Row: {
+          amount: number
+          created_at: string
+          id: number
+          profile_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: number
+          profile_id?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: number
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recharges_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      sdgs: {
+        Row: {
+          id: string
+        }
+        Insert: {
+          id?: string
+        }
+        Update: {
+          id?: string
         }
         Relationships: []
       }

@@ -1,6 +1,6 @@
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabase/supabase';
-import { DBProfile, DBProfileWithProjectsAndDonations, LoginForm, Profile } from './types';
+import { DBProfileWithProjectsAndDonationsAndRecharges, DBProfileWithSDGs, LoginForm, SDG } from './types';
 
 export default {
   getSupabaseImage: async (path: string, bucket: string) => {
@@ -15,36 +15,65 @@ export default {
     return session;
   },
 
-  getSupabaseProfile: async (userId: string) => {
-    const profile = await supabase
+  getCurrentBalance: async (userId: string) => {
+    const { data: profile, error } = await supabase
       .from('profiles')
-      .select(`*, projects(*, donations(*)), donations(*, projects(*))`)
+      .select(`donations(amount), recharges(amount)`)
+      .eq('id', userId)
+      .single();
+    if (error) {
+      return { currentBalance: 0, error };
+    }
+    const totalDonated = profile.donations.reduce((total, donation) => total + donation.amount, 0);
+    const totalRecharged = profile.recharges.reduce((total, charge) => total + charge.amount, 0);
+    const currentBalance = totalRecharged - totalDonated;
+    return { error: null, currentBalance };
+  },
+
+  getSupabaseProfile: async (userId: string) => {
+    const { data: profile, ...response } = await supabase
+      .from('profiles')
+      .select(`*, projects(*, donations(*), sdgs(*)), donations(*, projects(*, sdgs(*))), sdgs(*), recharges(*)`)
       .eq('id', userId)
       .order('created_at', { foreignTable: 'donations', ascending: false })
       .order('created_at', { foreignTable: 'projects', ascending: false })
       .single();
-    const sortedProjects: DBProfileWithProjectsAndDonations['projects'] =
-      profile.data?.projects
-        .map((project) => ({
+    if (!profile) return { ...response, data: null };
+    const sortedProjects: DBProfileWithProjectsAndDonationsAndRecharges['projects'] =
+      profile?.projects
+        .map(({ sdgs, ...project }) => ({
           ...project,
           donations: project.donations.sort(
             (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
           ),
+          sdg: sdgs?.id as SDG,
         }))
         .sort(
           (a, b) => new Date(b.donations[0].created_at).getTime() - new Date(a.donations[0].created_at).getTime()
         ) || [];
     const filteredProjects = [...new Map(sortedProjects.map((project) => [project.id, project])).values()];
+    const donations = profile?.donations.map((donation) => ({
+      ...donation,
+      project: { ...donation.projects, sdg: donation.projects?.sdgs?.id },
+    }));
+    const totalRecharged = profile.recharges.reduce((total, charge) => total + charge.amount, 0);
+    const totalDonated = profile.donations.reduce((total, donation) => total + donation.amount, 0);
     return {
-      ...profile,
-      data: { ...profile.data, projects: filteredProjects || [] } as DBProfileWithProjectsAndDonations,
+      ...response,
+      data: {
+        ...profile,
+        balance: totalRecharged - totalDonated,
+        SDGs: profile.sdgs.map((sdg) => sdg.id),
+        projects: filteredProjects || [],
+        donations,
+      } as DBProfileWithProjectsAndDonationsAndRecharges,
     };
   },
 
   getSupabaseProjectsWithDonations: async () => {
     return await supabase
       .from('projects')
-      .select(`*, donations(*)`)
+      .select(`*, donations(*), sdgs(*)`)
       .order('created_at', { foreignTable: 'donations', ascending: false });
   },
 
@@ -52,24 +81,23 @@ export default {
     return await supabase.storage.from(bucket).upload(path, formData);
   },
 
-  upsertSupabaseProfile: async (newProfile: DBProfile) => {
+  upsertSupabaseProfile: async (newProfile: DBProfileWithSDGs) => {
     return await supabase.from('profiles').upsert(newProfile);
   },
+  upsertSupabaseProfileSDGs: async (newProfile: DBProfileWithSDGs) => {
+    const results = await Promise.all(
+      newProfile.SDGs.map((sdg) => supabase.from('profile_sdgs').upsert({ profile_id: newProfile.id, sdg_id: sdg }))
+    );
+    results.filter((res) => !!res.error).length;
+    return { error: results.filter((res) => !!res.error) };
+  },
 
-  makeSupabaseDonation: async (userId: string, projectId: number, donation: number, currentBalance: number) => {
-    return await Promise.all([
-      supabase.from('donations').insert({
-        profile_id: userId,
-        project_id: projectId,
-        donation,
-      }),
-      supabase
-        .from('profiles')
-        .update({
-          balance: currentBalance - donation,
-        })
-        .eq('id', userId),
-    ]);
+  makeSupabaseDonation: async (userId: string, projectId: number, amount: number) => {
+    return await supabase.from('donations').insert({
+      profile_id: userId,
+      project_id: projectId,
+      amount,
+    });
   },
 
   supabaseSignIn: async (form: LoginForm) => {

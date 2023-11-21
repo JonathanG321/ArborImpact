@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useState } from 'react';
 import { Alert } from 'react-native';
-import { ProjectWithDonations } from '../../lib/types';
+import { ProjectWithDonations, SDG } from '../../lib/types';
 import { createProjectObjectsWithDonations } from '../../lib/utils';
 import Queries from '../../lib/supabaseQueries';
 
@@ -21,7 +21,9 @@ export function ProjectsContextProvider({ children }: PropsWithChildren) {
       const { error, status, data } = await Queries.getSupabaseProjectsWithDonations();
       if (error && status !== 406) throw error;
       if (error) return;
-      const projects = await createProjectObjectsWithDonations(data);
+      const projects = await createProjectObjectsWithDonations(
+        data.map((project) => ({ ...project, sdg: project.sdgs?.id as SDG }))
+      );
       setProjects(projects);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);

@@ -11,11 +11,12 @@ import { ProjectsContext } from '../../contexts/ProjectsContext';
 import MainNavigator from './MainNavigator';
 import { RootStackParamList } from '../../../lib/types';
 import { UserContext } from '../../contexts/UserContext';
+import LoadingScreen from '../../screens/LoadingScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function SessionNavigator() {
-  const { session, profile, userSetup } = useContext(UserContext);
+  const { session, profile, userSetup, isFirstLoad } = useContext(UserContext);
   const { getProjects } = useContext(ProjectsContext);
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -28,6 +29,10 @@ export default function SessionNavigator() {
     }
     Setup();
   }, []);
+
+  if (isFirstLoad) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Stack.Navigator id="Main">

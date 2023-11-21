@@ -1,7 +1,7 @@
 import { Session } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import Queries from '../../lib/supabaseQueries';
-import { DBProject, DonationWithProject, Profile, SDG } from '../../lib/types';
+import { DBProject, DonationWithProject, Profile } from '../../lib/types';
 import { createProjectObjects, createProjectObjectsWithDonations, downloadImage } from '../../lib/utils';
 import { Alert } from 'react-native';
 import { LoadingContext } from './LoadingContext';
@@ -14,6 +14,7 @@ export const UserContext = createContext<{
   profile: Profile | null;
   setProfile: (profile: Profile | null) => void;
   getProfile: (session: Session | null) => Promise<void | boolean>;
+  isFirstLoad: boolean;
 }>({
   session: null,
   setSession: () => undefined,
@@ -21,10 +22,12 @@ export const UserContext = createContext<{
   profile: null,
   setProfile: () => undefined,
   getProfile: () => Promise.resolve<void>(undefined),
+  isFirstLoad: true,
 });
 export function UserContextProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const { setIsLoading } = useContext(LoadingContext);
 
   async function getProfile(session: Session | null) {
@@ -36,7 +39,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
       setIsLoading(true);
       const { error, status, data: dbProfile } = await Queries.getSupabaseProfile(session?.user.id);
       if (error && status !== 406) throw error;
-      if (error) return;
+      if (error || !dbProfile) return;
       const [image, projects] = await Promise.all([
         downloadImage(dbProfile.avatar_url),
         createProjectObjectsWithDonations(dbProfile.projects),
@@ -47,8 +50,8 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         firstName: dbProfile.first_name,
         lastName: dbProfile.last_name,
         location: dbProfile.location,
-        balance: dbProfile.balance,
-        sdg: dbProfile.sdg as SDG[],
+        balance: dbProfile.recharges.reduce((total, charge) => total + charge.amount, 0),
+        sdg: dbProfile.SDGs,
         wantDifferenceWorld: dbProfile.want_difference_world,
         wantDiversifyPortfolio: dbProfile.want_diversify_portfolio,
         wantSpecificCause: dbProfile.want_specific_cause,
@@ -58,22 +61,26 @@ export function UserContextProvider({ children }: PropsWithChildren) {
           dbProfile.donations.map(
             async (donation) =>
               ({
-                donation: donation.donation,
+                donation: donation.amount,
                 createdAt: donation.created_at,
                 profileId: donation.profile_id,
                 projectId: donation.project_id,
                 project: {
-                  ...(await createProjectObjects(donation?.projects ? [donation.projects] : ([] as DBProject[])))[0],
+                  ...(await createProjectObjects(donation?.project ? [donation.project] : ([] as DBProject[])))[0],
                 },
               } as DonationWithProject)
           )
         ),
       };
       setProfile(profile);
-      setTimeout(() => setIsLoading(false), 1000);
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsFirstLoad(false);
+      }, 500);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
       setIsLoading(false);
+      setIsFirstLoad(false);
     }
   }
 
@@ -91,7 +98,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ session, setSession, userSetup, profile, setProfile, getProfile }}>
+    <UserContext.Provider value={{ session, setSession, userSetup, profile, setProfile, getProfile, isFirstLoad }}>
       {children}
     </UserContext.Provider>
   );

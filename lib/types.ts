@@ -39,15 +39,15 @@ export type RootDrawerParamList = {
 };
 
 export type SDG =
-  | 'SDG1'
-  | 'SDG2'
-  | 'SDG3'
-  | 'SDG4'
-  | 'SDG5'
-  | 'SDG6'
-  | 'SDG7'
-  | 'SDG8'
-  | 'SDG9'
+  | 'SDG01'
+  | 'SDG02'
+  | 'SDG03'
+  | 'SDG04'
+  | 'SDG05'
+  | 'SDG06'
+  | 'SDG07'
+  | 'SDG08'
+  | 'SDG09'
   | 'SDG10'
   | 'SDG11'
   | 'SDG12'
@@ -74,9 +74,13 @@ export type Profile = {
 };
 
 export type DBProfile = Database['public']['Tables']['profiles']['Row'];
-export interface DBProfileWithProjectsAndDonations extends DBProfile {
+export interface DBProfileWithSDGs extends DBProfile {
+  SDGs: SDG[];
+}
+export interface DBProfileWithProjectsAndDonationsAndRecharges extends DBProfileWithSDGs {
   projects: DBProjectWithDonations[];
   donations: DBDonationWithProject[];
+  recharges: Database['public']['Tables']['recharges']['Row'][];
 }
 
 export type Project = {
@@ -100,13 +104,16 @@ export interface ProjectWithDonations extends Project {
 }
 
 export type DBProject = Database['public']['Tables']['projects']['Row'];
-export interface DBProjectWithDonations extends DBProject {
+export interface DBProjectWithSDG extends DBProject {
+  sdg: SDG;
+}
+export interface DBProjectWithDonations extends DBProjectWithSDG {
   donations: DBDonation[];
 }
 
 export type DBDonation = Database['public']['Tables']['donations']['Row'];
 export interface DBDonationWithProject extends DBDonation {
-  projects: DBProject;
+  project: DBProjectWithSDG;
 }
 
 export type Donation = {

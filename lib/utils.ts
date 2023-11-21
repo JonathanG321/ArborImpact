@@ -101,7 +101,7 @@ function createProjectWithDonations(
     donations: donations.map(
       (donation) =>
         ({
-          donation: donation.donation,
+          donation: donation.amount,
           createdAt: donation.created_at,
           profileId: donation.profile_id,
           projectId: donation.project_id,
