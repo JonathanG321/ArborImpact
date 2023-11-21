@@ -70,6 +70,7 @@ export type Profile = {
   sdg: SDG[];
   projects: ProjectWithDonations[];
   donations: DonationWithProject[];
+  requestingFunds: boolean;
   balance: number;
 };
 

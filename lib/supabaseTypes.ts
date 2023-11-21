@@ -87,6 +87,7 @@ export interface Database {
           id: string
           last_name: string
           location: string
+          requesting_funds: boolean
           want_difference_world: boolean
           want_diversify_portfolio: boolean
           want_specific_cause: boolean
@@ -100,6 +101,7 @@ export interface Database {
           id?: string
           last_name?: string
           location?: string
+          requesting_funds?: boolean
           want_difference_world?: boolean
           want_diversify_portfolio?: boolean
           want_specific_cause?: boolean
@@ -113,6 +115,7 @@ export interface Database {
           id?: string
           last_name?: string
           location?: string
+          requesting_funds?: boolean
           want_difference_world?: boolean
           want_diversify_portfolio?: boolean
           want_specific_cause?: boolean

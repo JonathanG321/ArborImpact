@@ -56,6 +56,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         wantDiversifyPortfolio: dbProfile.want_diversify_portfolio,
         wantSpecificCause: dbProfile.want_specific_cause,
         wantTaxIncentives: dbProfile.want_tax_incentives,
+        requestingFunds: dbProfile.requesting_funds,
         projects: projects,
         donations: await Promise.all(
           dbProfile.donations.map(
