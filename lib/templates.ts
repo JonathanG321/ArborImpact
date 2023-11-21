@@ -15,6 +15,7 @@ export const emptyProfile: Profile = {
   donations: [],
   balance: 0,
   requestingFunds: false,
+  seenMarketplace: false,
 };
 
 export const dayMilliseconds = 1000 * 60 * 60 * 24;

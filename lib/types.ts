@@ -72,6 +72,7 @@ export type Profile = {
   projects: ProjectWithDonations[];
   donations: DonationWithProject[];
   requestingFunds: boolean;
+  seenMarketplace: boolean;
   balance: number;
 };
 

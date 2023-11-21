@@ -15,7 +15,6 @@ export default function MyProjects({ projects }: Props) {
     <ScrollView className="w-full h-full mt-5">
       {projects.map((project, i) => {
         const amountDonated = project.donations.reduce((total, current) => total + current.donation, 0);
-        console.log(project.sdg);
         return (
           <View key={project.name + project.id + project.impactType + i} className="flex-row flex mb-8">
             <View>
