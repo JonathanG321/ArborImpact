@@ -79,6 +79,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       SDGs: profileSetup.sdg,
       id: session.user.id,
       requesting_funds: false,
+      seen_marketplace: false,
       created_at: new Date().toUTCString(),
     };
     const { error } = await Queries.upsertSupabaseProfile(newProfile);
