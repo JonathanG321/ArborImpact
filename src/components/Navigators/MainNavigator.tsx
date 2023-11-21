@@ -17,6 +17,7 @@ import { LoadingContext } from '../../contexts/LoadingContext';
 import { useNavigation } from '@react-navigation/native';
 import Queries from '../../../lib/supabaseQueries';
 import { UserContext } from '../../contexts/UserContext';
+import MarketplaceScreen from '../../screens/MaketplaceScreen';
 
 function DrawerContent(props: DrawerContentComponentProps) {
   const { setProfile } = useContext(UserContext);
@@ -53,6 +54,7 @@ export default function MainNavigator() {
         options={{ headerTitle: '' }}
       />
       <Drawer.Screen name="Projects" component={ProjectsScreen} options={{ headerTitle: '' }} />
+      <Drawer.Screen name="Marketplace" component={MarketplaceScreen} options={{ headerTitle: '' }} />
       <Drawer.Screen
         name="Project"
         component={ProjectScreen}
