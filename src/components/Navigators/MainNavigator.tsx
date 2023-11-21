@@ -17,7 +17,7 @@ import { LoadingContext } from '../../contexts/LoadingContext';
 import { useNavigation } from '@react-navigation/native';
 import Queries from '../../../lib/supabaseQueries';
 import { UserContext } from '../../contexts/UserContext';
-import MarketplaceScreen from '../../screens/MaketplaceScreen';
+import MarketplaceScreen from '../../screens/MarketplaceScreen';
 
 function DrawerContent(props: DrawerContentComponentProps) {
   const { setProfile } = useContext(UserContext);
