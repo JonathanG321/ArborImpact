@@ -3,6 +3,13 @@ import { supabase } from '../supabase/supabase';
 import { DBProfileWithProjectsAndDonationsAndRecharges, DBProfileWithSDGs, LoginForm, SDG } from './types';
 
 export default {
+  requestFunds: async (userId?: string) => {
+    if (!userId) {
+      return { data: null, error: { message: 'No session error. Cannot update profile without a session!' } };
+    }
+    return await supabase.from('profiles').update({ requesting_funds: true }).eq('id', userId);
+  },
+
   getSupabaseImage: async (path: string, bucket: string) => {
     return await supabase.storage.from(bucket).download(path);
   },
