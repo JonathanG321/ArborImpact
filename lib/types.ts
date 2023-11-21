@@ -36,6 +36,7 @@ export type RootDrawerParamList = {
   Profile: { startTab: 0 | 1 };
   Projects: undefined;
   Project: { project: ProjectWithDonations };
+  Marketplace: undefined;
 };
 
 export type SDG =

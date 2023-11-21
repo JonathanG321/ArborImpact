@@ -88,6 +88,7 @@ export interface Database {
           last_name: string
           location: string
           requesting_funds: boolean
+          seen_marketplace: boolean
           want_difference_world: boolean
           want_diversify_portfolio: boolean
           want_specific_cause: boolean
@@ -102,6 +103,7 @@ export interface Database {
           last_name?: string
           location?: string
           requesting_funds?: boolean
+          seen_marketplace?: boolean
           want_difference_world?: boolean
           want_diversify_portfolio?: boolean
           want_specific_cause?: boolean
@@ -116,6 +118,7 @@ export interface Database {
           last_name?: string
           location?: string
           requesting_funds?: boolean
+          seen_marketplace?: boolean
           want_difference_world?: boolean
           want_diversify_portfolio?: boolean
           want_specific_cause?: boolean
