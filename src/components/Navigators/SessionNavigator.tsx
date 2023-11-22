@@ -12,18 +12,21 @@ import MainNavigator from './MainNavigator';
 import { RootStackParamList } from '../../../lib/types';
 import { UserContext } from '../../contexts/UserContext';
 import LoadingScreen from '../../screens/LoadingScreen';
+import { ProductsContext } from '../../contexts/ProductsContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function SessionNavigator() {
   const { session, profile, userSetup, isFirstLoad } = useContext(UserContext);
   const { getProjects } = useContext(ProjectsContext);
+  const { getProducts } = useContext(ProductsContext);
   const { setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     async function Setup() {
       setIsLoading(true);
       await getProjects();
+      await getProducts();
       await userSetup();
       setIsLoading(false);
     }
