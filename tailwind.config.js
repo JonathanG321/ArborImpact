@@ -18,6 +18,9 @@ module.exports = {
           blue: "#212697",
           grey: "#5a5a5b"
         }
+      },
+      height: {
+        "80%": "80vh"
       }
     },
   },

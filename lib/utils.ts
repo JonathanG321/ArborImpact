@@ -1,8 +1,9 @@
 import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
+import { Alert } from 'react-native';
+import { ImagePickerAsset } from 'expo-image-picker';
 import { DBProject, DBProjectWithDonations, Donation, Project, ProjectWithDonations } from './types';
 import Queries from './supabaseQueries';
-import { Alert } from 'react-native';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,7 +24,7 @@ export async function downloadImage(path: string, bucket: string = 'avatars') {
       fr.readAsDataURL(data);
     });
 
-    return image;
+    return { uri: image, width: 200, height: 200 } as ImagePickerAsset;
   } catch (error) {
     if (error instanceof Error) {
       Alert.alert('Error downloading image: ', error.message);
@@ -72,29 +73,27 @@ function createProject(
     ...rest
   }: DBProject,
   index: number,
-  projectMainImages: (string | undefined)[],
-  projectExtraImages: (string | undefined)[][]
+  projectMainImages: (ImagePickerAsset | undefined)[],
+  projectExtraImages: (ImagePickerAsset | undefined)[][]
 ) {
   return {
     createdAt: created_at,
-    projectImage: projectMainImages[index] ? { uri: projectMainImages[index], width: 200, height: 200 } : null,
+    projectImage: projectMainImages[index],
     fundingGoal: funding_goal,
     goalDate: goal_date,
     impactGoal: impact_goal,
     impactGoalUnit: impact_goal_unit,
     impactType: impact_type,
     donationCurrency: donation_currency,
-    extraImages: projectExtraImages[index]
-      ? projectExtraImages[index].map((image) => ({ uri: image, width: 200, height: 200 }))
-      : null,
+    extraImages: projectExtraImages[index],
     ...rest,
   } as Project;
 }
 function createProjectWithDonations(
   { donations, ...rest }: DBProjectWithDonations,
   index: number,
-  projectMainImages: (string | undefined)[],
-  projectExtraImages: (string | undefined)[][]
+  projectMainImages: (ImagePickerAsset | undefined)[],
+  projectExtraImages: (ImagePickerAsset | undefined)[][]
 ) {
   return {
     ...createProject(rest, index, projectMainImages, projectExtraImages),

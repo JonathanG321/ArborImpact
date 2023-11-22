@@ -45,7 +45,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         createProjectObjectsWithDonations(dbProfile.projects),
       ]);
       const profile: Profile = {
-        avatarImage: image ? { uri: image, width: 200, height: 200 } : null,
+        avatarImage: image || null,
         birthDate: dbProfile.birth_date,
         firstName: dbProfile.first_name,
         lastName: dbProfile.last_name,
