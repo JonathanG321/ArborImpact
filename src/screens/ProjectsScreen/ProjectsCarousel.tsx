@@ -3,7 +3,7 @@ import { Dimensions, ScaledSize, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import Carousel from 'react-native-snap-carousel';
-import { Project, RootDrawerParamList } from '../../lib/types';
+import { Project, RootDrawerParamList } from '../../../lib/types';
 import ProjectsCarouselItem from './ProjectsCarouselItem';
 
 const window: ScaledSize = Dimensions.get('window');

@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { SceneMap } from 'react-native-tab-view';
 import ScreenContainer from '../../components/ScreenContainer';
-import MarketplaceIntroModal from '../../components/MarketplaceIntroModal';
+import MarketplaceIntroModal from './MarketplaceIntroModal';
 import StyledTabView from '../../components/StyledTabView';
 import ArborMarket from './ArborMarket';
 import ImpactMarket from './ImpactMarket';

@@ -2,10 +2,10 @@ import { useContext, useState } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
-import LineBreak from './LineBreak';
-import ButtonDisplay from './ButtonDisplay';
-import Queries from '../../lib/supabaseQueries';
-import { UserContext } from '../contexts/UserContext';
+import LineBreak from '../../components/LineBreak';
+import ButtonDisplay from '../../components/ButtonDisplay';
+import Queries from '../../../lib/supabaseQueries';
+import { UserContext } from '../../contexts/UserContext';
 
 export default function MarketplaceIntroModal() {
   const { profile, session } = useContext(UserContext);

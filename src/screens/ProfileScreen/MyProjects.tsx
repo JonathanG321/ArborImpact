@@ -2,9 +2,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { View } from 'react-native';
 import { Badge, Text } from 'react-native-elements';
 import * as Progress from 'react-native-progress';
-import Avatar from './Avatar';
-import { ProjectWithDonations } from '../../lib/types';
-import { SDGs } from '../../lib/templates';
+import Avatar from '../../components/Avatar';
+import { ProjectWithDonations } from '../../../lib/types';
+import { SDGs } from '../../../lib/templates';
 
 type Props = {
   projects: ProjectWithDonations[];

@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import { Text } from 'react-native-elements';
-import Header from './Header';
-import ButtonDisplay from './ButtonDisplay';
+import Header from '../../components/Header';
+import ButtonDisplay from '../../components/ButtonDisplay';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { RootDrawerParamList } from '../../lib/types';
+import { RootDrawerParamList } from '../../../lib/types';
 
 type Props = {
   navigate: DrawerNavigationProp<RootDrawerParamList, 'Profile', undefined>['navigate'];

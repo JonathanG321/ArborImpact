@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import { SDGs } from '../../lib/templates';
-import { Project, SDG } from '../../lib/types';
-import Header from './Header';
-import Avatar from './Avatar';
+import { SDGs } from '../../../lib/templates';
+import { Project, SDG } from '../../../lib/types';
+import Header from '../../components/Header';
+import Avatar from '../../components/Avatar';
 
 export default function MyImpact({ projects = [] }: { projects?: Project[] }) {
   const impactedSDGsList = projects.map((project) => project.sdg);

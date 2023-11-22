@@ -1,7 +1,7 @@
 import { TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { Project } from '../../lib/types';
-import Avatar from './Avatar';
+import { Project } from '../../../lib/types';
+import Avatar from '../../components/Avatar';
 
 type CarouselItem = {
   item: Project;
