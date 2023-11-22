@@ -15,6 +15,7 @@ import MyProjects from '../components/MyProjects';
 import { UserContext } from '../contexts/UserContext';
 import Queries from '../../lib/supabaseQueries';
 import { cn } from '../../lib/utils';
+import StyledTabView from '../components/StyledTabView';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -25,7 +26,7 @@ export default function ProfileScreen({
   },
 }: Props) {
   const { profile, session, setProfile } = useContext(UserContext);
-  const [index, setIndex] = useState<number>(startTab);
+  // const [index, setIndex] = useState<number>(startTab);
   const routes = [
     { key: 'first', title: 'MY PROJECTS' },
     { key: 'second', title: 'MY IMPACT' },
@@ -68,10 +69,6 @@ export default function ProfileScreen({
       return (totalDonation / donationsByProject[projectKey][0].project.fundingGoal) * 100;
     })
     .reduce((total, currentShares) => total + currentShares, 0);
-
-  useEffect(() => {
-    setIndex(startTab);
-  }, []);
 
   return (
     <ScreenContainer>
@@ -131,33 +128,7 @@ export default function ProfileScreen({
         />
       </View>
       <LineBreak />
-      <View className="h-full px-4">
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={(newI) => {
-            if (!!profile?.projects) {
-              setIndex(newI);
-            } else {
-              setIndex(0);
-            }
-          }}
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              style={{ backgroundColor: 'transparent' }}
-              renderIndicator={(props) => (
-                <View style={{ height: props.layout.height, width: props.layout.width }}>
-                  <TabBarIndicator {...props} style={{ backgroundColor: 'black', height: 3, marginBottom: 10 }} />
-                </View>
-              )}
-              renderTabBarItem={(props) => (
-                <TabBarItem {...props} labelStyle={{ color: 'black', fontWeight: '800', fontSize: 20 }} />
-              )}
-            />
-          )}
-        />
-      </View>
+      <StyledTabView renderScene={renderScene} routes={routes} defaultIndex={startTab} />
     </ScreenContainer>
   );
 }

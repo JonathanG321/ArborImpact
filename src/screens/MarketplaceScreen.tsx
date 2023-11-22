@@ -1,15 +1,22 @@
 import { View } from 'react-native';
-import { Text } from 'react-native-elements';
 import ScreenContainer from '../components/ScreenContainer';
 import MarketplaceIntroModal from '../components/MarketplaceIntroModal';
+import { SceneMap } from 'react-native-tab-view';
+import StyledTabView from '../components/StyledTabView';
 
 export default function MarketplaceScreen() {
+  const routes = [
+    { key: 'first', title: 'ARBOR MARKETPLACE' },
+    { key: 'second', title: 'IMPACT MARKET' },
+  ];
+  const renderScene = SceneMap({
+    first: () => <View></View>,
+    second: () => <View></View>,
+  });
   return (
     <ScreenContainer scrollable>
-      <View className="flex items-center h-full w-full">
-        <Text className="text-3xl font-bold mb-5">Arbor Marketplace</Text>
-        <MarketplaceIntroModal />
-      </View>
+      <MarketplaceIntroModal />
+      <StyledTabView renderScene={renderScene} routes={routes} />
     </ScreenContainer>
   );
 }
