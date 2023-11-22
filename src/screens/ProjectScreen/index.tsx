@@ -2,15 +2,15 @@ import { useContext, useState } from 'react';
 import { Text } from 'react-native-elements';
 import { Alert, View } from 'react-native';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
-import { RootDrawerParamList } from '../../lib/types';
-import ScreenContainer from '../components/ScreenContainer';
-import LineBreak from '../components/LineBreak';
-import ButtonDisplay from '../components/ButtonDisplay';
-import { SDGs, dayMilliseconds } from '../../lib/templates';
-import DonationModal from '../components/DonationModal';
-import Queries from '../../lib/supabaseQueries';
-import Avatar from '../components/Avatar';
-import { UserContext } from '../contexts/UserContext';
+import { RootDrawerParamList } from '../../../lib/types';
+import ScreenContainer from '../../components/ScreenContainer';
+import LineBreak from '../../components/LineBreak';
+import ButtonDisplay from '../../components/ButtonDisplay';
+import { SDGs, dayMilliseconds } from '../../../lib/templates';
+import DonationModal from './DonationModal';
+import Queries from '../../../lib/supabaseQueries';
+import Avatar from '../../components/Avatar';
+import { UserContext } from '../../contexts/UserContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 

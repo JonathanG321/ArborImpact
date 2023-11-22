@@ -4,11 +4,11 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { FormSwitchProps, Profile, RootStackParamList } from '../../lib/types';
-import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
-import FormSwitch from '../components/FormSwitch';
-import { emptyProfile } from '../../lib/templates';
-import ScreenContainer from '../components/ScreenContainer';
+import { FormSwitchProps, Profile, RootStackParamList } from '../../../lib/types';
+import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
+import FormSwitch from '../../components/FormSwitch';
+import { emptyProfile } from '../../../lib/templates';
+import ScreenContainer from '../../components/ScreenContainer';
 
 export type ProfileSetup2Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 2', 'Main'>;
 

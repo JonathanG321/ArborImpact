@@ -5,12 +5,12 @@ import { View } from 'react-native';
 import { Dimensions } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Text } from 'react-native-elements';
-import { RootDrawerParamList } from '../../lib/types';
-import { ProjectsContext } from '../contexts/ProjectsContext';
-import ProjectsCarousel from '../components/ProjectsCarousel';
-import LineBreak from '../components/LineBreak';
-import { dayMilliseconds } from '../../lib/templates';
-import { UserContext } from '../contexts/UserContext';
+import { RootDrawerParamList } from '../../../lib/types';
+import { ProjectsContext } from '../../contexts/ProjectsContext';
+import ProjectsCarousel from '../../components/ProjectsCarousel';
+import LineBreak from '../../components/LineBreak';
+import { dayMilliseconds } from '../../../lib/templates';
+import { UserContext } from '../../contexts/UserContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 

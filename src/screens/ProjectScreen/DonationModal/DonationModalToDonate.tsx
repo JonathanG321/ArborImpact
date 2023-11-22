@@ -1,75 +1,31 @@
 import { View } from 'react-native';
 import { Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { ProjectWithDonations, RootDrawerParamList } from '../../lib/types';
-import ButtonDisplay from './ButtonDisplay';
-import LineBreak from './LineBreak';
-import FormattedInput, { FormattedInputProps } from './FormattedInput';
-import { useContext } from 'react';
-import { ProjectsContext } from '../contexts/ProjectsContext';
-import { UserContext } from '../contexts/UserContext';
+import ButtonDisplay from '../../../components/ButtonDisplay';
+import { ProjectWithDonations } from '../../../../lib/types';
+import LineBreak from '../../../components/LineBreak';
+import FormattedInput from '../../../components/FormattedInput';
 
-interface DonationModalProps extends FormattedInputProps {
-  donated: boolean;
-  setDonated: React.Dispatch<React.SetStateAction<boolean>>;
+type Props = {
+  project: ProjectWithDonations;
   isModalVisible: boolean;
+  donation: number;
+  setDonation: React.Dispatch<React.SetStateAction<number>>;
+  setDonated: React.Dispatch<React.SetStateAction<boolean>>;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   handleDonation: () => Promise<void>;
-  navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
-  project: ProjectWithDonations;
-}
+};
 
-export default function DonationModal({
-  donation,
-  donated,
-  setDonated,
-  isModalVisible,
-  setDonation,
-  setIsModalVisible,
-  handleDonation,
-  navigation,
+export default function DonationModalToDonate({
   project,
-}: DonationModalProps) {
-  const { getProjects } = useContext(ProjectsContext);
-  const { getProfile, session } = useContext(UserContext);
+  isModalVisible,
+  donation,
+  setDonated,
+  setIsModalVisible,
+  setDonation,
+  handleDonation,
+}: Props) {
   const impactShares = (donation / project.fundingGoal) * 100;
-
-  if (donated) {
-    return (
-      <Modal
-        className="flex items-center"
-        onBackdropPress={() => {
-          setIsModalVisible(false);
-          setDonated(false);
-        }}
-        animationOut="fadeOut"
-        isVisible={isModalVisible}
-      >
-        <View className="bg-white h-fit w-full rounded-2xl flex items-center p-10">
-          <Text className="text-2xl font-extrabold mb-3 text-center">
-            CONGRATULATIONS! YOU HAVE SUCCESSFULLY DONATED TO {project.name.toUpperCase()}
-          </Text>
-          <Text className="text-xl text-center text-gray-600 mb-5">
-            Now that you have donated for your first project, Let's see the impact created on your portfolio.
-          </Text>
-          <View className="flex flex-row w-1/3">
-            <ButtonDisplay
-              classNames="w-fit"
-              text="→ Let's Go"
-              onPress={async () => {
-                setIsModalVisible(false);
-                setDonated(false);
-                setDonation(0);
-                await Promise.all([getProjects(), getProfile(session)]);
-                navigation.jumpTo('Profile', { startTab: 1 });
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-    );
-  }
   return (
     <Modal
       className="flex items-center"

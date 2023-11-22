@@ -5,15 +5,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTailwind } from 'nativewind';
 import { z } from 'zod';
 import { SubmitHandler, useForm, Controller, SubmitErrorHandler } from 'react-hook-form';
-import DatePicker from '../components/DatePicker';
-import { Profile, RootStackParamList } from '../../lib/types';
-import { ProfileSetupContext } from '../contexts/ProfileSetupContext';
-import FormInput from '../components/FormInput';
-import { emptyProfile } from '../../lib/templates';
-import Header from '../components/Header';
-import ScreenContainer from '../components/ScreenContainer';
-import AvatarSelect from '../components/AvatarSelect';
-import { LoadingContext } from '../contexts/LoadingContext';
+import DatePicker from '../../components/DatePicker';
+import { Profile, RootStackParamList } from '../../../lib/types';
+import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
+import FormInput from '../../components/FormInput';
+import { emptyProfile } from '../../../lib/templates';
+import Header from '../../components/Header';
+import ScreenContainer from '../../components/ScreenContainer';
+import AvatarSelect from '../../components/AvatarSelect';
+import { LoadingContext } from '../../contexts/LoadingContext';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 

@@ -5,13 +5,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldErrors, useForm } from 'react-hook-form';
-import { LoginForm, RootStackParamList } from '../../lib/types';
-import { LoadingContext } from '../contexts/LoadingContext';
-import ScreenContainer from '../components/ScreenContainer';
-import AuthButton from '../components/AuthButton';
-import LineBreak from '../components/LineBreak';
-import AuthInput from '../components/AuthInput';
-import Queries from '../../lib/supabaseQueries';
+import { LoginForm, RootStackParamList } from '../../../lib/types';
+import { LoadingContext } from '../../contexts/LoadingContext';
+import ScreenContainer from '../../components/ScreenContainer';
+import AuthButton from '../../components/AuthButton';
+import LineBreak from '../../components/LineBreak';
+import AuthInput from '../../components/AuthInput';
+import Queries from '../../../lib/supabaseQueries';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Sign In', 'Main'>;
 
