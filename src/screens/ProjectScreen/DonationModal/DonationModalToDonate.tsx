@@ -1,10 +1,14 @@
-import { View } from 'react-native';
+import { useContext, useState } from 'react';
+import { View, Alert } from 'react-native';
 import { Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import ButtonDisplay from '../../../components/ButtonDisplay';
 import { ProjectWithDonations } from '../../../../lib/types';
 import LineBreak from '../../../components/LineBreak';
 import FormattedInput from '../../../components/FormattedInput';
+import Queries from '../../../../lib/supabaseQueries';
+import { UserContext } from '../../../contexts/UserContext';
+import { cn } from '../../../../lib/utils';
 
 type Props = {
   project: ProjectWithDonations;
@@ -13,7 +17,6 @@ type Props = {
   setDonation: React.Dispatch<React.SetStateAction<number>>;
   setDonated: React.Dispatch<React.SetStateAction<boolean>>;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDonation: () => Promise<void>;
 };
 
 export default function DonationModalToDonate({
@@ -23,9 +26,37 @@ export default function DonationModalToDonate({
   setDonated,
   setIsModalVisible,
   setDonation,
-  handleDonation,
 }: Props) {
+  const { session, setProfile, profile } = useContext(UserContext);
+  const [isDonating, setIsDonating] = useState(false);
   const impactShares = (donation / project.fundingGoal) * 100;
+
+  async function handleDonation() {
+    if (!session) throw new Error('Session does not exist when donation button is pressed');
+
+    setIsDonating(true);
+
+    const { error, currentBalance } = await Queries.getCurrentBalance(session.user.id);
+    if (error) {
+      setIsDonating(false);
+      Alert.alert('Failed to check current balance. Please wait a few minutes and try again.');
+      return;
+    } else if (currentBalance < donation) {
+      setIsDonating(false);
+      Alert.alert('You do not have enough money in your account to donate that much.');
+      return;
+    }
+    const { error: donationError } = await Queries.makeSupabaseDonation(session.user.id, project.id, donation);
+    if (donationError) {
+      setIsDonating(false);
+      Alert.alert(donationError.message);
+      return;
+    }
+    if (profile) setProfile({ ...profile, balance: currentBalance - donation });
+    setIsDonating(false);
+    setDonated(true);
+  }
+
   return (
     <Modal
       className="flex items-center"
@@ -60,9 +91,10 @@ export default function DonationModalToDonate({
         <View className="flex flex-row mb-6">
           <ButtonDisplay
             textClassNames="text-xl text-white font-bold"
-            classNames="bg-arbor-blue"
-            text="COMPLETE TRANSACTION"
-            onPress={async () => await handleDonation()}
+            classNames={cn('bg-arbor-blue', { 'bg-gray-400': isDonating })}
+            disabled={isDonating}
+            text={!isDonating ? 'COMPLETE TRANSACTION' : 'Loading...'}
+            onPress={!isDonating ? async () => await handleDonation() : undefined}
           />
         </View>
       </View>

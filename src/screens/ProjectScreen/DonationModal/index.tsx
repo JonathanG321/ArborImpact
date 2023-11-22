@@ -9,7 +9,6 @@ interface DonationModalProps extends FormattedInputProps {
   setDonated: React.Dispatch<React.SetStateAction<boolean>>;
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDonation: () => Promise<void>;
   navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
   project: ProjectWithDonations;
 }
@@ -21,7 +20,6 @@ export default function DonationModal({
   isModalVisible,
   setDonation,
   setIsModalVisible,
-  handleDonation,
   navigation,
   project,
 }: DonationModalProps) {
@@ -45,7 +43,6 @@ export default function DonationModal({
       setDonation={setDonation}
       donation={donation}
       setDonated={setDonated}
-      handleDonation={handleDonation}
     />
   );
 }

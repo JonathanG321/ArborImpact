@@ -1,6 +1,6 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Text } from 'react-native-elements';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../../lib/types';
 import ScreenContainer from '../../components/ScreenContainer';
@@ -8,9 +8,7 @@ import LineBreak from '../../components/LineBreak';
 import ButtonDisplay from '../../components/ButtonDisplay';
 import { SDGs, dayMilliseconds } from '../../../lib/templates';
 import DonationModal from './DonationModal';
-import Queries from '../../../lib/supabaseQueries';
 import Avatar from '../../components/Avatar';
-import { UserContext } from '../../contexts/UserContext';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Project'>;
 
@@ -23,30 +21,8 @@ export default function ProjectScreen({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [donation, setDonation] = useState<number>(0);
   const [donated, setDonated] = useState(false);
-  const { session, setProfile, profile } = useContext(UserContext);
   const extraImages = project.extraImages || [];
   const projectImages = project.projectImage ? [project.projectImage].concat(extraImages) : extraImages;
-
-  async function handleDonation() {
-    if (!session) throw new Error('Session does not exist when donation button is pressed');
-
-    const { error, currentBalance } = await Queries.getCurrentBalance(session.user.id);
-    if (error) {
-      Alert.alert('Failed to check current balance. Please wait a few minutes and try again.');
-      return;
-    }
-    if (currentBalance < donation) {
-      Alert.alert('You do not have enough money in your account to donate that much.');
-      return;
-    }
-    const { error: donationError } = await Queries.makeSupabaseDonation(session.user.id, project.id, donation);
-    if (donationError) {
-      Alert.alert(donationError.message);
-      return;
-    }
-    if (profile) setProfile({ ...profile, balance: currentBalance - donation });
-    setDonated(true);
-  }
 
   return (
     <ScreenContainer scrollable>
@@ -111,7 +87,6 @@ export default function ProjectScreen({
           setIsModalVisible={setIsModalVisible}
           donated={donated}
           setDonated={setDonated}
-          handleDonation={handleDonation}
           navigation={navigation}
           project={project}
         />
