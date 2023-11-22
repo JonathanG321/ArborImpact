@@ -9,7 +9,7 @@ export default {
     }
     return await supabase.from('profiles').update({ requesting_funds: true }).eq('id', userId);
   },
-  
+
   setSeenMarketplace: async (userId?: string) => {
     if (!userId) {
       return { data: null, error: { message: 'No session error. Cannot update profile without a session!' } };
@@ -88,6 +88,13 @@ export default {
     return await supabase
       .from('projects')
       .select(`*, donations(*), sdgs(*)`)
+      .order('created_at', { foreignTable: 'donations', ascending: false });
+  },
+
+  getSupabaseProducts: async () => {
+    return await supabase
+      .from('products')
+      .select(`*`)
       .order('created_at', { foreignTable: 'donations', ascending: false });
   },
 

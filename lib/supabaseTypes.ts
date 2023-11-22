@@ -48,6 +48,33 @@ export interface Database {
           }
         ]
       }
+      products: {
+        Row: {
+          created_at: string
+          description: string
+          discount: number
+          id: number
+          image_url: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          discount?: number
+          id?: number
+          image_url?: string | null
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          discount?: number
+          id?: number
+          image_url?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
       profile_sdgs: {
         Row: {
           profile_id: string

@@ -129,3 +129,13 @@ export type Donation = {
 export interface DonationWithProject extends Donation {
   project: Project;
 }
+
+export type DBProduct = Database['public']['Tables']['products']['Row'];
+export type Product = {
+  createdAt: string;
+  description: string;
+  discount: number;
+  id: number;
+  image: ImagePickerAsset | null;
+  name: string;
+};
