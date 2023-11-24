@@ -82,7 +82,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       seen_marketplace: false,
       created_at: new Date().toUTCString(),
     };
-    const { error } = await Queries.upsertSupabaseProfile(newProfile);
+    const [{ error }] = await Queries.upsertSupabaseProfile(newProfile, session.user.id);
     if (error) {
       Alert.alert('An error has occurred. Please try again later');
       setIsLoading(false);
