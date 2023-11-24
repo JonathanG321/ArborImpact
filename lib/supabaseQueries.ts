@@ -92,18 +92,18 @@ export default {
   },
 
   getSupabaseProducts: async () => {
-    return await supabase
-      .from('products')
-      .select(`*`)
-      .order('created_at', { foreignTable: 'donations', ascending: false });
+    return await supabase.from('products').select(`*`);
   },
 
   uploadSupabaseImage: async (path: string, bucket: string, formData: FormData) => {
     return await supabase.storage.from(bucket).upload(path, formData);
   },
 
-  upsertSupabaseProfile: async (newProfile: DBProfileWithSDGs) => {
-    return await supabase.from('profiles').upsert(newProfile);
+  upsertSupabaseProfile: async ({ SDGs, ...newProfile }: DBProfileWithSDGs, userId: string) => {
+    return await Promise.all([
+      supabase.from('profiles').upsert(newProfile),
+      ...SDGs.map((sdg) => supabase.from('profile_sdgs').upsert({ profile_id: userId, sdg_id: sdg })),
+    ]);
   },
   upsertSupabaseProfileSDGs: async (newProfile: DBProfileWithSDGs) => {
     const results = await Promise.all(
