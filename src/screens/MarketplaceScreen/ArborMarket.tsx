@@ -1,20 +1,25 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Text } from 'react-native-elements';
 import LineBreak from '../../components/LineBreak';
 import { ProductsContext } from '../../contexts/ProductsContext';
 import Avatar from '../../components/Avatar';
 import ButtonDisplay from '../../components/ButtonDisplay';
+import BaseInput from '../../components/BaseInput';
 
 export default function ArborMarket() {
   const { products } = useContext(ProductsContext);
+  const [search, setSearch] = useState('');
+  const filteredProducts =
+    products?.filter((product) => product.name.toLowerCase().includes(search.toLowerCase())) || [];
   return (
     <View className="flex-1">
       <Text className="text-center my-4 text-lg">Browse Your Rewards</Text>
       <LineBreak classNames="border-gray-300 mb-4" />
+      <BaseInput field="Search" placeholder="Search..." onChange={setSearch} value={search} cancellable />
       {products ? (
         <ScrollView className="h-full">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <View className="flex flex-row w-full h-36" key={product.name + product.description}>
               <View className="flex-1 p-4">
                 <Avatar image={product.image} accessibilityLabel="Product Image" classNames=" h-full" />
