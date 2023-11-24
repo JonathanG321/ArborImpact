@@ -3,11 +3,11 @@ import CurrencyInput from 'react-native-currency-input';
 import { cn } from '../../lib/utils';
 
 export type FormattedInputProps = {
-  donation: number;
-  setDonation: React.Dispatch<React.SetStateAction<number>>;
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function FormattedInput({ donation, setDonation }: FormattedInputProps) {
+export default function FormattedInput({ value, setValue }: FormattedInputProps) {
   return (
     <CurrencyInput
       className={cn('border-b w-20 text-md pb-1 font-bold')}
@@ -15,7 +15,7 @@ export default function FormattedInput({ donation, setDonation }: FormattedInput
       minValue={0}
       delimiter=","
       separator="."
-      value={donation}
+      value={value}
       renderTextInput={(textInputProps) => (
         <TextInput
           {...textInputProps}
@@ -26,13 +26,13 @@ export default function FormattedInput({ donation, setDonation }: FormattedInput
                 .filter((char) => /[0-9\.]/.test(char))
                 .join('')
             );
-            if (newValue === 0) setDonation(0);
+            if (newValue === 0) setValue(0);
           }}
         />
       )}
       onChangeValue={(newValue) => {
         if (typeof newValue === 'number') {
-          setDonation(newValue || 0);
+          setValue(newValue || 0);
         }
       }}
     />
