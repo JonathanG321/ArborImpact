@@ -54,24 +54,24 @@ export interface Database {
           description: string
           discount: number
           id: number
-          image_url: string | null
           name: string
+          product_image_url: string | null
         }
         Insert: {
           created_at?: string
           description?: string
           discount?: number
           id?: number
-          image_url?: string | null
           name?: string
+          product_image_url?: string | null
         }
         Update: {
           created_at?: string
           description?: string
           discount?: number
           id?: number
-          image_url?: string | null
           name?: string
+          product_image_url?: string | null
         }
         Relationships: []
       }
@@ -81,7 +81,7 @@ export interface Database {
           sdg_id: string
         }
         Insert: {
-          profile_id: string
+          profile_id?: string
           sdg_id: string
         }
         Update: {
@@ -261,6 +261,12 @@ export interface Database {
       delete_avatar: {
         Args: {
           avatar_url: string
+        }
+        Returns: Record<string, unknown>
+      }
+      delete_product_image: {
+        Args: {
+          product_image_url: string
         }
         Returns: Record<string, unknown>
       }
