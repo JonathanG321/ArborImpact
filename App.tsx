@@ -6,6 +6,7 @@ import SessionNavigator from './src/components/Navigators/SessionNavigator';
 import { ProfileSetupContextProvider } from './src/contexts/ProfileSetupContext';
 import { ProjectsContextProvider } from './src/contexts/ProjectsContext';
 import { UserContextProvider } from './src/contexts/UserContext';
+import { ProductsContextProvider } from './src/contexts/ProductsContext';
 
 export default function App() {
   // const [loaded] = useFonts({
@@ -22,7 +23,9 @@ export default function App() {
         <UserContextProvider>
           <ProfileSetupContextProvider>
             <ProjectsContextProvider>
-              <SessionNavigator />
+              <ProductsContextProvider>
+                <SessionNavigator />
+              </ProductsContextProvider>
             </ProjectsContextProvider>
           </ProfileSetupContextProvider>
         </UserContextProvider>
