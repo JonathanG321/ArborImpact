@@ -11,7 +11,12 @@ export default function ArborMarket() {
   const { products } = useContext(ProductsContext);
   const [search, setSearch] = useState('');
   const filteredProducts =
-    products?.filter((product) => product.name.toLowerCase().includes(search.toLowerCase())) || [];
+    products?.filter((product) => {
+      const searchStr = search.toLowerCase();
+      const productName = product.name.toLowerCase();
+      const productDescription = product.description.toLowerCase();
+      return productName.includes(searchStr) || productDescription.includes(searchStr);
+    }) || [];
   return (
     <View className="flex-1">
       <Text className="text-center my-4 text-lg">Browse Your Rewards</Text>
