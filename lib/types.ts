@@ -12,7 +12,7 @@ export type WantsItemProps = {
   iconColor?: string;
 };
 
-export type FormSwitchProps<T extends FieldValues> = {
+export type SetupSwitchProps<T extends FieldValues> = {
   control: Control<T> | undefined;
   field: Path<T>;
 } & WantsItemProps;

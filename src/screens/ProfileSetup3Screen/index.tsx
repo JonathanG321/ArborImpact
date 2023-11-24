@@ -7,7 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DBProfile, DBProfileWithSDGs, Profile, RootStackParamList } from '../../../lib/types';
 import ScreenContainer from '../../components/ScreenContainer';
-import SDGInput from '../../components/SDGInput';
+import SDGInput from './SDGInput';
 import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
 import { includedSDGs } from '../../../lib/templates';
 import { LoadingContext } from '../../contexts/LoadingContext';

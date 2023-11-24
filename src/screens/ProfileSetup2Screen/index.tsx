@@ -4,9 +4,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { FormSwitchProps, Profile, RootStackParamList } from '../../../lib/types';
+import { SetupSwitchProps, Profile, RootStackParamList } from '../../../lib/types';
 import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
-import FormSwitch from '../../components/FormSwitch';
+import FormSwitch from '../ProfileSetup1Screen/SetupSwitch';
 import { emptyProfile } from '../../../lib/templates';
 import ScreenContainer from '../../components/ScreenContainer';
 
@@ -34,7 +34,7 @@ export default function ProfileSetup2Screen({ navigation: { navigate } }: Profil
     navigate('Profile Setup 3');
   };
 
-  const fundReasonProps: FormSwitchProps<Profile>[] = [
+  const fundReasonProps: SetupSwitchProps<Profile>[] = [
     {
       field: 'wantDifferenceWorld',
       description: 'I WANT TO MAKE A DIFFERENCE IN THE WORLD',

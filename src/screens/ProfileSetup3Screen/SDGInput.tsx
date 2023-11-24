@@ -1,10 +1,10 @@
 import { UseFormGetValues, UseFormSetValue } from 'react-hook-form';
-import { Profile, SDG } from '../../lib/types';
+import { Profile, SDG } from '../../../lib/types';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Image } from 'react-native-elements';
-import { SDGs } from '../../lib/templates';
-import { cn } from '../../lib/utils';
+import { SDGs } from '../../../lib/templates';
+import { cn } from '../../../lib/utils';
 
 type SDGInputProps = {
   index: number;

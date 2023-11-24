@@ -73,8 +73,8 @@ export default function DonationModalToDonate({
           <View className="shadow py-5 px-7 w-full bg-white flex flex-row flex-wrap justify-center">
             <Text className="font-bold text-lg text-center">I would like to donate</Text>
             <FormattedInput
-              donation={donation}
-              setDonation={(newValue) => {
+              value={donation}
+              setValue={(newValue) => {
                 const totalDonated = project.donations.reduce((total, donation) => total + donation.donation, 0);
                 const remainingFunding = project.fundingGoal - totalDonated;
                 const newDonation = parseFloat(newValue.toString()) > remainingFunding ? remainingFunding : newValue;

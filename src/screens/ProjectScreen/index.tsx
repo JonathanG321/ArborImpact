@@ -81,8 +81,8 @@ export default function ProjectScreen({
           />
         </View>
         <DonationModal
-          donation={donation}
-          setDonation={setDonation}
+          value={donation}
+          setValue={setDonation}
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
           donated={donated}

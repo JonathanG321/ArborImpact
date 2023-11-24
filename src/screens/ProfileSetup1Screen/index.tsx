@@ -8,7 +8,7 @@ import { SubmitHandler, useForm, Controller, SubmitErrorHandler } from 'react-ho
 import DatePicker from '../../components/DatePicker';
 import { Profile, RootStackParamList } from '../../../lib/types';
 import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
-import FormInput from '../../components/FormInput';
+import FormInput from './SetupInput';
 import { emptyProfile } from '../../../lib/templates';
 import Header from '../../components/Header';
 import ScreenContainer from '../../components/ScreenContainer';
@@ -74,7 +74,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       ? `${birthDate.getMonth() + 1} / ${birthDate.toDateString().split(' ')[2]} / ${birthDate.getFullYear()}`
       : 'No value Selected';
   };
-  
+
   useEffect(() => {
     setIsLoading(false);
   }, []);

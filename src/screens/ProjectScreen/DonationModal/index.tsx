@@ -14,11 +14,11 @@ interface DonationModalProps extends FormattedInputProps {
 }
 
 export default function DonationModal({
-  donation,
+  value,
   donated,
   setDonated,
   isModalVisible,
-  setDonation,
+  setValue,
   setIsModalVisible,
   navigation,
   project,
@@ -31,7 +31,7 @@ export default function DonationModal({
         projectName={project.name}
         setIsModalVisible={setIsModalVisible}
         setDonated={setDonated}
-        setDonation={setDonation}
+        setDonation={setValue}
       />
     );
   }
@@ -40,8 +40,8 @@ export default function DonationModal({
       project={project}
       isModalVisible={isModalVisible}
       setIsModalVisible={setIsModalVisible}
-      setDonation={setDonation}
-      donation={donation}
+      setDonation={setValue}
+      donation={value}
       setDonated={setDonated}
     />
   );

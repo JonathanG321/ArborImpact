@@ -3,8 +3,8 @@ import { Control, Controller, FieldValues, Path, RegisterOptions } from 'react-h
 import { ViewStyle } from 'react-native';
 import { View } from 'react-native';
 import { Input } from 'react-native-elements';
-import InfoIcon from './InfoIcon';
-import { cn } from '../../lib/utils';
+import InfoIcon from '../../components/InfoIcon';
+import { cn } from '../../../lib/utils';
 
 type Props<T extends FieldValues> = {
   control: Control<T> | undefined;
