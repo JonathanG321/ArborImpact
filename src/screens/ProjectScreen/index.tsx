@@ -21,6 +21,7 @@ export default function ProjectScreen({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [donation, setDonation] = useState<number>(0);
   const [donated, setDonated] = useState(false);
+  const [showSpendingReport, setShowSpendingReport] = useState(false);
   const extraImages = project.extraImages || [];
   const projectImages = project.projectImage ? [project.projectImage].concat(extraImages) : extraImages;
 
@@ -51,8 +52,29 @@ export default function ProjectScreen({
         </View>
         <LineBreak />
         <View className="w-full flex flex-row my-6">
-          <ButtonDisplay text="VIEW SPENDING REPORTS" classNames="mx-4" textClassNames="font-bold" />
+          <ButtonDisplay
+            text={showSpendingReport ? 'HIDE SPENDING REPORT' : 'VIEW SPENDING REPORT'}
+            classNames="mx-4"
+            textClassNames="font-bold"
+            onPress={() => setShowSpendingReport(!showSpendingReport)}
+          />
         </View>
+        {showSpendingReport && (
+          <View className="w-full px-4 mb-5">
+            <View className="w-full p-4 bg-white shadow rounded-lg shadow-gray-500">
+              <View className="flex flex-row justify-between border-b-4">
+                <Text className="font-bold text-xl text-center w-28">Item</Text>
+                <Text className="font-bold text-xl text-center w-28">Cost</Text>
+              </View>
+              {project.spendingReport.map((reportItem) => (
+                <View key={reportItem.id + reportItem.item} className="flex flex-row justify-between border-b-4">
+                  <Text className="text-lg w-28">{reportItem.item}</Text>
+                  <Text className="text-lg w-28">${reportItem.cost}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
         <Text className="text-xl font-extrabold mb-4">FUNDING GOAL AND PROGRESS</Text>
         <LineBreak />
         <View className="w-full px-4">
