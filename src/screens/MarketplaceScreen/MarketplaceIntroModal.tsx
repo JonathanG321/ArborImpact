@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
@@ -7,9 +7,13 @@ import ButtonDisplay from '../../components/ButtonDisplay';
 import Queries from '../../../lib/supabaseQueries';
 import { UserContext } from '../../contexts/UserContext';
 
-export default function MarketplaceIntroModal() {
-  const { profile, session } = useContext(UserContext);
-  const [isModalVisible, setIsModalVisible] = useState(!profile?.seenMarketplace);
+type Props = {
+  isModalVisible: boolean;
+  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function MarketplaceIntroModal({ isModalVisible, setIsModalVisible }: Props) {
+  const { session } = useContext(UserContext);
   const firstTimeCards = [
     { title: 'Explanation of impact shares', description: 'Represents your contribution towards an impact project' },
     { title: 'How shares are redeemable', description: '10 impact shares = %10 discount on a product' },
@@ -23,7 +27,7 @@ export default function MarketplaceIntroModal() {
     Queries.setSeenMarketplace(session?.user.id);
   }
   return (
-    <Modal animationOut="fadeOut" isVisible={isModalVisible} onBackdropPress={leaveModal}>
+    <Modal animationOut="fadeOut" animationIn="fadeIn" isVisible={isModalVisible} onBackdropPress={leaveModal}>
       <View className="flex items-center bg-white rounded-lg p-8">
         <Text className="text-lg font-medium mb-3 text-center">
           Here's how to make the most of your account and each amazing benefit.

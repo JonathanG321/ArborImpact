@@ -80,6 +80,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       id: session.user.id,
       requesting_funds: false,
       seen_marketplace: false,
+      made_first_donation: false,
       created_at: new Date().toUTCString(),
     };
     const [{ error }] = await Queries.upsertSupabaseProfile(newProfile, session.user.id);
