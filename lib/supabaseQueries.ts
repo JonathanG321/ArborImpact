@@ -17,6 +17,13 @@ export default {
     return await supabase.from('profiles').update({ seen_marketplace: true }).eq('id', userId);
   },
 
+  setMadeFirstDonation: async (userId?: string) => {
+    if (!userId) {
+      return { data: null, error: { message: 'No session error. Cannot update profile without a session!' } };
+    }
+    return await supabase.from('profiles').update({ made_first_donation: true }).eq('id', userId);
+  },
+
   getSupabaseImage: async (path: string, bucket: string) => {
     return await supabase.storage.from(bucket).download(path);
   },
@@ -47,7 +54,9 @@ export default {
   getSupabaseProfile: async (userId: string) => {
     const { data: profile, ...response } = await supabase
       .from('profiles')
-      .select(`*, projects(*, donations(*), sdgs(*)), donations(*, projects(*, sdgs(*))), sdgs(*), recharges(*)`)
+      .select(
+        `*, projects(*, donations(*), sdgs(*), spending_reports(*)), donations(*, projects(*, sdgs(*))), sdgs(*), recharges(*)`
+      )
       .eq('id', userId)
       .order('created_at', { foreignTable: 'donations', ascending: false })
       .order('created_at', { foreignTable: 'projects', ascending: false })
@@ -60,6 +69,7 @@ export default {
           donations: project.donations.sort(
             (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
           ),
+          spending_report: project.spending_reports,
           sdg: sdgs?.id as SDG,
         }))
         .sort(
@@ -84,11 +94,12 @@ export default {
     };
   },
 
-  getSupabaseProjectsWithDonations: async () => {
+  getSupabaseProjectsWithDonationsAndSpendingReport: async () => {
     return await supabase
       .from('projects')
-      .select(`*, donations(*), sdgs(*)`)
-      .order('created_at', { foreignTable: 'donations', ascending: false });
+      .select(`*, donations(*), sdgs(*), spending_reports(*)`)
+      .order('created_at', { foreignTable: 'donations', ascending: false })
+      .order('created_at', { foreignTable: 'spending_reports', ascending: false });
   },
 
   getSupabaseProducts: async () => {
