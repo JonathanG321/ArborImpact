@@ -114,6 +114,7 @@ export interface Database {
           id: string
           last_name: string
           location: string
+          made_first_donation: boolean
           requesting_funds: boolean
           seen_marketplace: boolean
           want_difference_world: boolean
@@ -129,6 +130,7 @@ export interface Database {
           id?: string
           last_name?: string
           location?: string
+          made_first_donation?: boolean
           requesting_funds?: boolean
           seen_marketplace?: boolean
           want_difference_world?: boolean
@@ -144,6 +146,7 @@ export interface Database {
           id?: string
           last_name?: string
           location?: string
+          made_first_donation?: boolean
           requesting_funds?: boolean
           seen_marketplace?: boolean
           want_difference_world?: boolean
@@ -252,6 +255,38 @@ export interface Database {
           id?: string
         }
         Relationships: []
+      }
+      spending_reports: {
+        Row: {
+          cost: number
+          created_at: string
+          id: number
+          item: string
+          project_id: number
+        }
+        Insert: {
+          cost?: number
+          created_at?: string
+          id?: number
+          item?: string
+          project_id: number
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          id?: number
+          item?: string
+          project_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spending_reports_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
