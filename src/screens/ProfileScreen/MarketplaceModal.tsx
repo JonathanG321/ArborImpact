@@ -5,14 +5,15 @@ import { Text } from 'react-native-elements';
 import ButtonDisplay from '../../components/ButtonDisplay';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../../lib/types';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  navigate: DrawerNavigationProp<RootDrawerParamList, 'Profile', undefined>['navigate'];
 };
 
-export default function MarketplaceModal({ isModalVisible, setIsModalVisible, navigate }: Props) {
+export default function MarketplaceModal({ isModalVisible, setIsModalVisible }: Props) {
+  const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList, 'Profile'>>();
   return (
     <Modal className="flex items-center" onBackdropPress={() => setIsModalVisible(false)} isVisible={isModalVisible}>
       <View className="bg-arbor-bg h-2/5 w-11/12 rounded-2xl flex justify-between items-center p-6">

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { SceneMap } from 'react-native-tab-view';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../../lib/types';
@@ -11,6 +11,7 @@ import { UserContext } from '../../contexts/UserContext';
 import StyledTabView from '../../components/StyledTabView';
 import ProfileBalances from './ProfileBalances';
 import ProfileHeader from './ProfileHeader';
+import MarketplaceModal from './MarketplaceModal';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -21,6 +22,7 @@ export default function ProfileScreen({
   },
 }: Props) {
   const { profile } = useContext(UserContext);
+  const [isModalVisible, setIsModalVisible] = useState(true);
 
   const routes = [
     { key: 'projects', title: 'MY PROJECTS' },
@@ -39,6 +41,9 @@ export default function ProfileScreen({
 
   return (
     <ScreenContainer>
+      {profile?.madeFirstDonation && !profile.seenMarketplace && (
+        <MarketplaceModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+      )}
       <ProfileHeader />
       <LineBreak />
       <ProfileBalances />
