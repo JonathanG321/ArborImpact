@@ -3,7 +3,7 @@ import { View, Alert } from 'react-native';
 import { Text } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import ButtonDisplay from '../../../components/ButtonDisplay';
-import { ProjectWithDonations } from '../../../../lib/types';
+import { ProjectWithDonationsAndSpendingReport } from '../../../../lib/types';
 import LineBreak from '../../../components/LineBreak';
 import FormattedInput from '../../../components/FormattedInput';
 import Queries from '../../../../lib/supabaseQueries';
@@ -11,7 +11,7 @@ import { UserContext } from '../../../contexts/UserContext';
 import { cn } from '../../../../lib/utils';
 
 type Props = {
-  project: ProjectWithDonations;
+  project: ProjectWithDonationsAndSpendingReport;
   isModalVisible: boolean;
   donation: number;
   setDonation: React.Dispatch<React.SetStateAction<number>>;
@@ -52,7 +52,15 @@ export default function DonationModalToDonate({
       Alert.alert(donationError.message);
       return;
     }
-    if (profile) setProfile({ ...profile, balance: currentBalance - donation });
+    if (!profile?.madeFirstDonation) {
+      const { error: madeDonationError } = await Queries.setMadeFirstDonation(session.user.id);
+      if (madeDonationError) {
+        setIsDonating(false);
+        Alert.alert(madeDonationError.message);
+        return;
+      }
+    }
+    if (profile) setProfile({ ...profile, balance: currentBalance - donation, madeFirstDonation: true });
     setIsDonating(false);
     setDonated(true);
   }
