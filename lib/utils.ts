@@ -2,7 +2,13 @@ import { twMerge } from 'tailwind-merge';
 import { ClassValue, clsx } from 'clsx';
 import { Alert } from 'react-native';
 import { ImagePickerAsset } from 'expo-image-picker';
-import { DBProject, DBProjectWithDonations, Donation, Project, ProjectWithDonations } from './types';
+import {
+  DBProject,
+  ProjectWithDonationsAndSpendingReport,
+  Donation,
+  Project,
+  DBProjectWithDonationsAndSpendingReport,
+} from './types';
 import Queries from './supabaseQueries';
 
 export function cn(...inputs: ClassValue[]) {
@@ -51,10 +57,10 @@ export async function createProjectObjects(dbProjects: DBProject[]) {
   );
   return projects;
 }
-export async function createProjectObjectsWithDonations(dbProjects: DBProjectWithDonations[]) {
+export async function createProjectObjectsWithDonations(dbProjects: DBProjectWithDonationsAndSpendingReport[]) {
   const { projectExtraImages, projectMainImages } = await getImages(dbProjects);
   const projects = dbProjects.map((project, index) =>
-    createProjectWithDonations(project, index, projectMainImages, projectExtraImages)
+    createProjectWithDonationsAndSpendingReport(project, index, projectMainImages, projectExtraImages)
   );
   return projects;
 }
@@ -70,6 +76,7 @@ function createProject(
     impact_goal_unit,
     impact_type,
     donation_currency,
+
     ...rest
   }: DBProject,
   index: number,
@@ -89,14 +96,15 @@ function createProject(
     ...rest,
   } as Project;
 }
-function createProjectWithDonations(
-  { donations, ...rest }: DBProjectWithDonations,
+function createProjectWithDonationsAndSpendingReport(
+  { donations, spending_report, ...rest }: DBProjectWithDonationsAndSpendingReport,
   index: number,
   projectMainImages: (ImagePickerAsset | undefined)[],
   projectExtraImages: (ImagePickerAsset | undefined)[][]
 ) {
   return {
     ...createProject(rest, index, projectMainImages, projectExtraImages),
+    spendingReport: spending_report,
     donations: donations.map(
       (donation) =>
         ({
@@ -106,5 +114,5 @@ function createProjectWithDonations(
           projectId: donation.project_id,
         } as Donation)
     ),
-  } as ProjectWithDonations;
+  } as ProjectWithDonationsAndSpendingReport;
 }

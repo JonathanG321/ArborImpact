@@ -35,7 +35,7 @@ export type RootDrawerParamList = {
   Home: undefined;
   Profile: { startTab: 0 | 1 };
   Projects: undefined;
-  Project: { project: ProjectWithDonations };
+  Project: { project: ProjectWithDonationsAndSpendingReport };
   Marketplace: undefined;
 };
 
@@ -59,6 +59,7 @@ export type SDG =
   | 'SDG17';
 
 export type Profile = {
+  id: string;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -69,10 +70,11 @@ export type Profile = {
   wantTaxIncentives: boolean;
   wantSpecificCause: boolean;
   sdg: SDG[];
-  projects: ProjectWithDonations[];
+  projects: ProjectWithDonationsAndSpendingReport[];
   donations: DonationWithProject[];
   requestingFunds: boolean;
   seenMarketplace: boolean;
+  madeFirstDonation: boolean;
   balance: number;
 };
 
@@ -81,7 +83,7 @@ export interface DBProfileWithSDGs extends DBProfile {
   SDGs: SDG[];
 }
 export interface DBProfileWithProjectsAndDonationsAndRecharges extends DBProfileWithSDGs {
-  projects: DBProjectWithDonations[];
+  projects: DBProjectWithDonationsAndSpendingReport[];
   donations: DBDonationWithProject[];
   recharges: Database['public']['Tables']['recharges']['Row'][];
 }
@@ -102,16 +104,24 @@ export type Project = {
   donationCurrency: string;
   extraImages: ImagePickerAsset[] | null;
 };
-export interface ProjectWithDonations extends Project {
+export interface ProjectWithDonationsAndSpendingReport extends Project {
   donations: Donation[];
+  spendingReport: SpendingReport;
 }
 
 export type DBProject = Database['public']['Tables']['projects']['Row'];
 export interface DBProjectWithSDG extends DBProject {
   sdg: SDG;
 }
-export interface DBProjectWithDonations extends DBProjectWithSDG {
+export interface DBProjectWithDonationsAndSpendingReport extends DBProjectWithSDG {
   donations: DBDonation[];
+  spending_report: DBSpendingReport;
+}
+
+export type DBSpendingReport = Database['public']['Tables']['spending_reports']['Row'][];
+export interface SpendingReport extends Omit<DBSpendingReport, 'created_at' | 'project_id'> {
+  createdAt: string;
+  projectId: number;
 }
 
 export type DBDonation = Database['public']['Tables']['donations']['Row'];
