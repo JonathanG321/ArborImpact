@@ -15,7 +15,13 @@ type Props = {
 export default function MarketplaceModal({ isModalVisible, setIsModalVisible }: Props) {
   const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList, 'Profile'>>();
   return (
-    <Modal className="flex items-center" onBackdropPress={() => setIsModalVisible(false)} isVisible={isModalVisible}>
+    <Modal
+      className="flex items-center"
+      animationIn="fadeIn"
+      animationOut="fadeOut"
+      onBackdropPress={() => setIsModalVisible(false)}
+      isVisible={isModalVisible}
+    >
       <View className="bg-arbor-bg h-2/5 w-11/12 rounded-2xl flex justify-between items-center p-6">
         <Header textClassNames="text-2xl" title="REDEEM YOUR IMPACT SHARES FOR DISCOUNTS" centered />
         <Text className="text-xl text-center text-gray-600 mb-5">

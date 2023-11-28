@@ -27,7 +27,7 @@ export default function MarketplaceIntroModal({ isModalVisible, setIsModalVisibl
     Queries.setSeenMarketplace(session?.user.id);
   }
   return (
-    <Modal animationOut="fadeOut" animationIn="fadeIn" isVisible={isModalVisible} onBackdropPress={leaveModal}>
+    <Modal animationIn="fadeIn" animationOut="fadeOut" isVisible={isModalVisible} onBackdropPress={leaveModal}>
       <View className="flex items-center bg-white rounded-lg p-8">
         <Text className="text-lg font-medium mb-3 text-center">
           Here's how to make the most of your account and each amazing benefit.
