@@ -1,48 +1,40 @@
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { ProjectWithDonationsAndSpendingReport, RootDrawerParamList } from '../../../../lib/types';
-import { FormattedInputProps } from '../../../components/FormattedInput';
+import { ProjectWithDonationsAndSpendingReport } from '../../../../lib/types';
 import DonationModalDonated from './DonationModalDonated';
 import DonationModalToDonate from './DonationModalToDonate';
+import { useState } from 'react';
+import { View } from 'react-native';
+import ButtonDisplay from '../../../components/ButtonDisplay';
 
-interface DonationModalProps extends FormattedInputProps {
-  donated: boolean;
-  setDonated: React.Dispatch<React.SetStateAction<boolean>>;
-  isModalVisible: boolean;
-  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
+interface DonationModalProps {
   project: ProjectWithDonationsAndSpendingReport;
 }
 
-export default function DonationModal({
-  value,
-  donated,
-  setDonated,
-  isModalVisible,
-  setValue,
-  setIsModalVisible,
-  navigation,
-  project,
-}: DonationModalProps) {
-  if (donated) {
-    return (
-      <DonationModalDonated
-        isModalVisible={isModalVisible}
-        navigation={navigation}
-        projectName={project.name}
-        setIsModalVisible={setIsModalVisible}
-        setDonated={setDonated}
-        setDonation={setValue}
-      />
-    );
-  }
+export default function DonationModal({ project }: DonationModalProps) {
+  const [donation, setDonation] = useState(0);
+  const [donated, setDonated] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const passProps = {
+    isModalVisible,
+    setIsModalVisible,
+    donation,
+    setDonation,
+    project,
+    projectName: project.name,
+    setDonated,
+  };
+
   return (
-    <DonationModalToDonate
-      project={project}
-      isModalVisible={isModalVisible}
-      setIsModalVisible={setIsModalVisible}
-      setDonation={setValue}
-      donation={value}
-      setDonated={setDonated}
-    />
+    <>
+      <View className="w-full flex flex-row my-6">
+        <ButtonDisplay
+          onPress={() => setIsModalVisible(true)}
+          text="Donate!"
+          classNames="mx-4 bg-arbor-blue"
+          textClassNames="font-bold text-white"
+        />
+      </View>
+      {donated ? <DonationModalDonated {...passProps} /> : <DonationModalToDonate {...passProps} />}
+    </>
   );
 }

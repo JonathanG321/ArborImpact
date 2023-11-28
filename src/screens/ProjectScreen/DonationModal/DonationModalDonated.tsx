@@ -7,6 +7,7 @@ import ButtonDisplay from '../../../components/ButtonDisplay';
 import { ProjectsContext } from '../../../contexts/ProjectsContext';
 import { UserContext } from '../../../contexts/UserContext';
 import { RootDrawerParamList } from '../../../../lib/types';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = {
   isModalVisible: boolean;
@@ -14,7 +15,6 @@ type Props = {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setDonated: React.Dispatch<React.SetStateAction<boolean>>;
   setDonation: React.Dispatch<React.SetStateAction<number>>;
-  navigation: DrawerNavigationProp<RootDrawerParamList, 'Project', undefined>;
 };
 
 export default function DonationModalDonated({
@@ -23,8 +23,8 @@ export default function DonationModalDonated({
   setDonated,
   setIsModalVisible,
   setDonation,
-  navigation,
 }: Props) {
+  const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
   const { getProjects } = useContext(ProjectsContext);
   const { getProfile, session } = useContext(UserContext);
   return (
@@ -34,6 +34,7 @@ export default function DonationModalDonated({
         setIsModalVisible(false);
         setDonated(false);
       }}
+      animationIn="fadeIn"
       animationOut="fadeOut"
       isVisible={isModalVisible}
     >
@@ -53,7 +54,7 @@ export default function DonationModalDonated({
               setDonated(false);
               setDonation(0);
               await Promise.all([getProjects(), getProfile(session)]);
-              navigation.jumpTo('Profile', { startTab: 1 });
+              navigate('Profile', { startTab: 1 });
             }}
           />
         </View>

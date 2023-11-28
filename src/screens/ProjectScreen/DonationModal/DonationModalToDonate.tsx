@@ -72,6 +72,8 @@ export default function DonationModalToDonate({
         setIsModalVisible(false);
         setDonated(false);
       }}
+      animationIn="fadeIn"
+      animationOut="fadeOut"
       isVisible={isModalVisible}
     >
       <View className="bg-arbor-bg h-4/6 w-11/12 rounded-2xl flex justify-between items-center p-6">
