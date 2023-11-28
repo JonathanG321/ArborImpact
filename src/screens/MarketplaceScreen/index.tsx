@@ -22,9 +22,9 @@ export default function MarketplaceScreen() {
   });
   useEffect(() => {
     if (!profile?.seenMarketplace) {
-      setIsModalVisible(true);
+      setTimeout(() => setIsModalVisible(true), 100);
     }
-  }, []);
+  }, [profile]);
   return (
     <ScreenContainer>
       {!profile?.seenMarketplace && (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Route, SceneRendererProps, TabBar, TabBarIndicator, TabBarItem, TabView } from 'react-native-tab-view';
 
@@ -14,6 +14,12 @@ type Props = {
 
 export default function StyledTabView({ renderScene, routes, defaultIndex = 0 }: Props) {
   const [index, setIndex] = useState(defaultIndex);
+
+  useEffect(() => {
+    if (defaultIndex === 1) {
+      setTimeout(() => setIndex(1), 10);
+    }
+  }, []);
   return (
     <View className="h-full px-4">
       <TabView

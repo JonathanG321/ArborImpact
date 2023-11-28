@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SceneMap } from 'react-native-tab-view';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../../lib/types';
@@ -22,7 +22,7 @@ export default function ProfileScreen({
   },
 }: Props) {
   const { profile } = useContext(UserContext);
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const routes = [
     { key: 'projects', title: 'MY PROJECTS' },
@@ -39,11 +39,15 @@ export default function ProfileScreen({
     impact: () => <MyImpact projects={profile?.projects} />,
   });
 
+  useEffect(() => {
+    if (profile?.madeFirstDonation && !profile.seenMarketplace) {
+      setTimeout(() => setIsModalVisible(true), 100);
+    }
+  }, []);
+
   return (
     <ScreenContainer>
-      {profile?.madeFirstDonation && !profile.seenMarketplace && (
-        <MarketplaceModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
-      )}
+      <MarketplaceModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
       <ProfileHeader />
       <LineBreak />
       <ProfileBalances />
