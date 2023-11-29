@@ -43,7 +43,7 @@ export default function ProfileScreen({
     if (profile?.madeFirstDonation && !profile.seenMarketplace) {
       setTimeout(() => setIsModalVisible(true), 100);
     }
-  }, []);
+  }, [profile]);
 
   return (
     <ScreenContainer>
