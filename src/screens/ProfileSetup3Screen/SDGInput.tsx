@@ -18,9 +18,9 @@ export default function SDGInput({ index, setSDGValue, getValues }: SDGInputProp
     return <Image source={{}} PlaceholderContent={<ActivityIndicator />} />;
   }
 
-  const sdg = `SDG${index}` as keyof typeof SDGs;
+  const sdg = `SDG${index < 10 ? `0${index}` : index}` as keyof typeof SDGs;
 
-  function onPress(sdgValues: SDG[], currentSDG: SDG, i: number) {
+  function onPress(sdgValues: SDG[], currentSDG: SDG) {
     if (!sdgValues.includes(currentSDG)) {
       sdgValues.push(currentSDG);
       setPressed(true);
@@ -32,7 +32,7 @@ export default function SDGInput({ index, setSDGValue, getValues }: SDGInputProp
   }
 
   return (
-    <Pressable onPress={() => onPress(getValues().sdg, sdg, index)}>
+    <Pressable onPress={() => onPress(getValues().sdg, sdg)}>
       <View className={cn('m-1 border-8 border-gray-500', { 'border-yellow-600': pressed })}>
         <Image source={SDGs[sdg]} className="w-20 h-20" PlaceholderContent={<ActivityIndicator />} />
       </View>

@@ -39,7 +39,7 @@ export default function BaseInput({
       errorMessage={error?.message}
       rightIconContainerStyle={{ position: 'absolute', right: 1 }}
       rightIcon={
-        value.length > 0 && cancellable ? (
+        value && value.length > 0 && cancellable ? (
           <Icon type="ionicon" name="close-outline" color="black" onPress={() => onChange('')} />
         ) : undefined
       }

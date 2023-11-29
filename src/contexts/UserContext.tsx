@@ -10,6 +10,7 @@ import { supabase } from '../../supabase/supabase';
 export const UserContext = createContext<{
   session: Session | null;
   setSession: (session: Session) => void;
+  setIsFirstLoad: (isFirstLoad: boolean) => void;
   userSetup: () => Promise<void>;
   profile: Profile | null;
   setProfile: (profile: Profile | null) => void;
@@ -22,7 +23,8 @@ export const UserContext = createContext<{
   profile: null,
   setProfile: () => undefined,
   getProfile: () => Promise.resolve<void>(undefined),
-  isFirstLoad: true,
+  setIsFirstLoad: () => undefined,
+  isFirstLoad: false,
 });
 export function UserContextProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
@@ -94,9 +96,9 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         ),
       };
       setProfile(profile);
+      setIsFirstLoad(false);
       setTimeout(() => {
         setIsLoading(false);
-        setIsFirstLoad(false);
       }, 500);
     } catch (error) {
       if (error instanceof Error) Alert.alert(error.message);
@@ -119,7 +121,9 @@ export function UserContextProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ session, setSession, userSetup, profile, setProfile, getProfile, isFirstLoad }}>
+    <UserContext.Provider
+      value={{ session, setSession, userSetup, profile, setProfile, getProfile, isFirstLoad, setIsFirstLoad }}
+    >
       {children}
     </UserContext.Provider>
   );

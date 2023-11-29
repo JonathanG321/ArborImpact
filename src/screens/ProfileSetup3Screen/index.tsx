@@ -3,9 +3,9 @@ import { useContext } from 'react';
 import { Text } from 'react-native-elements';
 import { Alert, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DBProfile, DBProfileWithSDGs, Profile, RootStackParamList } from '../../../lib/types';
+import { DBProfileWithSDGs, Profile, RootStackParamList } from '../../../lib/types';
 import ScreenContainer from '../../components/ScreenContainer';
 import SDGInput from './SDGInput';
 import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
@@ -18,7 +18,7 @@ export type ProfileSetup3Props = NativeStackScreenProps<RootStackParamList, 'Pro
 
 const schema = z
   .object({
-    sdg: z.array(z.string().regex(/^SDG[1-9][1-7]?$/)).default([]),
+    sdg: z.array(z.string().regex(/^SDG[0-9][0-9]?$/)).default([]),
   })
   .required();
 
@@ -59,7 +59,6 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     const fileExt = file.fileName?.split('.').pop();
     const filePath = `${Math.random()}.${fileExt}`;
     const { error: avatarError } = await Queries.uploadSupabaseImage(filePath, 'avatars', formData);
-
     if (avatarError) {
       Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
       setIsLoading(false);
@@ -76,19 +75,25 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       want_specific_cause: profileSetup.wantSpecificCause,
       want_tax_incentives: profileSetup.wantTaxIncentives,
       avatar_url: filePath,
-      SDGs: profileSetup.sdg,
+      SDGs: sdg,
       id: session.user.id,
       requesting_funds: false,
       seen_marketplace: false,
       made_first_donation: false,
       created_at: new Date().toUTCString(),
     };
-    const [{ error }] = await Queries.upsertSupabaseProfile(newProfile, session.user.id);
+    const [{ error }, ...rest] = await Queries.upsertSupabaseProfile(newProfile, session.user.id);
     if (error) {
       Alert.alert('An error has occurred. Please try again later');
+      console.log(error);
       setIsLoading(false);
       return;
     }
+    rest.forEach((result) => {
+      if (result.error) {
+        console.log(result.error);
+      }
+    });
     setProfile({ ...profileSetup, sdg, balance: 0 });
     setTimeout(() => setIsLoading(false), 1000);
   };

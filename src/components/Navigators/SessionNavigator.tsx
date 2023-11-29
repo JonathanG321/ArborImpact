@@ -17,7 +17,7 @@ import { ProductsContext } from '../../contexts/ProductsContext';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function SessionNavigator() {
-  const { session, profile, userSetup, isFirstLoad } = useContext(UserContext);
+  const { session, profile, userSetup, isFirstLoad, setIsFirstLoad } = useContext(UserContext);
   const { getProjects } = useContext(ProjectsContext);
   const { getProducts } = useContext(ProductsContext);
   const { setIsLoading } = useContext(LoadingContext);
@@ -29,6 +29,7 @@ export default function SessionNavigator() {
       await getProducts();
       await userSetup();
       setIsLoading(false);
+      setIsFirstLoad(false);
     }
     Setup();
   }, []);
