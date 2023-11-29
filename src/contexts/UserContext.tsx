@@ -39,9 +39,16 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         return false;
       }
       setIsLoading(true);
-      const { error, status, data: dbProfile } = await Queries.getSupabaseProfile(session?.user.id);
+      const [{ error, status, data: dbProfile }, { data: balance, error: balanceError }] = await Promise.all([
+        Queries.getSupabaseProfile(session?.user.id),
+        Queries.getProfileBalance(session?.user.id),
+      ]);
       if (error && status !== 406) throw error;
-      if (error || !dbProfile) return;
+      if (error || !dbProfile) {
+        return;
+      } else if (balanceError) {
+        Alert.alert('Failed to retrieve Balance. Please reload and try again later.');
+      }
       const [image, projects] = await Promise.all([
         downloadImage(dbProfile.avatar_url),
         createProjectObjectsWithDonations(dbProfile.projects),
@@ -58,7 +65,6 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         want_diversify_portfolio,
         want_specific_cause,
         want_tax_incentives,
-        recharges,
         donations,
         id,
         location,
@@ -69,7 +75,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         birthDate: birth_date,
         firstName: first_name,
         lastName: last_name,
-        balance: recharges.reduce((total, charge) => total + charge.amount, 0),
+        balance: balance?.balance || 0,
         sdg: SDGs,
         location,
         wantDifferenceWorld: want_difference_world,
