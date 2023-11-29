@@ -36,6 +36,13 @@ export interface Database {
             foreignKeyName: "donations_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
+            referencedRelation: "profile_balances"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "donations_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -89,6 +96,13 @@ export interface Database {
           sdg_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "profile_sdgs_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profile_balances"
+            referencedColumns: ["profile_id"]
+          },
           {
             foreignKeyName: "profile_sdgs_profile_id_fkey"
             columns: ["profile_id"]
@@ -239,6 +253,13 @@ export interface Database {
             foreignKeyName: "recharges_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
+            referencedRelation: "profile_balances"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "recharges_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
@@ -258,6 +279,7 @@ export interface Database {
       }
       spending_reports: {
         Row: {
+          amount: number
           cost: number
           created_at: string
           id: number
@@ -265,6 +287,7 @@ export interface Database {
           project_id: number
         }
         Insert: {
+          amount?: number
           cost?: number
           created_at?: string
           id?: number
@@ -272,6 +295,7 @@ export interface Database {
           project_id: number
         }
         Update: {
+          amount?: number
           cost?: number
           created_at?: string
           id?: number
@@ -290,7 +314,13 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      profile_balances: {
+        Row: {
+          balance: number | null
+          profile_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       delete_avatar: {
