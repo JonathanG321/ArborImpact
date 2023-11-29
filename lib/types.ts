@@ -79,14 +79,13 @@ export type Profile = {
 };
 
 export type DBProfile = Database['public']['Tables']['profiles']['Row'];
-export interface DBProfileWithSDGs extends DBProfile {
+export type DBProfileWithSDGs = DBProfile & {
   SDGs: SDG[];
-}
-export interface DBProfileWithProjectsAndDonationsAndRecharges extends DBProfileWithSDGs {
+};
+export type DBProfileWithProjectsAndDonations = DBProfileWithSDGs & {
   projects: DBProjectWithDonationsAndSpendingReport[];
   donations: DBDonationWithProject[];
-  recharges: Database['public']['Tables']['recharges']['Row'][];
-}
+};
 
 export type Project = {
   id: number;
@@ -104,30 +103,30 @@ export type Project = {
   donationCurrency: string;
   extraImages: ImagePickerAsset[] | null;
 };
-export interface ProjectWithDonationsAndSpendingReport extends Project {
+export type ProjectWithDonationsAndSpendingReport = Project & {
   donations: Donation[];
   spendingReport: SpendingReport;
-}
+};
 
 export type DBProject = Database['public']['Tables']['projects']['Row'];
-export interface DBProjectWithSDG extends DBProject {
+export type DBProjectWithSDG = DBProject & {
   sdg: SDG;
-}
-export interface DBProjectWithDonationsAndSpendingReport extends DBProjectWithSDG {
+};
+export type DBProjectWithDonationsAndSpendingReport = DBProjectWithSDG & {
   donations: DBDonation[];
   spending_report: DBSpendingReport;
-}
+};
 
 export type DBSpendingReport = Database['public']['Tables']['spending_reports']['Row'][];
-export interface SpendingReport extends Omit<DBSpendingReport, 'created_at' | 'project_id'> {
+export type SpendingReport = Omit<DBSpendingReport, 'created_at' | 'project_id'> & {
   createdAt: string;
   projectId: number;
-}
+};
 
 export type DBDonation = Database['public']['Tables']['donations']['Row'];
-export interface DBDonationWithProject extends DBDonation {
+export type DBDonationWithProject = DBDonation & {
   project: DBProjectWithSDG;
-}
+};
 
 export type Donation = {
   donation: number;
@@ -136,9 +135,9 @@ export type Donation = {
   projectId: number;
 };
 
-export interface DonationWithProject extends Donation {
+export type DonationWithProject = Donation & {
   project: Project;
-}
+};
 
 export type DBProduct = Database['public']['Tables']['products']['Row'];
 export type Product = {
