@@ -1,6 +1,6 @@
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabase/supabase';
-import { DBProfileWithProjectsAndDonationsAndRecharges, DBProfileWithSDGs, LoginForm, SDG } from './types';
+import { DBProfileWithProjectsAndDonations, DBProfileWithSDGs, LoginForm, SDG } from './types';
 
 export default {
   requestFunds: async (userId?: string) => {
@@ -37,32 +37,32 @@ export default {
   },
 
   getCurrentBalance: async (userId: string) => {
-    const { data: profile, error } = await supabase
-      .from('profiles')
-      .select(`donations(amount), recharges(amount)`)
-      .eq('id', userId)
+    const { data: balance, error } = await supabase
+      .from('profile_balances')
+      .select(`*`)
+      .eq('profile_id', userId)
       .single();
     if (error) {
       return { currentBalance: 0, error };
     }
-    const totalDonated = profile.donations.reduce((total, donation) => total + donation.amount, 0);
-    const totalRecharged = profile.recharges.reduce((total, charge) => total + charge.amount, 0);
-    const currentBalance = totalRecharged - totalDonated;
+    const currentBalance = balance.balance || 0;
     return { error: null, currentBalance };
+  },
+
+  getProfileBalance: async (userId: string) => {
+    return await supabase.from('profile_balances').select('balance').eq('profile_id', userId).single();
   },
 
   getSupabaseProfile: async (userId: string) => {
     const { data: profile, ...response } = await supabase
       .from('profiles')
-      .select(
-        `*, projects(*, donations(*), sdgs(*), spending_reports(*)), donations(*, projects(*, sdgs(*))), sdgs(*), recharges(*)`
-      )
+      .select(`*, projects(*, donations(*), sdgs(*), spending_reports(*)), donations(*, projects(*, sdgs(*))), sdgs(*)`)
       .eq('id', userId)
       .order('created_at', { foreignTable: 'donations', ascending: false })
       .order('created_at', { foreignTable: 'projects', ascending: false })
       .single();
     if (!profile) return { ...response, data: null };
-    const sortedProjects: DBProfileWithProjectsAndDonationsAndRecharges['projects'] =
+    const sortedProjects: DBProfileWithProjectsAndDonations['projects'] =
       profile?.projects
         .map(({ sdgs, ...project }) => ({
           ...project,
@@ -80,17 +80,14 @@ export default {
       ...donation,
       project: { ...donation.projects, sdg: donation.projects?.sdgs?.id },
     }));
-    const totalRecharged = profile.recharges.reduce((total, charge) => total + charge.amount, 0);
-    const totalDonated = profile.donations.reduce((total, donation) => total + donation.amount, 0);
     return {
       ...response,
       data: {
         ...profile,
-        balance: totalRecharged - totalDonated,
         SDGs: profile.sdgs.map((sdg) => sdg.id),
         projects: filteredProjects || [],
         donations,
-      } as DBProfileWithProjectsAndDonationsAndRecharges,
+      } as DBProfileWithProjectsAndDonations,
     };
   },
 
