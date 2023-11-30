@@ -63,6 +63,7 @@ export interface Database {
           id: number
           name: string
           product_image_url: string | null
+          sdg: string
         }
         Insert: {
           created_at?: string
@@ -71,6 +72,7 @@ export interface Database {
           id?: number
           name?: string
           product_image_url?: string | null
+          sdg?: string
         }
         Update: {
           created_at?: string
@@ -79,8 +81,17 @@ export interface Database {
           id?: number
           name?: string
           product_image_url?: string | null
+          sdg?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_sdg_fkey"
+            columns: ["sdg"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       profile_sdgs: {
         Row: {

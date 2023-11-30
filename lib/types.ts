@@ -147,4 +147,5 @@ export type Product = {
   id: number;
   image: ImagePickerAsset | null;
   name: string;
+  sdg: SDG;
 };
