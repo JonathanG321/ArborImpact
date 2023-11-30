@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useState } from 'react';
 import { Alert } from 'react-native';
-import { Product } from '../../lib/types';
+import { Product, SDG } from '../../lib/types';
 import { downloadImage } from '../../lib/utils';
 import Queries from '../../lib/supabaseQueries';
 
@@ -27,6 +27,7 @@ export function ProductsContextProvider({ children }: PropsWithChildren) {
             const image = await downloadImage(product?.product_image_url || '', 'product_images');
             return {
               ...product,
+              sdg: (product.sdgs?.id || product.sdg) as SDG,
               createdAt: product.created_at,
               image: image || null,
             };

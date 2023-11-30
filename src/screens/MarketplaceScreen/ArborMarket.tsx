@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Text } from 'react-native-elements';
+import { Badge, Text } from 'react-native-elements';
 import LineBreak from '../../components/LineBreak';
 import { ProductsContext } from '../../contexts/ProductsContext';
 import Avatar from '../../components/Avatar';
 import ButtonDisplay from '../../components/ButtonDisplay';
 import BaseInput from '../../components/BaseInput';
+import { SDGs } from '../../../lib/templates';
 
 export default function ArborMarket() {
   const { products } = useContext(ProductsContext);
@@ -26,8 +27,13 @@ export default function ArborMarket() {
         <ScrollView className="h-full">
           {filteredProducts.map((product) => (
             <View className="flex flex-row w-full h-36" key={product.name + product.description}>
-              <View className="flex-1 p-4">
+              <View className="sflex-1 p-4">
                 <Avatar image={product.image} accessibilityLabel="Product Image" classNames=" h-full" />
+                <Badge
+                  badgeStyle={{ backgroundColor: 'transparent' }}
+                  value={<Avatar classNames="h-10 w-10" image={SDGs[product.sdg]} />}
+                  containerStyle={{ position: 'absolute', bottom: 13, right: 3 }}
+                />
               </View>
               <View className="flex-1 px-4 overflow-hidden">
                 <Text className="font-extrabold text-3xl">{product.discount}% OFF</Text>

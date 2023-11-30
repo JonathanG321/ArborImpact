@@ -100,7 +100,7 @@ export default {
   },
 
   getSupabaseProducts: async () => {
-    return await supabase.from('products').select(`*`);
+    return await supabase.from('products').select(`*, sdgs(*)`);
   },
 
   uploadSupabaseImage: async (path: string, bucket: string, formData: FormData) => {
