@@ -4,12 +4,10 @@ import Header from '../../components/Header';
 import ButtonDisplay from '../../components/ButtonDisplay';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../../lib/types';
+import { useNavigation } from '@react-navigation/native';
 
-type Props = {
-  navigate: DrawerNavigationProp<RootDrawerParamList, 'Profile', undefined>['navigate'];
-};
-
-export default function NoProjectsPlaceholder({ navigate }: Props) {
+export default function NoProjectsPlaceholder() {
+  const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList, 'Profile', undefined>>();
   return (
     <View className="flex mt-3 items-center">
       <Header textClassNames="text-2xl" centered title="UH-OH!" />

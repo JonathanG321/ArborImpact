@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Alert, View } from 'react-native';
 import ButtonDisplay from '../../components/ButtonDisplay';
 import { cn } from '../../../lib/utils';
-import { DonationWithProject, Profile } from '../../../lib/types';
+import { DonationWithProject } from '../../../lib/types';
 import { UserContext } from '../../contexts/UserContext';
 import Queries from '../../../lib/supabaseQueries';
 

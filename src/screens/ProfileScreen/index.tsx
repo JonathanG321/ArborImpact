@@ -16,7 +16,6 @@ import MarketplaceModal from './MarketplaceModal';
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
 export default function ProfileScreen({
-  navigation: { navigate },
   route: {
     params: { startTab },
   },
@@ -29,15 +28,17 @@ export default function ProfileScreen({
     { key: 'impact', title: 'MY IMPACT' },
   ];
 
-  const renderScene = SceneMap({
-    projects: () =>
-      profile?.projects?.length ? (
-        <MyProjects projects={profile?.projects} />
-      ) : (
-        <NoProjectsPlaceholder navigate={navigate} />
-      ),
-    impact: () => <MyImpact projects={profile?.projects} />,
-  });
+  const renderScene = SceneMap(
+    profile?.projects?.length
+      ? {
+          projects: () => <MyProjects projects={profile.projects} />,
+          impact: () => <MyImpact projects={profile.projects} />,
+        }
+      : {
+          projects: () => <NoProjectsPlaceholder />,
+          impact: () => <NoProjectsPlaceholder />,
+        }
+  );
 
   useEffect(() => {
     if (profile?.madeFirstDonation && !profile.seenMarketplace) {
@@ -49,9 +50,9 @@ export default function ProfileScreen({
     <ScreenContainer>
       <MarketplaceModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
       <ProfileHeader />
-      <LineBreak />
+      <LineBreak classNames="flex-1 w-auto" />
       <ProfileBalances />
-      <LineBreak />
+      <LineBreak classNames="flex-1 w-auto" />
       <StyledTabView renderScene={renderScene} routes={routes} defaultIndex={startTab} />
     </ScreenContainer>
   );

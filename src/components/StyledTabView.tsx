@@ -19,7 +19,7 @@ export default function StyledTabView({ renderScene, routes, defaultIndex = 0 }:
     if (defaultIndex === 1) {
       setTimeout(() => setIndex(1), 10);
     }
-  }, []);
+  }, [defaultIndex]);
   return (
     <View className="h-full px-4">
       <TabView

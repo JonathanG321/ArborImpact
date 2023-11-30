@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { Badge, Text } from 'react-native-elements';
 import * as Progress from 'react-native-progress';
 import Avatar from '../../components/Avatar';
-import { ProjectWithDonations } from '../../../lib/types';
+import { ProjectWithDonationsAndSpendingReport } from '../../../lib/types';
 import { SDGs } from '../../../lib/templates';
 
 type Props = {
-  projects: ProjectWithDonations[];
+  projects: ProjectWithDonationsAndSpendingReport[];
 };
 
 export default function MyProjects({ projects }: Props) {
@@ -20,7 +20,7 @@ export default function MyProjects({ projects }: Props) {
             <View>
               <Avatar classNames="h-32 w-32" image={project.projectImage} accessibilityLabel="Project Image" />
               <Badge
-                status="success"
+                badgeStyle={{ backgroundColor: 'transparent' }}
                 value={<Avatar classNames="h-10 w-10" image={SDGs[project.sdg]} />}
                 containerStyle={{ position: 'absolute', bottom: -3, right: -14 }}
               />
