@@ -31,7 +31,13 @@ export default function SetupSwitch<T extends FieldValues>({
           name={field}
         />
       </View>
-      <WantsItem type={type} icon={icon} description={description} descriptionClassName={descriptionClassName} />
+      <WantsItem
+        iconSize={22}
+        type={type}
+        icon={icon}
+        description={description}
+        descriptionClassName={descriptionClassName}
+      />
     </View>
   );
 }
