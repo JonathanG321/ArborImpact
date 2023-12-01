@@ -38,6 +38,10 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     defaultValues: { sdg: [] },
   });
 
+  const onError: SubmitErrorHandler<Pick<Profile, 'sdg'>> = ({ sdg }) => {
+    console.log(sdg?.message);
+  };
+
   const onSubmit: SubmitHandler<Pick<Profile, 'sdg'>> = async ({ sdg }) => {
     if (!session) return;
     if (!profileSetup.avatarImage) {
@@ -50,14 +54,15 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     const photo = {
       uri: file.uri,
       type: file.type,
-      name: file.fileName,
+      name: file.fileName || file.uri,
     };
 
     const formData = new FormData();
     formData.append('file', photo as any);
 
-    const fileExt = file.fileName?.split('.').pop();
+    const fileExt = photo.name?.split('.').pop();
     const filePath = `${Math.random()}.${fileExt}`;
+    console.log(filePath);
     const { error: avatarError } = await Queries.uploadSupabaseImage(filePath, 'avatars', formData);
     if (avatarError) {
       Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
@@ -85,7 +90,6 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     const [{ error }, ...rest] = await Queries.upsertSupabaseProfile(newProfile, session.user.id);
     if (error) {
       Alert.alert('An error has occurred. Please try again later');
-      console.log(error);
       setIsLoading(false);
       return;
     }
@@ -93,30 +97,31 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       if (result.error) {
         console.log(result.error);
       }
+      return;
     });
     setProfile({ ...profileSetup, sdg, balance: 0 });
     setTimeout(() => setIsLoading(false), 1000);
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer scrollable>
       <View className="flex items-center h-full">
         <View className="flex flex-row justify-center">
           <Text className="text-2xl mb-6 text-arbor-grey text-center mx-5">
             Select the SDGs that you're interested in
           </Text>
         </View>
-        <View className="flex flex-row justify-center items-center w-11/12 flex-wrap">
+        <View className="flex flex-row justify-center items-center flex-1 flex-wrap">
           {Array.from({ length: 17 }).map((_, index) => {
             if (!includedSDGs.includes(index + 1)) return;
             return <SDGInput key={index} index={index + 1} setSDGValue={setValue} getValues={getValues} />;
           })}
         </View>
-      </View>
-      <View className="flex items-end px-3 py-1">
-        <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-          <Text className="text-lg mr-5">Done</Text>
-        </TouchableOpacity>
+        <View className="w-full flex items-end mt-10">
+          <TouchableOpacity onPress={handleSubmit(onSubmit, onError)}>
+            <Text className="text-lg mr-5">Done</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScreenContainer>
   );
