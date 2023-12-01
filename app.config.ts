@@ -39,6 +39,13 @@ export default {
     extra: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+      eas: {
+        projectId: '04c00a47-97b7-400b-9b24-a8a80cb66d29',
+      },
     },
   },
+  updates: {
+    url: 'https://u.expo.dev/04c00a47-97b7-400b-9b24-a8a80cb66d29',
+  },
+  runtimeVersion: '1.0.0',
 };
