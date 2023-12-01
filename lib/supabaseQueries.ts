@@ -103,8 +103,8 @@ export default {
     return await supabase.from('products').select(`*, sdgs(*)`);
   },
 
-  uploadSupabaseImage: async (path: string, bucket: string, formData: FormData) => {
-    return await supabase.storage.from(bucket).upload(path, formData);
+  uploadSupabaseImage: async (path: string, bucket: string, base64: ArrayBuffer, contentType: string) => {
+    return supabase.storage.from(bucket).upload(path, base64, { contentType });
   },
 
   upsertSupabaseProfile: async ({ SDGs, ...newProfile }: DBProfileWithSDGs, userId: string) => {

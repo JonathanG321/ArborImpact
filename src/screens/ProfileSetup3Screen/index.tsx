@@ -5,6 +5,8 @@ import { Alert, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import * as FileSystem from 'expo-file-system';
+import { decode } from 'base64-arraybuffer';
 import { DBProfileWithSDGs, Profile, RootStackParamList } from '../../../lib/types';
 import ScreenContainer from '../../components/ScreenContainer';
 import SDGInput from './SDGInput';
@@ -51,23 +53,21 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
 
     const file = profileSetup.avatarImage;
 
-    const photo = {
-      uri: file.uri,
-      type: file.type,
-      name: file.fileName || file.uri,
-    };
+    const base64 = await FileSystem.readAsStringAsync(file.uri, { encoding: 'base64' });
 
-    const formData = new FormData();
-    formData.append('file', photo as any);
-
-    const fileExt = photo.name?.split('.').pop();
+    const fileName = file.fileName || file.uri.split('/').pop();
+    const fileExt = fileName?.split('.').pop() || 'png';
     const filePath = `${Math.random()}.${fileExt}`;
-    console.log(filePath);
-    const { error: avatarError } = await Queries.uploadSupabaseImage(filePath, 'avatars', formData);
-    if (avatarError) {
-      Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
-      setIsLoading(false);
-      return;
+    try {
+      const { error: avatarError } = await Queries.uploadSupabaseImage(filePath, 'avatars', decode(base64), 'image/*');
+      if (avatarError) {
+        Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
+        setIsLoading(false);
+        return;
+      }
+    } catch (e) {
+      console.log('catch');
+      console.error(e);
     }
 
     const newProfile: DBProfileWithSDGs = {
@@ -126,3 +126,6 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     </ScreenContainer>
   );
 }
+
+// {"name": "IMG_0005.jpg", "type": "image", "uri": "file:///Users/jonathangordon/Library/Developer/CoreSimulator/Devices/155868EC-5BAB-4879-9743-13DD49A2AC73/data/Containers/Data/Application/72D8BFD1-DA97-43CE-83E4-DDE43DF7503B/Library/Caches/ExponentExperienceData/%2540anonymous%252Farbor-impact-a366ccf0-e114-4edf-9ea9-43d81067b252/ImagePicker/AD97C933-396A-42A2-9706-B4320A20E26F.jpg"}
+// {"name": "fc776c12-c5b3-4c76-b28a-1dfd7db38b20.jpeg", "type": "image", "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Farbor-impact-a366ccf0-e114-4edf-9ea9-43d81067b252/ImagePicker/fc776c12-c5b3-4c76-b28a-1dfd7db38b20.jpeg"}
