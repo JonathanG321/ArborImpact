@@ -76,7 +76,7 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer scrollable>
       <Header textClassNames="text-3xl" title="LET'S FUND THE AGE OF ACTION, YOU'RE ONE STEP CLOSER." />
       <Text className="text-xl text-gray-600 text-center mb-2">We're so excited to get started with you.</Text>
       <LineBreak classNames="w-fit border-gray-400 mb-4" />
@@ -116,7 +116,7 @@ export default function SignUpScreen({ navigation: { replace } }: Props) {
         name="disclaimer"
       />
       <AuthButton text="Create Account" icon="→" onPress={handleSubmit(onSubmit, onError)} />
-      <View className="flex flex-row justify-center mt-5">
+      <View className="flex flex-row justify-center mt-5 mb-10">
         <Text className="text-lg flex text-center mr-2">Already Have an Account?</Text>
         <TouchableOpacity className="flex items-center" onPress={() => replace('Sign In')}>
           <Text className="text-blue-400 text-lg">Sign In</Text>

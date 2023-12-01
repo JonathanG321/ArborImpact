@@ -51,7 +51,7 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
   }
 
   return (
-    <ScreenContainer>
+    <ScreenContainer scrollable>
       <Text className="text-2xl text-center mb-2">Sign in to your Arbor Account</Text>
       <View className="flex flex-row justify-center">
         <LineBreak classNames="w-1/2 border-gray-400" />
