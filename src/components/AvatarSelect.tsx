@@ -1,4 +1,4 @@
-import { View, Alert, Image, Button } from 'react-native';
+import { View, Alert, Button } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Avatar from './Avatar';
 

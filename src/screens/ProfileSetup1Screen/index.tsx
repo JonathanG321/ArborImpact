@@ -23,20 +23,7 @@ const schema = z
     lastName: z.string().min(2, 'Too Short!').default(''),
     location: z.string().min(2, 'Too Short!').default(''),
     birthDate: z.string(),
-    avatarImage: z
-      .object({
-        height: z.number(),
-        uri: z.string(),
-        width: z.number(),
-        assetId: z.string().optional().nullable(),
-        base64: z.string().optional().nullable(),
-        duration: z.number().optional().nullable(),
-        fileName: z.string().optional().nullable(),
-        fileSize: z.number().optional(),
-        type: z.string().optional(),
-        exif: z.record(z.string()).optional().nullable(),
-      })
-      .required(),
+    avatarImage: z.object({}).required(),
   })
   .required();
 
@@ -53,7 +40,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
   } = useForm<Exclude<Profile, 'sdg'>>({ resolver: zodResolver(schema), defaultValues: emptyProfile });
 
   const onSubmit: SubmitHandler<Profile> = (form) => {
-    setProfileSetup(form);
+    setProfileSetup({ ...form, avatarImage: getValues('avatarImage') });
     navigate('Profile Setup 2');
   };
 
@@ -64,6 +51,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       const errors = { ...err, avatarImage: err.avatarImage?.uri };
       setError(profileKey, errors[profileKey] || {});
     });
+    console.log(err);
     Alert.alert('Some fields contain Errors. Please fix them before moving on.');
   };
 
@@ -80,7 +68,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
   }, []);
 
   return (
-    <ScreenContainer>
+    <ScreenContainer scrollable>
       <Header title="HI, MY NAME IS" />
       <View className="flex flex-row">
         <FormInput
@@ -144,7 +132,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
           name="avatarImage"
         />
       </View>
-      <View className="flex flex-row justify-end mt-10 mr-5">
+      <View className="flex flex-row justify-end mt-10 mr-5 mb-10">
         <TouchableOpacity onPress={handleSubmit(onSubmit, onError)}>
           <Text className="text-lg">Next →</Text>
         </TouchableOpacity>
