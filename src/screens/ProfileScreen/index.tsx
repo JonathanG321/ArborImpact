@@ -47,7 +47,7 @@ export default function ProfileScreen({
   }, [profile]);
 
   return (
-    <ScreenContainer>
+    <ScreenContainer scrollable>
       <MarketplaceModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
       <ProfileHeader />
       <LineBreak classNames="flex-1 w-auto" />

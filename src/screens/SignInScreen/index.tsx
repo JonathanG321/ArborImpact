@@ -38,8 +38,8 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
 
     if (error) {
       Alert.alert(error.message);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   function onError(errors: FieldErrors<LoginForm>) {

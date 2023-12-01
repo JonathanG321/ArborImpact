@@ -11,6 +11,7 @@ import ProjectsCarousel from './ProjectsCarousel';
 import LineBreak from '../../components/LineBreak';
 import { dayMilliseconds } from '../../../lib/templates';
 import { UserContext } from '../../contexts/UserContext';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 
@@ -34,7 +35,7 @@ export default function ProjectsScreen({}: Props) {
   }, []);
 
   return (
-    <View style={{ height: Dimensions.get('window').height - headerHeight }}>
+    <ScrollView style={{ height: Dimensions.get('window').height - headerHeight }}>
       <LinearGradient
         style={{ height: Dimensions.get('window').height, width: Dimensions.get('window').width }}
         className="h-full z[-1] absolute"
@@ -70,6 +71,6 @@ export default function ProjectsScreen({}: Props) {
       ) : (
         <Text>No Projects</Text>
       )}
-    </View>
+    </ScrollView>
   );
 }
