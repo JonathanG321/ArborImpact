@@ -28,15 +28,15 @@ export default function MarketplaceIntroModal({ isModalVisible, setIsModalVisibl
   }
   return (
     <Modal animationIn="fadeIn" animationOut="fadeOut" isVisible={isModalVisible} onBackdropPress={leaveModal}>
-      <View className="flex items-center bg-white rounded-lg p-8">
-        <Text className="text-lg font-medium mb-3 text-center">
+      <View className="flex items-center bg-white rounded-lg p-6">
+        <Text className="font-medium mb-2 text-center">
           Here's how to make the most of your account and each amazing benefit.
         </Text>
-        <LineBreak classNames="border-gray-400 w-3/4 mb-5" />
+        <LineBreak classNames="border-gray-400 w-3/4 mb-3" />
         {firstTimeCards.map((card) => (
-          <View key={card.title} className="w-full rounded-xl bg-white shadow-sm shadow-slate-600 p-5 mb-5">
-            <Text className="text-md font-extrabold text-center mb-6">{card.title}</Text>
-            <Text className="text-md text-center mb-3">{card.description}</Text>
+          <View key={card.title} className="w-full rounded-xl bg-white shadow-sm shadow-slate-600 p-5 mb-3">
+            <Text className="font-extrabold text-center mb-2">{card.title}</Text>
+            <Text className="text-xs text-center mb-3">{card.description}</Text>
           </View>
         ))}
         <View className="flex flex-row w-1/2">
