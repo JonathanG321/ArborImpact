@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SetupSwitchProps, Profile, RootStackParamList } from '../../../lib/types';
 import { ProfileSetupContext } from '../../contexts/ProfileSetupContext';
-import FormSwitch from '../ProfileSetup1Screen/SetupSwitch';
+import FormSwitch from './SetupSwitch';
 import { emptyProfile } from '../../../lib/templates';
 import ScreenContainer from '../../components/ScreenContainer';
 
