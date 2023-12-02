@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Dimensions } from 'react-native';
 import { Badge, Text } from 'react-native-elements';
 import LineBreak from '../../components/LineBreak';
 import { ProductsContext } from '../../contexts/ProductsContext';
@@ -7,6 +7,7 @@ import Avatar from '../../components/Avatar';
 import ButtonDisplay from '../../components/ButtonDisplay';
 import BaseInput from '../../components/BaseInput';
 import { SDGs } from '../../../lib/templates';
+import { ScaledSize } from 'react-native';
 
 export default function ArborMarket() {
   const { products } = useContext(ProductsContext);
@@ -18,6 +19,10 @@ export default function ArborMarket() {
       const productDescription = product.description.toLowerCase();
       return productName.includes(searchStr) || productDescription.includes(searchStr);
     }) || [];
+
+  const window: ScaledSize = Dimensions.get('window');
+
+  const PAGE_WIDTH = window.width;
   return (
     <View className="flex-1">
       <Text className="text-center my-4 text-lg">Browse Your Rewards</Text>
@@ -27,19 +32,27 @@ export default function ArborMarket() {
         <ScrollView className="h-full">
           {filteredProducts.map((product) => (
             <View className="flex flex-row w-full h-36" key={product.name + product.description}>
-              <View className="sflex-1 p-4">
-                <Avatar image={product.image} accessibilityLabel="Product Image" classNames=" h-full" />
+              <View className="py-4 flex">
+                <Avatar
+                  image={product.image}
+                  accessibilityLabel="Product Image"
+                  style={{ width: PAGE_WIDTH / 3 }}
+                  classNames="w-0 h-full"
+                />
                 <Badge
                   badgeStyle={{ backgroundColor: 'transparent' }}
                   value={<Avatar classNames="h-10 w-10" image={SDGs[product.sdg]} />}
-                  containerStyle={{ position: 'absolute', bottom: 13, right: 3 }}
+                  containerStyle={{ position: 'absolute', bottom: 11, right: -13 }}
                 />
+                <View className="h-8" />
               </View>
-              <View className="flex-1 px-4 overflow-hidden">
+              <View className="flex-1 px-4 pl-6 overflow-hidden">
                 <Text className="font-extrabold text-3xl">{product.discount}% OFF</Text>
-                <Text className="text-arbor-grey text-xs h-2/4">{product.description}</Text>
+                <ScrollView className="mb-1">
+                  <Text className="text-arbor-grey text-xs">{product.description}</Text>
+                </ScrollView>
                 <ButtonDisplay
-                  text="Redeem Rewards    →"
+                  text="Redeem Rewards  →"
                   classNames="bg-transparent p-0 flex-none items-start rounded"
                   textClassNames="font-bold"
                 />
