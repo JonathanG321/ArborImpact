@@ -38,7 +38,7 @@ export default function StyledTabView({ renderScene, routes, defaultIndex = 0 }:
             renderTabBarItem={(props) => (
               <TabBarItem
                 {...props}
-                labelStyle={{ color: 'black', fontWeight: '800', fontSize: 20, textAlign: 'center' }}
+                labelStyle={{ color: 'black', fontWeight: '800', fontSize: 17, textAlign: 'center' }}
               />
             )}
           />

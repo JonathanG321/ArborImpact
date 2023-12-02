@@ -5,12 +5,13 @@ import { cn } from '../../lib/utils';
 export type FormattedInputProps = {
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
+  classNames?: string;
 };
 
-export default function FormattedInput({ value, setValue }: FormattedInputProps) {
+export default function FormattedInput({ value, setValue, classNames }: FormattedInputProps) {
   return (
     <CurrencyInput
-      className={cn('border-b w-20 text-md pb-1 font-bold')}
+      className={cn('border-b w-20 text-md pb-1 font-bold', classNames)}
       prefix="$"
       minValue={0}
       delimiter=","

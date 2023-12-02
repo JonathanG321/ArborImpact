@@ -16,7 +16,7 @@ export default function ButtonDisplay({ textClassNames, text, onPress, className
     <TouchableOpacity
       activeOpacity={!!onPress ? 0.2 : 1}
       disabled={disabled}
-      className={cn('py-3 items-center flex-1 bg-arbor-yellow rounded-lg', classNames)}
+      className={cn('py-3 items-center justify-center flex-1 bg-arbor-yellow rounded-lg px-2', classNames)}
       onPress={onPress}
     >
       <Text className={textClassNames}>{text}</Text>

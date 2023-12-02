@@ -16,7 +16,7 @@ export default function WantsItem({
       <View className="w-1/12">
         <Icon type={type} name={icon} size={iconSize} color={iconColor} />
       </View>
-      <View className="w-9/12 mb-2 mt-2">
+      <View className="w-9/12">
         <Text className={cn('font-bold ml-2 font-bebas-neue text-md flex flex-wrap', descriptionClassName)}>
           {description}
         </Text>
