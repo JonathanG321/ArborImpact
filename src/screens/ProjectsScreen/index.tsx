@@ -1,9 +1,6 @@
 import { useContext, useEffect } from 'react';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
-import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
-import { Dimensions } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Text } from 'react-native-elements';
 import { RootDrawerParamList } from '../../../lib/types';
 import { ProjectsContext } from '../../contexts/ProjectsContext';
@@ -11,14 +8,13 @@ import ProjectsCarousel from './ProjectsCarousel';
 import LineBreak from '../../components/LineBreak';
 import { dayMilliseconds } from '../../../lib/templates';
 import { UserContext } from '../../contexts/UserContext';
-import { ScrollView } from 'react-native-gesture-handler';
+import ScreenContainer from '../../components/ScreenContainer';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Projects', 'Main'>;
 
 export default function ProjectsScreen({}: Props) {
   const { projects, getProjects } = useContext(ProjectsContext);
   const { profile } = useContext(UserContext);
-  const headerHeight = useHeaderHeight();
   const currentDate = new Date().getTime();
 
   const newProjects =
@@ -35,14 +31,9 @@ export default function ProjectsScreen({}: Props) {
   }, []);
 
   return (
-    <ScrollView style={{ height: Dimensions.get('window').height - headerHeight }}>
-      <LinearGradient
-        style={{ height: Dimensions.get('window').height, width: Dimensions.get('window').width }}
-        className="h-full z[-1] absolute"
-        colors={['#E5F0FF', '#fff']}
-      />
+    <ScreenContainer scrollable noPadding>
       {projects?.length ? (
-        <>
+        <View className="mb-16">
           <Text className="text-2xl font-bold w-full text-center my-6">BROWSE PROJECTS</Text>
           <View className="flex flex-row justify-center mb-4">
             <LineBreak classNames="w-1/2 border-gray-400" />
@@ -67,10 +58,10 @@ export default function ProjectsScreen({}: Props) {
               <ProjectsCarousel projects={neglectedProjects} />
             </>
           )}
-        </>
+        </View>
       ) : (
         <Text>No Projects</Text>
       )}
-    </ScrollView>
+    </ScreenContainer>
   );
 }

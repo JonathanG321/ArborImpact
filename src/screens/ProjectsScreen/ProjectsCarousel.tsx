@@ -17,6 +17,7 @@ type ProjectsProps = {
 export default function ProjectsCarousel({ projects }: ProjectsProps) {
   const ref = useRef(null);
   const { navigate } = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
+  const itemSize = PAGE_WIDTH / 3 - 10;
 
   return (
     <View>
@@ -25,11 +26,12 @@ export default function ProjectsCarousel({ projects }: ProjectsProps) {
         data={projects}
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
-        fadingEdgeLength={50}
+        fadingEdgeLength={0}
         sliderWidth={PAGE_WIDTH}
-        slideStyle={{ height: 130, padding: 3 }}
+        slideStyle={{ height: itemSize, padding: 3 }}
         firstItem={1}
-        itemWidth={130}
+        itemWidth={itemSize}
+        itemHeight={itemSize}
         useScrollView={true}
         renderItem={({ index, item }) => (
           <ProjectsCarouselItem key={item.name} index={index} item={item} navigate={navigate} />

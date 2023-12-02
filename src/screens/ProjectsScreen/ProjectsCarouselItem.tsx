@@ -28,7 +28,7 @@ export default function ProjectsCarouselItem({ item, navigate }: Props) {
         }}
       >
         <View className="bg-gray-500 opacity-50 h-full w-full absolute bottom-0 left-0 z-[1]" />
-        <Text className="text-xl px-2 pb-1 text-white font-bold absolute bottom-0 left-0 z-[1]">{item.name}</Text>
+        <Text className="text-lg px-2 pb-1 text-white font-bold absolute bottom-0 left-0 z-[1]">{item.name}</Text>
         {!!item.projectImage ? (
           <Avatar
             image={{ ...item.projectImage }}
