@@ -61,7 +61,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     try {
       const { error: avatarError } = await Queries.uploadSupabaseImage(filePath, 'avatars', decode(base64), 'image/*');
       if (avatarError) {
-        Alert.alert('An image error has occurred. Please go back, reselect your image, and try again.');
+        Alert.alert('An Image Error Has Occurred', 'Please go back, reselect your image, and try again.');
         setIsLoading(false);
         return;
       }
@@ -89,7 +89,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     };
     const [{ error }, ...rest] = await Queries.upsertSupabaseProfile(newProfile, session.user.id);
     if (error) {
-      Alert.alert('An error has occurred. Please try again later');
+      Alert.alert('An Error Has Occurred', 'Please try again later.');
       setIsLoading(false);
       return;
     }

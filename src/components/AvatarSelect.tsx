@@ -23,7 +23,7 @@ export default function AvatarSelect({ image, onSelect }: Props) {
       onSelect(file);
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        Alert.alert('Error Selecting Image: ', error.message);
       } else {
         throw error;
       }

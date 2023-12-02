@@ -37,7 +37,7 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
     const { error } = await Queries.supabaseSignIn(form);
 
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert('Error Signing In', error.message);
     }
     setIsLoading(false);
   }
@@ -47,7 +47,7 @@ export default function SignInScreen({ navigation: { replace } }: Props) {
       const LoginFormKey = key as keyof LoginForm;
       setError(LoginFormKey, errors[LoginFormKey] || {});
     });
-    Alert.alert('Some fields contain Errors. Please fix them before moving on.');
+    Alert.alert('Some Fields Contain Errors', 'Please fix them before moving on.');
   }
 
   return (

@@ -35,7 +35,7 @@ export function ProductsContextProvider({ children }: PropsWithChildren) {
         )
       );
     } catch (error) {
-      if (error instanceof Error) Alert.alert(error.message);
+      if (error instanceof Error) Alert.alert('Error Retrieving Products: ', error.message);
     }
   }
 

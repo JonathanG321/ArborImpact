@@ -38,7 +38,7 @@ export default function ProfileBalances() {
               : async () => {
                   const res = await Queries.requestFunds(session?.user.id);
                   if (res && res.error) {
-                    Alert.alert(res.error.message);
+                    Alert.alert('Error Requesting Funds', res.error.message);
                     return;
                   } else if (!profile) {
                     Alert.alert('No Profile Found');

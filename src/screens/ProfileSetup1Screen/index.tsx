@@ -52,7 +52,7 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
       setError(profileKey, errors[profileKey] || {});
     });
     console.log(err);
-    Alert.alert('Some fields contain Errors. Please fix them before moving on.');
+    Alert.alert('Some fields contain Errors', 'Please fix them before moving on.');
   };
 
   const handleDateText = (): string => {

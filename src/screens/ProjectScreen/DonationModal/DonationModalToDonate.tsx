@@ -33,30 +33,37 @@ export default function DonationModalToDonate({
 
   async function handleDonation() {
     if (!session) throw new Error('Session does not exist when donation button is pressed');
+    if (donation === 0) {
+      Alert.alert("You can't donate nothing :(", 'You must input a value greater than 0 in order to donate.');
+      return;
+    }
 
     setIsDonating(true);
 
     const { error, currentBalance } = await Queries.getCurrentBalance(session.user.id);
     if (error) {
       setIsDonating(false);
-      Alert.alert('Failed to check current balance. Please wait a few minutes and try again.');
+      Alert.alert('Failed to check current balance', 'Please wait a few minutes and try again.');
       return;
     } else if (currentBalance < donation) {
       setIsDonating(false);
-      Alert.alert('You do not have enough money in your account to donate that much.');
+      Alert.alert(
+        'You do not have enough money in your account',
+        'Please recharge your account or input a smaller donation.'
+      );
       return;
     }
     const { error: donationError } = await Queries.makeSupabaseDonation(session.user.id, project.id, donation);
     if (donationError) {
       setIsDonating(false);
-      Alert.alert(donationError.message);
+      Alert.alert('Failed to donate', donationError.message);
       return;
     }
     if (!profile?.madeFirstDonation) {
       const { error: madeDonationError } = await Queries.setMadeFirstDonation(session.user.id);
       if (madeDonationError) {
         setIsDonating(false);
-        Alert.alert(madeDonationError.message);
+        Alert.alert('Failed to update has donated flag', madeDonationError.message);
         return;
       }
     }
@@ -76,11 +83,11 @@ export default function DonationModalToDonate({
       animationOut="fadeOut"
       isVisible={isModalVisible}
     >
-      <View className="bg-arbor-bg h-4/6 w-11/12 rounded-2xl flex justify-between items-center p-6">
+      <View className="bg-arbor-bg w-11/12 rounded-2xl flex justify-between items-center p-6">
         <View className="flex items-center w-full">
           <Text className="text-2xl font-extrabold mb-3">{project.name.toUpperCase()}</Text>
-          <LineBreak classNames="border-gray-400 mb-16" />
-          <View className="shadow py-5 px-7 w-full bg-white flex flex-row flex-wrap justify-center">
+          <LineBreak classNames="border-gray-400 mb-6" />
+          <View className="shadow py-5 px-7 w-full bg-white flex flex-row flex-wrap justify-center mb-5">
             <Text className="font-bold text-lg text-center">I would like to donate</Text>
             <FormattedInput
               value={donation}
@@ -98,9 +105,9 @@ export default function DonationModalToDonate({
             </Text>
           </View>
         </View>
-        <View className="flex flex-row mb-6">
+        <View className="flex flex-row">
           <ButtonDisplay
-            textClassNames="text-xl text-white font-bold"
+            textClassNames="text-lg text-white font-bold"
             classNames={cn('bg-arbor-blue', { 'bg-gray-400': isDonating })}
             disabled={isDonating}
             text={!isDonating ? 'COMPLETE TRANSACTION' : 'Loading...'}

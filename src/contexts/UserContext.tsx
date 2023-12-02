@@ -47,7 +47,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
       if (error || !dbProfile) {
         return;
       } else if (balanceError) {
-        Alert.alert('Failed to retrieve Balance. Please reload and try again later.');
+        Alert.alert('Failed To Retrieve Balance', 'Please reload and try again later.');
       }
       const [image, projects] = await Promise.all([
         downloadImage(dbProfile.avatar_url),
@@ -107,7 +107,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         setIsLoading(false);
       }, 500);
     } catch (error) {
-      if (error instanceof Error) Alert.alert(error.message);
+      if (error instanceof Error) Alert.alert('Error Getting Profile: ', error.message);
       setIsLoading(false);
       setIsFirstLoad(false);
     }
