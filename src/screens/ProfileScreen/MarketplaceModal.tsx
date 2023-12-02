@@ -31,9 +31,9 @@ export default function MarketplaceModal({ isModalVisible, setIsModalVisible }: 
       isVisible={isModalVisible}
     >
       {!pressedNavigate && (
-        <View className="bg-arbor-bg h-2/5 w-11/12 rounded-2xl flex justify-between items-center p-6">
-          <Header textClassNames="text-2xl" title="REDEEM YOUR IMPACT SHARES FOR DISCOUNTS" centered />
-          <Text className="text-xl text-center text-gray-600 mb-5">
+        <View className="bg-arbor-bg w-11/12 rounded-2xl flex justify-between items-center p-6">
+          <Header textClassNames="text-xl" title="REDEEM YOUR IMPACT SHARES FOR DISCOUNTS" centered />
+          <Text className="text-lg text-center text-gray-600 mb-5">
             Now that you have an impact in your portfolio, Let's redeem your shares!
           </Text>
           <View className="flex flex-row w-2/3 shadow-sm shadow-gray-600">
@@ -42,7 +42,7 @@ export default function MarketplaceModal({ isModalVisible, setIsModalVisible }: 
                 setPressedNavigate(true);
                 setIsModalVisible(false);
               }}
-              textClassNames="font-extrabold text-xl"
+              textClassNames="font-extrabold text-lg"
               text="→ LET'S GO"
             />
           </View>

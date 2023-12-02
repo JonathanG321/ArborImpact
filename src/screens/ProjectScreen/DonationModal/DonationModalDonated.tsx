@@ -38,11 +38,11 @@ export default function DonationModalDonated({
       animationOut="fadeOut"
       isVisible={isModalVisible}
     >
-      <View className="bg-white h-fit w-full rounded-2xl flex items-center p-10">
-        <Text className="text-2xl font-extrabold mb-3 text-center">
+      <View className="bg-white h-fit w-full rounded-2xl flex items-center p-6">
+        <Text className="text-xl font-extrabold mb-3 text-center">
           CONGRATULATIONS! YOU HAVE SUCCESSFULLY DONATED TO {projectName.toUpperCase()}
         </Text>
-        <Text className="text-xl text-center text-gray-600 mb-5">
+        <Text className="text-lg text-center text-gray-600 mb-5">
           Now that you have donated for your first project, Let's see the impact created on your portfolio.
         </Text>
         <View className="flex flex-row w-1/3">

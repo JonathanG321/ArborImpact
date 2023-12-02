@@ -12,6 +12,7 @@ import StyledTabView from '../../components/StyledTabView';
 import ProfileBalances from './ProfileBalances';
 import ProfileHeader from './ProfileHeader';
 import MarketplaceModal from './MarketplaceModal';
+import { View } from 'react-native';
 
 type Props = DrawerScreenProps<RootDrawerParamList, 'Profile', 'Main'>;
 
@@ -53,7 +54,9 @@ export default function ProfileScreen({
       <LineBreak classNames="flex-1 w-auto" />
       <ProfileBalances />
       <LineBreak classNames="flex-1 w-auto" />
-      <StyledTabView renderScene={renderScene} routes={routes} defaultIndex={startTab} />
+      <View className="h-96">
+        <StyledTabView renderScene={renderScene} routes={routes} defaultIndex={startTab} />
+      </View>
     </ScreenContainer>
   );
 }
