@@ -31,7 +31,7 @@ export default function ProjectScreen({
         <LineBreak />
         <ProjectInfo project={project} />
         <LineBreak />
-        <SpendingReport project={project} />
+        {!!project.spendingReport.length && <SpendingReport project={project} />}
         <Text className="text-xl font-extrabold mb-4">FUNDING GOAL AND PROGRESS</Text>
         <LineBreak />
         <ProjectStats project={project} />
