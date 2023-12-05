@@ -99,7 +99,7 @@ export default function DonationModalToDonate({
               }}
             />
             <Text className="font-bold text-lg text-center">
-              {project.donationCurrency} to {project.name}. Contributing {impactShares.toFixed(0)}% of the funding goal
+              {project.donationCurrency} to {project.name}. Contributing {Math.floor(impactShares)}% of the funding goal
               of ${project.fundingGoal.toLocaleString()} {project.donationCurrency}, receiving{' '}
               {Math.floor(impactShares)} impact share{Math.floor(impactShares) === 1 ? '' : 's'}.
             </Text>
