@@ -1,10 +1,10 @@
 import { View } from 'react-native';
-import { WantsItemProps } from '../../../lib/types';
-import Avatar from '../../components/Avatar';
-import Header from '../../components/Header';
-import WantsItem from '../../components/WantsItem';
+import { WantsItemProps } from '../../lib/types';
+import Avatar from './Avatar';
+import Header from './Header';
+import WantsItem from './WantsItem';
 import { useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../contexts/UserContext';
 
 export default function ProfileHeader() {
   const { profile } = useContext(UserContext);

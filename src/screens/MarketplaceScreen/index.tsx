@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SceneMap } from 'react-native-tab-view';
 import ScreenContainer from '../../components/ScreenContainer';
@@ -5,8 +6,8 @@ import MarketplaceIntroModal from './MarketplaceIntroModal';
 import StyledTabView from '../../components/StyledTabView';
 import ArborMarket from './ArborMarket';
 import ImpactMarket from './ImpactMarket';
-import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../contexts/UserContext';
+import ProfileInfo from '../../components/ProfileInfo';
 
 export default function MarketplaceScreen() {
   const { profile } = useContext(UserContext);
@@ -30,6 +31,7 @@ export default function MarketplaceScreen() {
       {!profile?.seenMarketplace && (
         <MarketplaceIntroModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
       )}
+      <ProfileInfo />
       <View className="h-80%">
         <StyledTabView renderScene={renderScene} routes={routes} defaultIndex={0} />
       </View>

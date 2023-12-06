@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { Alert, View } from 'react-native';
-import ButtonDisplay from '../../components/ButtonDisplay';
-import { cn } from '../../../lib/utils';
-import { DonationWithProject } from '../../../lib/types';
-import { UserContext } from '../../contexts/UserContext';
-import Queries from '../../../lib/supabaseQueries';
+import ButtonDisplay from './ButtonDisplay';
+import { cn } from '../../lib/utils';
+import { DonationWithProject } from '../../lib/types';
+import { UserContext } from '../contexts/UserContext';
+import Queries from '../../lib/supabaseQueries';
 
 export default function ProfileBalances() {
   const { session, profile, setProfile } = useContext(UserContext);
