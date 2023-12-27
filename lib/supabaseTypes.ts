@@ -12,18 +12,24 @@ export interface Database {
       admins: {
         Row: {
           created_at: string
+          first_name: string | null
           id: string
-          name: string | null
+          last_name: string | null
+          status: string | null
         }
         Insert: {
           created_at?: string
+          first_name?: string | null
           id: string
-          name?: string | null
+          last_name?: string | null
+          status?: string | null
         }
         Update: {
           created_at?: string
+          first_name?: string | null
           id?: string
-          name?: string | null
+          last_name?: string | null
+          status?: string | null
         }
         Relationships: [
           {
@@ -90,6 +96,8 @@ export interface Database {
           name: string
           product_image_url: string | null
           sdg: string
+          status: string
+          unlock_shares: number
         }
         Insert: {
           created_at?: string
@@ -99,6 +107,8 @@ export interface Database {
           name?: string
           product_image_url?: string | null
           sdg?: string
+          status?: string
+          unlock_shares?: number
         }
         Update: {
           created_at?: string
@@ -108,6 +118,8 @@ export interface Database {
           name?: string
           product_image_url?: string | null
           sdg?: string
+          status?: string
+          unlock_shares?: number
         }
         Relationships: [
           {
@@ -210,7 +222,9 @@ export interface Database {
       projects: {
         Row: {
           activity: string
+          brief: string
           created_at: string
+          description: string
           donation_currency: string
           extra_images: string[]
           funding_goal: number
@@ -223,10 +237,14 @@ export interface Database {
           project_image_url: string
           region: string
           sdg: string
+          unique_impact_metric_unit: string
+          universal_impact_metric_unit: string
         }
         Insert: {
           activity?: string
+          brief?: string
           created_at?: string
+          description?: string
           donation_currency?: string
           extra_images?: string[]
           funding_goal?: number
@@ -239,10 +257,14 @@ export interface Database {
           project_image_url?: string
           region?: string
           sdg?: string
+          unique_impact_metric_unit?: string
+          universal_impact_metric_unit?: string
         }
         Update: {
           activity?: string
+          brief?: string
           created_at?: string
+          description?: string
           donation_currency?: string
           extra_images?: string[]
           funding_goal?: number
@@ -255,6 +277,8 @@ export interface Database {
           project_image_url?: string
           region?: string
           sdg?: string
+          unique_impact_metric_unit?: string
+          universal_impact_metric_unit?: string
         }
         Relationships: [
           {
