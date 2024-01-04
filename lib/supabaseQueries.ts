@@ -130,6 +130,9 @@ export default {
   },
 
   supabaseSignIn: async (form: LoginForm) => {
+    const user = (await supabase.auth.admin.listUsers()).data?.users.filter((user) => user.email === form.email)[0];
+    const isAdmin = !!(await supabase.from('admins').select('*').eq('id', user.id).single()).data;
+    if (isAdmin) return { error: { message: 'User is an admin.' } };
     return await supabase.auth.signInWithPassword(form);
   },
 
