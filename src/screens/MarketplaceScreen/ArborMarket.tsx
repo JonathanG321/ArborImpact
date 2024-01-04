@@ -31,7 +31,7 @@ export default function ArborMarket() {
       {products ? (
         <ScrollView className="h-full">
           {filteredProducts.map((product) => (
-            <View className="flex flex-row w-full h-36" key={product.name + product.description}>
+            <View className="flex flex-row w-full h-36 mb-2" key={product.name + product.description}>
               <View className="py-4 flex">
                 <Avatar
                   image={product.image}
