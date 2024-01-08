@@ -36,9 +36,11 @@ export function UserContextProvider({ children }: PropsWithChildren) {
     try {
       if (session && !session?.user) throw new Error('No user on the session!');
       if (!session) {
+        setIsFirstLoad(false);
         return false;
       }
       setIsLoading(true);
+      setIsFirstLoad(true);
       const [{ error, status, data: dbProfile }, { data: balance, error: balanceError }] = await Promise.all([
         Queries.getSupabaseProfile(session?.user.id),
         Queries.getProfileBalance(session?.user.id),
