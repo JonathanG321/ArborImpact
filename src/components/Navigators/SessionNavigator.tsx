@@ -25,11 +25,8 @@ export default function SessionNavigator() {
   useEffect(() => {
     async function Setup() {
       setIsLoading(true);
-      await getProjects();
-      await getProducts();
-      await userSetup();
+      await Promise.all([getProjects(), getProducts(), userSetup()]);
       setIsLoading(false);
-      setIsFirstLoad(false);
     }
     Setup();
   }, []);
@@ -37,37 +34,36 @@ export default function SessionNavigator() {
   if (isFirstLoad) {
     return <LoadingScreen />;
   }
+  if (!session) {
+    return (
+      <Stack.Navigator id="Main">
+        <Stack.Screen name="Sign Up" component={SignUpScreen} />
+        <Stack.Screen name="Sign In" component={SignInScreen} />
+      </Stack.Navigator>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <Stack.Navigator id="Main">
+        <Stack.Screen options={{ title: 'Profile Setup 1/3' }} name="Profile Setup 1" component={ProfileSetup1Screen} />
+        <Stack.Screen
+          options={{ title: 'Profile Setup 2/3', headerBackTitle: 'Back' }}
+          name="Profile Setup 2"
+          component={ProfileSetup2Screen}
+        />
+        <Stack.Screen
+          options={{ title: 'Profile Setup 3/3', headerBackTitle: 'Back' }}
+          name="Profile Setup 3"
+          component={ProfileSetup3Screen}
+        />
+      </Stack.Navigator>
+    );
+  }
 
   return (
     <Stack.Navigator id="Main">
-      {session ? (
-        profile ? (
-          <Stack.Screen options={{ headerShown: false }} name="Main" component={MainNavigator} />
-        ) : (
-          <>
-            <Stack.Screen
-              options={{ title: 'Profile Setup 1/3' }}
-              name="Profile Setup 1"
-              component={ProfileSetup1Screen}
-            />
-            <Stack.Screen
-              options={{ title: 'Profile Setup 2/3', headerBackTitle: 'Back' }}
-              name="Profile Setup 2"
-              component={ProfileSetup2Screen}
-            />
-            <Stack.Screen
-              options={{ title: 'Profile Setup 3/3', headerBackTitle: 'Back' }}
-              name="Profile Setup 3"
-              component={ProfileSetup3Screen}
-            />
-          </>
-        )
-      ) : (
-        <>
-          <Stack.Screen name="Sign Up" component={SignUpScreen} />
-          <Stack.Screen name="Sign In" component={SignInScreen} />
-        </>
-      )}
+      <Stack.Screen options={{ headerShown: false }} name="Main" component={MainNavigator} />
     </Stack.Navigator>
   );
 }
