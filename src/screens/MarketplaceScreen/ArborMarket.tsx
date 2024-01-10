@@ -14,6 +14,7 @@ export default function ArborMarket() {
   const [search, setSearch] = useState('');
   const filteredProducts =
     products?.filter((product) => {
+      if (product.status === 'paused') return false;
       const searchStr = search.toLowerCase();
       const productName = product.name.toLowerCase();
       const productDescription = product.description.toLowerCase();

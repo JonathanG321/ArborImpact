@@ -148,4 +148,5 @@ export type Product = {
   image: ImagePickerAsset | null;
   name: string;
   sdg: SDG;
+  status: 'paused' | 'published';
 };
