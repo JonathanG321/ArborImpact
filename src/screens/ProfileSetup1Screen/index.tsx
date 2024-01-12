@@ -14,6 +14,7 @@ import Header from '../../components/Header';
 import ScreenContainer from '../../components/ScreenContainer';
 import AvatarSelect from '../../components/AvatarSelect';
 import { LoadingContext } from '../../contexts/LoadingContext';
+import { UserContext } from '../../contexts/UserContext';
 
 export type ProfileSetup1Props = NativeStackScreenProps<RootStackParamList, 'Profile Setup 1', 'Main'>;
 
@@ -28,6 +29,7 @@ const schema = z
   .required();
 
 export default function ProfileSetup1Screen({ navigation: { navigate } }: ProfileSetup1Props) {
+  const { setIsFirstLoad } = useContext(UserContext);
   const { setProfileSetup } = useContext(ProfileSetupContext);
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -65,6 +67,9 @@ export default function ProfileSetup1Screen({ navigation: { navigate } }: Profil
 
   useEffect(() => {
     setIsLoading(false);
+    setTimeout(() => {
+      setIsFirstLoad(false);
+    }, 3000);
   }, []);
 
   return (

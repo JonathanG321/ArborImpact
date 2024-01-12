@@ -19,7 +19,7 @@ export default function ProfileScreen({
     params: { startTab },
   },
 }: Props) {
-  const { profile } = useContext(UserContext);
+  const { profile, setIsFirstLoad } = useContext(UserContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const routes = [
@@ -41,8 +41,13 @@ export default function ProfileScreen({
 
   useEffect(() => {
     if (profile?.madeFirstDonation && !profile.seenMarketplace) {
-      setTimeout(() => setIsModalVisible(true), 100);
+      setTimeout(() => {
+        setIsModalVisible(true);
+      }, 100);
     }
+    setTimeout(() => {
+      setIsFirstLoad(false);
+    }, 100);
   }, [profile]);
 
   return (
