@@ -99,8 +99,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
       }
       return;
     });
-    await Queries.addNewUserGift(newProfile.id);
-    setProfile({ ...profileSetup, sdg, balance: 0 });
+    setProfile({ ...profileSetup, sdg, balance: 10 });
     setTimeout(() => setIsLoading(false), 1000);
   };
 

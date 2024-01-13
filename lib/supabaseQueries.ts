@@ -113,9 +113,6 @@ export default {
       ...SDGs.map((sdg) => supabase.from('profile_sdgs').upsert({ profile_id: userId, sdg_id: sdg })),
     ]);
   },
-  addNewUserGift: async (userId: string) => {
-    return await supabase.from('recharges').upsert({ amount: 10, profile_id: userId });
-  },
   upsertSupabaseProfileSDGs: async (newProfile: DBProfileWithSDGs) => {
     const results = await Promise.all(
       newProfile.SDGs.map((sdg) => supabase.from('profile_sdgs').upsert({ profile_id: newProfile.id, sdg_id: sdg }))
