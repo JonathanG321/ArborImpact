@@ -20,7 +20,10 @@ export type ProfileSetup3Props = NativeStackScreenProps<RootStackParamList, 'Pro
 
 const schema = z
   .object({
-    sdg: z.array(z.string().regex(/^SDG[0-9][0-9]?$/)).default([]),
+    sdg: z
+      .array(z.string().regex(/^SDG[0-9][0-9]?$/))
+      .min(1, 'You must select at least 1 SDG')
+      .default([]),
   })
   .required();
 
@@ -41,7 +44,7 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
   });
 
   const onError: SubmitErrorHandler<Pick<Profile, 'sdg'>> = ({ sdg }) => {
-    console.log(sdg?.message);
+    Alert.alert(sdg?.message || '');
   };
 
   const onSubmit: SubmitHandler<Pick<Profile, 'sdg'>> = async ({ sdg }) => {
@@ -126,6 +129,3 @@ export default function ProfileSetup3Screen({ navigation: { goBack, reset } }: P
     </ScreenContainer>
   );
 }
-
-// {"name": "IMG_0005.jpg", "type": "image", "uri": "file:///Users/jonathangordon/Library/Developer/CoreSimulator/Devices/155868EC-5BAB-4879-9743-13DD49A2AC73/data/Containers/Data/Application/72D8BFD1-DA97-43CE-83E4-DDE43DF7503B/Library/Caches/ExponentExperienceData/%2540anonymous%252Farbor-impact-a366ccf0-e114-4edf-9ea9-43d81067b252/ImagePicker/AD97C933-396A-42A2-9706-B4320A20E26F.jpg"}
-// {"name": "fc776c12-c5b3-4c76-b28a-1dfd7db38b20.jpeg", "type": "image", "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Farbor-impact-a366ccf0-e114-4edf-9ea9-43d81067b252/ImagePicker/fc776c12-c5b3-4c76-b28a-1dfd7db38b20.jpeg"}
