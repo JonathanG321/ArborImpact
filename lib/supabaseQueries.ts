@@ -1,4 +1,4 @@
-import { Session } from '@supabase/supabase-js';
+import { PostgrestSingleResponse, Session } from '@supabase/supabase-js';
 import { supabase } from '../supabase/supabase';
 import { DBProfileWithProjectsAndDonations, DBProfileWithSDGs, LoginForm, SDG } from './types';
 
@@ -108,9 +108,12 @@ export default {
   },
 
   upsertSupabaseProfile: async ({ SDGs, ...newProfile }: DBProfileWithSDGs, userId: string) => {
+    const profile = await supabase.from('profiles').upsert(newProfile).select('*').single();
+    if (!profile.data) return [profile] as PostgrestSingleResponse<null>[];
     return await Promise.all([
-      supabase.from('profiles').upsert(newProfile),
-      ...SDGs.map((sdg) => supabase.from('profile_sdgs').upsert({ profile_id: userId, sdg_id: sdg })),
+      ...SDGs.map((sdg) =>
+        supabase.from('profile_sdgs').upsert({ profile_id: profile.data?.id ?? userId, sdg_id: sdg })
+      ),
     ]);
   },
   upsertSupabaseProfileSDGs: async (newProfile: DBProfileWithSDGs) => {
