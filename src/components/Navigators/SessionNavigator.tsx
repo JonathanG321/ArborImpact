@@ -17,7 +17,7 @@ import { ProductsContext } from '../../contexts/ProductsContext';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function SessionNavigator() {
-  const { session, profile, userSetup, isFirstLoad } = useContext(UserContext);
+  const { session, profile, userSetup, isFirstLoad, setIsFirstLoad } = useContext(UserContext);
   const { getProjects } = useContext(ProjectsContext);
   const { getProducts } = useContext(ProductsContext);
   const { setIsLoading } = useContext(LoadingContext);
@@ -27,6 +27,9 @@ export default function SessionNavigator() {
       setIsLoading(true);
       await Promise.all([getProjects(), getProducts(), userSetup()]);
       setIsLoading(false);
+      setTimeout(() => {
+        setIsFirstLoad(false);
+      }, 2000);
     }
     Setup();
   }, []);
